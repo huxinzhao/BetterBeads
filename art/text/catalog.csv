@@ -1,0 +1,791 @@
+﻿Key,DefaultText,Format,SourceLocations
+forge.appearance.unforge,Unforging removes forge upgrades and restores the original appearance. The appearance donor is not returned.,普通文本,
+forge.appearance.invalid,Use matching weapon types with valid designs. Only vanilla and bead weapons are supported.,普通文本,
+forge.appearance.confirm,Keep the left weapon's stats and use the right weapon's appearance. Consumes the right weapon and 10 Cinder Shards.,普通文本,
+forge.appearance.description,Bead appearance: {0},普通文本,
+forge.appearance.changed,"The requirements have changed. Check the weapons, inventory space, and Cinder Shards.",普通文本,
+mod.loaded,Better Beads 1.0 loaded.,普通文本,
+bench.name,Bead Workbench,普通文本,
+bench.invalid-config,Cannot read the workbench configuration. The original file was kept and recipe sales were disabled. Check the file format.,普通文本,
+bench.unconfigured,Workbench costs are missing or invalid. Its crafting recipe and Robin's shop entry were not added.,普通文本,
+bench.description,Create bead designs using materials from your backpack and ordinary chests within 5 tiles. Materials are used when you fuse a design.,普通文本,
+bench.processing,Processing,普通文本,
+bench.editor,Create,普通文本,
+bench.library,My designs,普通文本,
+bench.processing-pending,Materials are used when fusing. Use the weapon's More menu to prepare beads for refining.,普通文本,
+bench.editor-pending,The editor could not load. Check the SMAPI log.,普通文本,
+bench.library-status,This save has {{count}} designs. Enlarge the window to manage them.,SMAPI占位符 {{name}},
+bench.shared,All workbenches in this save share designs and favorite colors.,普通文本,
+data.unreadable,Better Beads: save data is unreadable or its version is unsupported. Changes are disabled; the original data was kept.,普通文本,
+product.picture,Bead Art,普通文本,
+product.picture-detailed,Detailed Bead Art (32×32),普通文本,
+product.Sword,Bead Sword,普通文本,
+product.Dagger,Bead Dagger,普通文本,
+product.Hammer,Bead Hammer,普通文本,
+product.weapon-description,A weapon made of fused beads. Its design and stats are stored on this item.,普通文本,
+weapon.config-upgraded,Added missing weapon material values to the old processing configuration. Backup: {{backup}},SMAPI占位符 {{name}},
+product.wood-ornament,Bead Ornament,普通文本,
+product.ornament-large,Large Bead Ornament,普通文本,
+product.stone-statue,Bead Statue,普通文本,
+product.hat,Bead Hat,普通文本,
+product.description,A handmade bead creation. Its design is stored independently on this item.,普通文本,
+debug.command,Receive two ornaments with different designs and one hat in a single-player save. Requires three empty inventory slots. For testing only.,普通文本,
+debug.single-player,Load an available single-player save first.,普通文本,
+debug.space,Free three inventory slots first. No samples were given.,普通文本,
+debug.square,Orange Square (test sample),普通文本,
+debug.diamond,Blue Diamond (test sample),普通文本,
+debug.delivered,"Received three test samples. Check their separate designs, placement, wearing, and persistence after saving and reloading.",普通文本,
+color.black,Charcoal,普通文本,
+use.Pants,Pants,普通文本,
+material.hardwood,Hardwood,普通文本,
+use.Dagger,Dagger,普通文本,
+material.topaz,Topaz,普通文本,
+use.Sword,Sword,普通文本,
+color.green,Leaf Green,普通文本,
+material.wood,Wood,普通文本,
+color.dark-brown,Dark Brown,普通文本,
+use.Picture,Bead Art,普通文本,
+use.Hammer,Hammer,普通文本,
+color.ice,Ice Blue,普通文本,
+color.cream,Cream,普通文本,
+color.brown,Wood Brown,普通文本,
+color.jade,Jade Green,普通文本,
+material.gold,Gold,普通文本,
+color.pink,Blossom Pink,普通文本,
+material.emerald,Emerald,普通文本,
+color.gold,Pale Gold,普通文本,
+color.orange,Pumpkin,普通文本,
+material.iron,Iron,普通文本,
+material.ruby,Ruby,普通文本,
+material.jade,Jade,普通文本,
+use.WoodFurniture,Wooden Furniture,普通文本,
+material.decoration,Ordinary,普通文本,
+material.copper,Copper,普通文本,
+material.wool,Wool,普通文本,
+color.purple,Iridium Purple,普通文本,
+bead.description,Used for: {{uses}}. Choose colors while editing. Colors do not stack stats.,SMAPI占位符 {{name}},
+color.white,Warm White,普通文本,
+material.iridium,Iridium,普通文本,
+material.diamond,Diamond,普通文本,
+color.aqua,Aqua,普通文本,
+bead.name,{{material}} Beads,SMAPI占位符 {{name}},
+processing.next,Next,普通文本,
+processing.config-error,Processing settings are invalid. Processing is disabled; check processing.json. The original file was kept.,普通文本,
+processing.previous,Previous,普通文本,
+use.Statue,Statue,普通文本,
+color.leaf,Sprout Green,普通文本,
+color.red,Ruby Red,普通文本,
+color.iron,Iron Gray,普通文本,
+color.copper,Copper Red,普通文本,
+material.amethyst,Amethyst,普通文本,
+use.Hat,Hat,普通文本,
+material.aquamarine,Aquamarine,普通文本,
+color.violet,Violet,普通文本,
+material.stone,Stone,普通文本,
+use.Shirt,Shirt,普通文本,
+color.gray,Stone Gray,普通文本,
+editor.reference,Reference,普通文本,
+editor.material,Bead material,普通文本,
+editor.replacement,Preview changes to the whole design. Confirming can be undone.,普通文本,
+editor.make,Fuse,普通文本,
+editor.cancel,Cancel,普通文本,
+editor.tools,More tools,普通文本,
+editor.fill,Fill,普通文本,
+editor.apply,Replace,普通文本,
+editor.locked,Locked,普通文本,
+editor.redo,Redo,普通文本,
+editor.mirror-h,Flip horizontally,普通文本,
+editor.center,Center,普通文本,
+editor.erase,Tweezers,普通文本,
+editor.pick,Eyedropper,普通文本,
+editor.save,Save design,普通文本,
+editor.mirror-v,Flip vertically,普通文本,
+editor.overlay,Material marks,普通文本,
+editor.undo,Undo,普通文本,
+editor.replace-material,Replace material,普通文本,
+editor.material-source,Source: {{material}},SMAPI占位符 {{name}},
+editor.material-unassigned,Unassigned,普通文本,
+editor.material-replacement,{{source}} → {{target}} · {{count}} beads,SMAPI占位符 {{name}},
+editor.untitled,Untitled design,普通文本,
+editor.clean,No unsaved changes,普通文本,
+editor.paint,Bead pen,普通文本,
+editor.choose-target,Choose a target color or material first.,普通文本,
+editor.dirty,Unsaved changes,普通文本,
+editor.replace-color,Replace color,普通文本,
+editor.close-drawer,Close panel,普通文本,
+editor.preview,Preview,普通文本,
+editor.materials,Automatic materials · Available beads,普通文本,
+editor.small,The window is too small. Enlarge it or lower UI zoom. Your draft has been kept.,普通文本,
+editor.grid,Grid and pegs,普通文本,
+issue.template,Template is not configured,普通文本,
+editor.discard,Discard and close,普通文本,
+issue.wool-budget,Wool budget is not configured,普通文本,
+issue.size,Incorrect canvas size,普通文本,
+issue.unknown-material,Unknown material,普通文本,
+editor.saved,Design saved. It will persist when you save the game.,普通文本,
+issue.extra-view,Unexpected view,普通文本,
+issue.insufficient-material,Not enough materials,普通文本,
+issue.empty,The design has no usable beads,普通文本,
+editor.save-close,Save and close,普通文本,
+editor.save-failed,Could not save. Your draft was kept. There may be a revision conflict or invalid design data.,普通文本,
+issue.missing-view,Required views are missing,普通文本,
+editor.name-apply,Apply name,普通文本,
+issue.unavailable,This template is not available for crafting,普通文本,
+issue.weapon-rules,Weapon stats or allowed effects are invalid; crafting is unavailable,普通文本,
+issue.unexpected-supplement,This product cannot use extra materials. Remove them before crafting.,普通文本,
+issue.material-overflow,The material total is too large. Reduce it.,普通文本,
+issue.minimum-material,Placed beads and extra materials do not meet the template's minimum,普通文本,
+editor.amount,{{material}}: need {{needed}} / have {{owned}} / missing {{missing}},SMAPI占位符 {{name}},
+editor.rename,Design name,普通文本,
+editor.keep-editing,Keep editing,普通文本,
+issue.unknown-color,Unknown color,普通文本,
+issue.unassigned-material,Some beads have no material,普通文本,
+issue.incompatible-material,The material is incompatible with this product,普通文本,
+issue.structure,Invalid design structure,普通文本,
+editor.unsaved,This draft has unsaved changes. Saved designs persist with your normal game save.,普通文本,
+editor.no-issues,No missing requirements were found.,普通文本,
+editor.settings,Design settings,普通文本,
+editor.template,Template: {{template}},SMAPI占位符 {{name}},
+editor.direction,View: {{direction}},SMAPI占位符 {{name}},
+editor.next-direction,Change view,普通文本,
+editor.template-pending,No template is available. Check template settings and the SMAPI log.,普通文本,
+editor.wool-pending,Wool is used automatically. Edit each required view; copy to other views in More.,普通文本,
+editor.weapon-pending,The weapon template has no valid stat configuration. Check the settings and SMAPI log.,普通文本,
+view.front,Front,普通文本,
+view.right,Right,普通文本,
+view.left,Left,普通文本,
+view.back,Back,普通文本,
+template.picture,16×16 Bead Art,普通文本,
+template.hat,20×20 Hat (test shape),普通文本,
+template.unknown,Unsupported template,普通文本,
+library.all,All types,普通文本,
+library.unreadable,Cannot read this design,普通文本,
+library.empty,No matching designs. Create and save one in the editor.,普通文本,
+library.open,Edit,普通文本,
+library.copy,Copy,普通文本,
+library.new,New bead art,普通文本,
+library.save-as,Save draft as,普通文本,
+library.save-open,Save and open,普通文本,
+library.discard-open,Discard and open,普通文本,
+library.details,Details,普通文本,
+library.copied,Copied and selected an independent design.,普通文本,
+library.saved-as,Saved as a new design. Your current draft was kept.,普通文本,
+library.conflict,The record has changed. Select it again to continue.,普通文本,
+library.draft-dirty,The open design has unsaved changes. Handle them in the editor first.,普通文本,
+library.renamed,Design renamed.,普通文本,
+library.deleted,Design deleted. Existing products and open drafts were kept.,普通文本,
+library.delete,Delete design,普通文本,
+library.delete-confirm,Confirm deletion,普通文本,
+library.delete-warning,Delete the selected record? Existing products will not be affected.,普通文本,
+library.issues,Missing / invalid requirements,普通文本,
+library.search,Search names,普通文本,
+library.import-pending,Read item art,普通文本,
+editor.import,Read item art,普通文本,
+import.title,Read reference art (does not consume the item),普通文本,
+import.empty,There are no suitable items in your backpack.,普通文本,
+import.unsupported,"This item's custom drawing is not supported. Standard objects, ordinary colored objects, furniture, hats, clothing, and melee weapons are supported.",普通文本,
+import.invalid-product,Cannot read this product's data. Your draft was kept.,普通文本,
+import.missing-data,Cannot find the item's current drawing data.,普通文本,
+import.source-bounds,The source area is invalid or exceeds the supported size.,普通文本,
+import.read-failed,Could not read the image. Check the log. The item and draft are unchanged.,普通文本,
+import.adjust-size,Choose cropping or proportional scaling before converting.,普通文本,
+import.size.Original,Size: original pixels,普通文本,
+import.size.Crop,Size: crop (adjust X / Y offset),普通文本,
+import.size.FitNearest,"Size: fit, nearest neighbor",普通文本,
+import.all-colors,All colors (skip color availability warnings),普通文本,
+import.alpha,Alpha threshold,普通文本,
+import.preview,Convert preview,普通文本,
+import.original,View original,普通文本,
+import.converted,View result,普通文本,
+import.options,Conversion settings,普通文本,
+import.summary,{{count}} beads · All colors available,SMAPI占位符 {{name}},
+manufacturing.unavailable,Cannot fuse right now. Use a single-player save.,普通文本,
+manufacturing.duplicate,This request is already processing or has been completed.,普通文本,
+manufacturing.changed,"Materials, money, or rules have changed. Open the preview again.",普通文本,
+manufacturing.failed,Crafting failed. Check the log.,普通文本,
+manufacturing.success,"Crafted! The design is stored on the product. To keep a design record, click Save design.",普通文本,
+manufacturing.confirm-title,Craft one item? Uses this draft; does not automatically save a design record.,普通文本,
+manufacturing.cost,Service fee: {{cost}}g · Selected materials will be consumed,SMAPI占位符 {{name}},
+manufacturing.confirm,Confirm,普通文本,
+manufacturing.error.InvalidRequest,Invalid request. Open the preview again.,普通文本,
+manufacturing.error.InvalidRecipe,The template rules are invalid. Crafting is unavailable.,普通文本,
+manufacturing.config-error,Crafting settings are inconsistent. Fusing is disabled; processing and designs remain available.,普通文本,
+manufacturing.error.InvalidWeaponStats,Weapon material or stat rules have not been fully configured. Crafting is unavailable.,普通文本,
+manufacturing.error.InvalidInventory,The workbench or material source has changed. Close and reopen the workbench.,普通文本,
+manufacturing.error.InvalidDesign,Check the canvas dimensions and selected materials.,普通文本,
+manufacturing.error.InsufficientFunds,Not enough money to pay the fee.,普通文本,
+manufacturing.error.NoSpace,"Your backpack cannot receive the product, even after materials are consumed.",普通文本,
+editor.change-template,Type / template,普通文本,
+editor.conversion-summary,Unassigned: {{unassigned}} · Incompatible: {{incompatible}} · Extra materials: {{supplements}},SMAPI占位符 {{name}},
+editor.conversion-note,Decorations use ordinary beads; clothing uses wool. Only weapons offer additional materials and effects.,普通文本,
+editor.template-help,"Preview product conversion: decorations use ordinary beads, clothing uses wool, and weapons use selected materials.",普通文本,
+weapon.panel,"Extra materials, stats, and effects",普通文本,
+effect.ruby.weak,The ruby's power is still too weak.,普通文本,
+effect.ruby.overloaded,The ruby's power is too strong! Your weapon is becoming unstable.,普通文本,
+effect.jade.weak,The jade's power is still too weak.,普通文本,
+effect.jade.overloaded,The jade's power is too strong! Your weapon is becoming unstable.,普通文本,
+effect.amethyst.weak,The amethyst's power is still too weak.,普通文本,
+effect.amethyst.overloaded,The amethyst's power is too strong! Your weapon is becoming unstable.,普通文本,
+weapon.materials,Weapon materials,普通文本,
+weapon.stats,Stat preview,普通文本,
+weapon.no-materials,No suitable materials are available.,普通文本,
+weapon.quantity,Extra material: {{count}} beads,SMAPI占位符 {{name}},
+weapon.stock,Need {{needed}} of this material · Have {{owned}},SMAPI占位符 {{name}},
+weapon.clear-one,Clear this material,普通文本,
+weapon.clear-all,Clear extra materials,普通文本,
+weapon.total,Total {{total}} (extra: {{supplements}}) · Minimum {{minimum}},SMAPI占位符 {{name}},
+weapon.total-unconfigured,Extra: {{supplements}} · Minimum cost rule is not configured,SMAPI占位符 {{name}},
+weapon.averages,Average hardness {{hardness}} · Weight {{weight}},SMAPI占位符 {{name}},
+weapon.damage,Damage {{min}}–{{max}},SMAPI占位符 {{name}},
+weapon.speed,Attack speed {{speed}} · Knockback {{knockback}},SMAPI占位符 {{name}},
+weapon.critical,Crit chance {{chance}}% · Crit multiplier {{multiplier}},SMAPI占位符 {{name}},
+weapon.fix-materials,Meet the minimum cost and check the materials or template settings.,普通文本,
+weapon.preview-note,Preview only. Inventory is checked again when crafting.,普通文本,
+issue.unexpected-effects,This product does not support weapon effects. Clear the selection.,普通文本,
+issue.effect-selection,Invalid effect selection. Check the selected materials and supported effects.,普通文本,
+weapon.effects,Gem effects,普通文本,
+effect.description.ruby,Ruby · Damage +20%,普通文本,
+effect.description.jade,Jade · Heal for 5% of actual damage,普通文本,
+effect.description.amethyst,Amethyst · Knockback +30%,普通文本,
+effect.penalty,Overload penalty: base damage −{{penalty}}%,SMAPI占位符 {{name}},
+effect.unavailable,Effects cannot be calculated. Check the materials or template.,普通文本,
+effect.ratio,{{ratio}}% · {{state}} · Selected {{count}}/2,SMAPI占位符 {{name}},
+effect.state.Absent,None,普通文本,
+effect.state.Weak,Weak,普通文本,
+effect.state.Ready,Ready,普通文本,
+effect.state.Overloaded,Overloaded,普通文本,
+effect.state.Unavailable,Unavailable,普通文本,
+effect.ready,Available. Select it to activate.,普通文本,
+effect.absent,No gems of this type have been added.,普通文本,
+effect.select,Select effect,普通文本,
+effect.deselect,Deselect effect,普通文本,
+effect.clear,Clear effects,普通文本,
+effect.config-upgraded,Added material families and three gem effects without changing existing values. Backup: {{backup}},SMAPI占位符 {{name}},
+series.Metal,Metal,普通文本,
+series.Gem,Gem,普通文本,
+bead.profile,{{series}} · Hardness {{hardness}} · Weight {{weight}},SMAPI占位符 {{name}},
+creative.material-plan,Creative mode: skip {{needed}} beads; no materials consumed,SMAPI占位符 {{name}},
+creative.option,Creative crafting,普通文本,
+material.refined-iron,Refined Iron,普通文本,
+material.refined-gold,Refined Gold,普通文本,
+material.refined-topaz,Refined Topaz,普通文本,
+material.refined-iridium,Refined Iridium,普通文本,
+creative.confirm,Creative mode: crafting is free. The item is marked as a creative item.,普通文本,
+material.refined-ruby,Refined Ruby,普通文本,
+soul.level,Galaxy Soul {{level}}/3 · Damage +{{bonus}}%,SMAPI占位符 {{name}},
+material.refined-jade,Refined Jade,普通文本,
+creative.amount,{{material}}: skip {{needed}} (free),SMAPI占位符 {{name}},
+material.refined-emerald,Refined Emerald,普通文本,
+material.refined-diamond,Refined Diamond,普通文本,
+material.refined-aquamarine,Refined Aquamarine,普通文本,
+creative.tooltip,Craft without using materials or paying fees. The item is marked as creative and cannot be sold for profit. Colors are also freely available in normal mode. Preparing beads for refining still costs materials.,普通文本,
+material.refined-amethyst,Refined Amethyst,普通文本,
+material.refined-copper,Refined Copper,普通文本,
+refinement.config-upgraded,"Updated default gem values and refining output, preserving custom values. Backup: {{backup}}",SMAPI占位符 {{name}},
+creative.bench-name,Bead Workbench · Creative,普通文本,
+bead.refined-description,Beads can be refined only once. Refined and ordinary gems of the same kind count together toward gem effects.,普通文本,
+bead.refine-recipe,Furnace: 10 ordinary beads + 1 Coal yield 5 refined beads in 30 minutes.,普通文本,
+editor.more,More,普通文本,
+editor.palette,Bead tray,普通文本,
+editor.material-stock,{{material}}: {{count}} available (beads plus materials in backpack and nearby chests),SMAPI占位符 {{name}},
+editor.weapon-details,"Materials, stats, effects",普通文本,
+product.shirt,Bead-Print Shirt,普通文本,
+product.pants,Bead-Print Pants,普通文本,
+product.chair,Bead Chair,普通文本,
+product.table,Bead Table,普通文本,
+editor.check-cost,Check cost,普通文本,
+editor.help-short,Help,普通文本,
+editor.help,How to play,普通文本,
+editor.choose-product,"Choose a product, then check its preview and cost.",普通文本,
+editor.owned-short,Available: {{owned}},SMAPI占位符 {{name}},
+editor.assign-all,Set all materials,普通文本,
+editor.assign-note,Use {{material}} for all placed beads. Keeps their colors and uses no inventory; extra weapon materials are separate.,SMAPI占位符 {{name}},
+editor.copy-directions,Copy to all views,普通文本,
+editor.copy-directions-note,Overwrite other views with this view. Can be undone. All views are saved separately; wool is charged once.,普通文本,
+editor.clothing-conversion,Clothing uses a fixed wool budget. The converted design is copied to the current view only. You can undo this change.,普通文本,
+issue.empty-view,A required view is empty,普通文本,
+editor.journey,"1. Place materials in your backpack or ordinary chests within 5 tiles of the workbench. Older bead recipes are no longer used.
+2. Choose a product and colors. Use the side panel on small windows. Open Bead colors to change your favorite colors; no color unlocks are required.
+3. Use the bead pen to place beads; use tweezers or right click to remove them. Changing the selected color does not repaint existing beads.
+4. Furniture and decorations use ordinary beads automatically; clothing uses wool. Weapons let you choose metals, gems, and extra materials.
+5. Fuse the design when it is ready. Existing beads are used first, then raw materials; leftovers are kept. Review the exact cost before confirming. No materials are used if the product cannot fit.
+6. To refine beads, select an ordinary metal or gem in the weapon menu and prepare it through More. A furnace turns 10 beads and 1 Coal into 5 refined beads in 30 minutes.
+7. Save your designs and let the game save normally. Hats and shirts require all four views. Read item art can use vanilla designs as a starting point.
+Shortcuts: Ctrl+Z / Y to undo / redo; wheel to zoom; Space-drag to pan. More contains import, centering, and auxiliary tools.",普通文本,
+editor.save-as,Save as new,普通文本,
+editor.saved-as,Saved and opened a new design. The original is unchanged. Save the game normally to keep it.,普通文本,
+import.restore-design,"Read the product's complete design and materials, including all views. Uses its saved snapshot.",普通文本,
+editor.wool-budget,Fixed wool budget for all views,普通文本,
+editor.fitting,Try on,普通文本,
+editor.fitting-note,Temporary preview · Does not equip anything or use materials,普通文本,
+editor.fitting-failed,Could not show the try-on preview. Close it and check the SMAPI log.,普通文本,
+bead.ordinary,Ordinary Beads,普通文本,
+editor.prepare,Prepare for refining,普通文本,
+import.exact-colors,Keep original colors,普通文本,
+import.base-colors,Match basic colors,普通文本,
+issue.invalid-color,The design contains non-opaque colors. Choose new colors for those beads.,普通文本,
+palette.custom,Custom color,普通文本,
+palette.adjust,Bead colors,普通文本,
+palette.title,Bead colors,普通文本,
+simple.mard-reference,MARD 221 reference,普通文本,
+simple.mard-fallback,MARD 20 fallback,普通文本,
+simple.before-color,Before,普通文本,
+simple.after-color,After,普通文本,
+palette.reset-slot,Reset color,普通文本,
+palette.reset-all,Reset 16 colors,普通文本,
+palette.save,Save colors,普通文本,
+supply.short,Need {{needed}} / Have {{owned}},SMAPI占位符 {{name}},
+supply.range,Within {{radius}} tiles · {{count}} chests,SMAPI占位符 {{name}},
+supply.help,"Uses your backpack and nearby ordinary chests automatically: existing beads first, then raw materials. Ordinary Wood, Stone, and Fiber take priority over flowers and Hardwood. Lower-quality items of the same kind are used first; quality does not increase yield. The confirmation lists exact costs and leftovers.",普通文本,
+supply.consume,Use {{name}} × {{count}} ({{quality}}),SMAPI占位符 {{name}},
+supply.return,Keep leftover {{name}} × {{count}},SMAPI占位符 {{name}},
+supply.prepare-title,Prepare for refining · Consumes raw materials,普通文本,
+supply.prepare-help,Prepared beads go into your backpack for the furnace. No preparation is needed for ordinary crafting.,普通文本,
+supply.prepare-confirm,Prepare,普通文本,
+supply.prepared,Beads added to your backpack. You can refine them at a furnace.,普通文本,
+supply.no-raw,No unrefined raw materials of this type nearby. Select an ordinary metal or gem.,普通文本,
+supply.no-space,No room for the prepared beads. No raw materials were consumed.,普通文本,
+manufacturing.error.NoSurplusSpace,"The product fits, but leftover beads do not. Free a backpack slot or space in a nearby chest.",普通文本,
+supply.regular,Normal,普通文本,
+supply.silver,Silver,普通文本,
+supply.gold,Gold,普通文本,
+supply.iridium,Iridium,普通文本,
+palette.hint,"Select a tray color, then drag the picker to recolor it.",普通文本,
+palette.tray,Favorite colors,普通文本,
+palette.current,Current color,普通文本,
+editor.sidebar,Colors & materials,普通文本,
+palette.dye-page,Recolor,普通文本,
+palette.no-repaint,Changing favorite colors does not repaint your design.,普通文本,
+editor.drawer-colors,Colors,普通文本,
+editor.drawer-materials,Materials,普通文本,
+editor.drawer-close,Close,普通文本,
+editor.commissions,Stories & commissions,普通文本,
+editor.patterns,Reference patterns,普通文本,
+editor.valuable-sources,Allow flowers / hardwood,普通文本,
+manufacturing.error.FeatureLocked,"Complete the required villager story first, or remove locked effects and refined materials.",普通文本,
+effect.v2.ruby,Ruby: up to +12% damage,普通文本,
+effect.v2.jade,Jade: heal for up to 3% of actual damage,普通文本,
+effect.v2.amethyst,Amethyst: up to +20% knockback,普通文本,
+copy.ModEntry.15c24010a9,Cannot read clothing settings. Keeping the file and using defaults: ,普通文本,BetterBeads/ModEntry.cs:31
+copy.ModEntry.3c7101906f,Invalid clothing budget; using defaults.,普通文本,BetterBeads/ModEntry.cs:32
+copy.ModEntry.d42d13e93b,"Updated clothing budgets to the 0.16 defaults, preserving custom budgets.",普通文本,BetterBeads/ModEntry.cs:36
+copy.ReferencePatterns.8124f7e843,Potato Sprout Garden,普通文本,BetterBeads/Data/ReferencePatterns.cs:11
+copy.ReferencePatterns.d52502a3d1,Adapted from josehzz · CC0,普通文本,BetterBeads/Data/ReferencePatterns.cs:11 | BetterBeads/Data/ReferencePatterns.cs:12 | BetterBeads/Data/ReferencePatterns.cs:23 | BetterBeads/Data/ReferencePatterns.cs:24
+copy.ReferencePatterns.d754e8556f,Strawberry Heart Sign,普通文本,BetterBeads/Data/ReferencePatterns.cs:12
+copy.ReferencePatterns.5050ca5e35,Woodland Cabin,普通文本,BetterBeads/Data/ReferencePatterns.cs:13
+copy.ReferencePatterns.5c77248021,BetterBeads · Original pixel art,普通文本,BetterBeads/Data/ReferencePatterns.cs:13 | BetterBeads/Data/ReferencePatterns.cs:14 | BetterBeads/Data/ReferencePatterns.cs:15 | BetterBeads/Data/ReferencePatterns.cs:16 | BetterBeads/Data/ReferencePatterns.cs:17 | BetterBeads/Data/ReferencePatterns.cs:18 | BetterBeads/Data/ReferencePatterns.cs:19 | BetterBeads/Data/ReferencePatterns.cs:20 | BetterBeads/Data/ReferencePatterns.cs:21 | BetterBeads/Data/ReferencePatterns.cs:22 | BetterBeads/Data/ReferencePatterns.cs:25 | BetterBeads/Data/ReferencePatterns.cs:26 | BetterBeads/Data/ReferencePatterns.cs:27 | BetterBeads/Data/ReferencePatterns.cs:28 | BetterBeads/Data/ReferencePatterns.cs:29 | BetterBeads/Data/ReferencePatterns.cs:30
+copy.ReferencePatterns.25b401d17e,Garden Chair,普通文本,BetterBeads/Data/ReferencePatterns.cs:14
+copy.ReferencePatterns.ed1c8e3992,Sunflower Straw Hat,普通文本,BetterBeads/Data/ReferencePatterns.cs:15
+copy.ReferencePatterns.8143a29679,Leaf Apron,普通文本,BetterBeads/Data/ReferencePatterns.cs:16
+copy.ReferencePatterns.0305d857d8,Copper Leaf Dagger,普通文本,BetterBeads/Data/ReferencePatterns.cs:17
+copy.ReferencePatterns.51a2e36e01,Crimson Guard Sword,普通文本,BetterBeads/Data/ReferencePatterns.cs:18
+copy.ReferencePatterns.f57cd083e5,Crystal Cluster Hammer,普通文本,BetterBeads/Data/ReferencePatterns.cs:19
+copy.ReferencePatterns.e745b040dd,Furnace Sign,普通文本,BetterBeads/Data/ReferencePatterns.cs:20
+copy.ReferencePatterns.49c131fbe8,Adventurer's Crest,普通文本,BetterBeads/Data/ReferencePatterns.cs:21
+copy.ReferencePatterns.b6aded70ba,Starlight Guardian Sword,普通文本,BetterBeads/Data/ReferencePatterns.cs:22
+copy.ReferencePatterns.f77f40736b,Spring Bouquet,普通文本,BetterBeads/Data/ReferencePatterns.cs:23
+copy.ReferencePatterns.4e0243d194,Sprout Planter,普通文本,BetterBeads/Data/ReferencePatterns.cs:24
+copy.ReferencePatterns.6cc00ad125,Tidal Shell,普通文本,BetterBeads/Data/ReferencePatterns.cs:25
+copy.ReferencePatterns.f4339c659f,Sea Breeze Tea Table,普通文本,BetterBeads/Data/ReferencePatterns.cs:26
+copy.ReferencePatterns.0e4568fae5,Harvest Pumpkin,普通文本,BetterBeads/Data/ReferencePatterns.cs:27
+copy.ReferencePatterns.45a4a7f7cf,Autumn Patchwork Pants,普通文本,BetterBeads/Data/ReferencePatterns.cs:28
+copy.ReferencePatterns.364e8a3a60,Winter Star Lantern,普通文本,BetterBeads/Data/ReferencePatterns.cs:29
+copy.ReferencePatterns.b45675acdd,Scarf Snowman,普通文本,BetterBeads/Data/ReferencePatterns.cs:30
+copy.SpecialEffects.50078dca31,Ruby: damage +{0:0.##}%,复合占位符 {0}/{1},BetterBeads/Data/SpecialEffects.cs:49
+copy.SpecialEffects.ba32a2d6c7,Jade: heal for {0:0.##}% of actual damage,复合占位符 {0}/{1},BetterBeads/Data/SpecialEffects.cs:49
+copy.SpecialEffects.a7bdbe8d5c,Amethyst: knockback +{0:0.##}%,复合占位符 {0}/{1},BetterBeads/Data/SpecialEffects.cs:49
+copy.WorkshopGuidance.70994f61d2,First commission completed in spring,普通文本,BetterBeads/Data/WorkshopGuidance.cs:8
+copy.WorkshopGuidance.375980e82c,First commission completed in summer,普通文本,BetterBeads/Data/WorkshopGuidance.cs:8
+copy.WorkshopGuidance.a8e81634b7,First commission completed in fall,普通文本,BetterBeads/Data/WorkshopGuidance.cs:9
+copy.WorkshopGuidance.972021ec66,First commission completed in winter,普通文本,BetterBeads/Data/WorkshopGuidance.cs:9
+copy.WorkshopGuidance.aa358f4c84,Starter patterns,普通文本,BetterBeads/Data/WorkshopGuidance.cs:10
+copy.WorkshopGuidance.9520f858c0,The saloon could use a sprout or flower painting to welcome spring visitors.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:15
+copy.WorkshopGuidance.ec37c904d3,"Gus would like waves, shells, or fruit to give the saloon a refreshing summer feel.",普通文本,BetterBeads/Data/WorkshopGuidance.cs:15
+copy.WorkshopGuidance.be1d442aea,"Gus would like pumpkins, fallen leaves, or harvest designs for the saloon.",普通文本,BetterBeads/Data/WorkshopGuidance.cs:15
+copy.WorkshopGuidance.2d1624e06f,"Gus would like star lanterns, snow, or warm colors to decorate the saloon for winter.",普通文本,BetterBeads/Data/WorkshopGuidance.cs:15
+copy.WorkshopGuidance.d2cea8d80d,Emily is planning a spring outfit. Flowers and new leaves could be good inspiration.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:16
+copy.WorkshopGuidance.581d226c89,Emily wants a summer look. Try sea-breeze or sunflower colors.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:16
+copy.WorkshopGuidance.b3d29fd9a6,"Emily is putting together a fall outfit. Patches, leaves, and warm colors would suit it.",普通文本,BetterBeads/Data/WorkshopGuidance.cs:16
+copy.WorkshopGuidance.1845b2cc77,Emily wants to design a winter outfit. Try snowflake or starlight colors.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:16
+copy.WorkshopGuidance.54ed104cd4,Robin wants something handmade for a spring cabin. Try a garden or woodland theme.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:17
+copy.WorkshopGuidance.f92e9c6840,Robin is furnishing a summer resting spot. Try seaside or cool green leaves.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:17
+copy.WorkshopGuidance.04bc35bce3,"Robin is decorating a harvest-season cabin. Try pumpkins, wood grain, or autumn leaves.",普通文本,BetterBeads/Data/WorkshopGuidance.cs:17
+copy.WorkshopGuidance.11160ff5aa,"Robin is decorating a winter cabin. Try a snowman, pine branches, or warm lights.",普通文本,BetterBeads/Data/WorkshopGuidance.cs:17
+copy.WorkshopGuidance.77a67a64ab,The theme is inspiration only. The design and colors are up to you.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:18
+copy.WorkshopGuidance.7eea797f56,Crafting costs a fixed {0} wool beads across all views. Wool or Cloth can be converted automatically.,复合占位符 {0}/{1},BetterBeads/Data/WorkshopGuidance.cs:34
+copy.WorkshopGuidance.a617273f6e,"Crafting uses at least {0} ordinary beads, charging the higher of the design count and structural budget.",复合占位符 {0}/{1},BetterBeads/Data/WorkshopGuidance.cs:35
+copy.WorkshopGuidance.c5c6c80378,Both 16×16 and 32×32 art can be delivered. Detailed art is charged by its actual bead count.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:36
+copy.WorkshopGuidance.3c1e31a193,g,普通文本,BetterBeads/Data/WorkshopGuidance.cs:43
+copy.WorkshopGuidance.6305279d5c, friendship,普通文本,BetterBeads/Data/WorkshopGuidance.cs:43
+copy.WorkshopGuidance.207cd83136,Patterns: ,普通文本,BetterBeads/Data/WorkshopGuidance.cs:47
+copy.WorkshopGuidance.ea4f1d6156,One effect slot,普通文本,BetterBeads/Data/WorkshopGuidance.cs:49
+copy.WorkshopGuidance.e02e6e9a0b,Furnace refining,普通文本,BetterBeads/Data/WorkshopGuidance.cs:49
+copy.WorkshopGuidance.fcbe6ab764,Two effect slots,普通文本,BetterBeads/Data/WorkshopGuidance.cs:49
+copy.WorkshopGuidance.483b4c3034,Galaxy Soul upgrades,普通文本,BetterBeads/Data/WorkshopGuidance.cs:49
+copy.WorkshopGuidance.e4d3ccb6bd,Craft: ,普通文本,BetterBeads/Data/WorkshopGuidance.cs:50
+copy.WorkshopGuidance.5f7d6a1c5a,Automatic weekly commissions,普通文本,BetterBeads/Data/WorkshopGuidance.cs:51
+copy.WorkshopGuidance.de4ff756af,Rewards: ,普通文本,BetterBeads/Data/WorkshopGuidance.cs:52
+copy.WorkshopGuidance.e23b1efff6,This week's commission is in your journal. Look for letters from Emily and Clint tomorrow.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:56
+copy.WorkshopGuidance.a82a468b30,Future commissions may request clothing. Your current commission is unchanged.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:57
+copy.WorkshopGuidance.69c425e14f,You can now select one gem effect for weapons. Look for the heat-test letter tomorrow.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:58
+copy.WorkshopGuidance.0f3f2c01db,"Prepare beads from the weapon's More menu, then refine them in a furnace. Marlon's combat task starts tomorrow.",普通文本,BetterBeads/Data/WorkshopGuidance.cs:59
+copy.WorkshopGuidance.4be06764ef,You can now combine two gem effects. Galaxy Soul upgrades still require the original rare material.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:60
+copy.WorkshopGuidance.2dee012cc1,This week's commission is complete. The next one arrives next week. Copy your new patterns from Reference patterns.,普通文本,BetterBeads/Data/WorkshopGuidance.cs:61
+copy.WorkshopProgress.777725ec2a,Your First Creation,普通文本,BetterBeads/Data/WorkshopProgress.cs:103
+copy.WorkshopProgress.f27727ce2b,Robin wants bead art for the workshop. Deliver a picture with at least 32 beads; choose any design and colors. Unlocks weekly commissions and two patterns.,普通文本,BetterBeads/Data/WorkshopProgress.cs:103
+copy.WorkshopProgress.1ce470add2,Wear Your Creation,普通文本,BetterBeads/Data/WorkshopProgress.cs:104
+copy.WorkshopProgress.77eb23335f,Emily would like to see your style. Deliver a bead hat with all four views and at least 8 beads per view. Unlocks clothing commissions and two patterns.,普通文本,BetterBeads/Data/WorkshopProgress.cs:104
+copy.WorkshopProgress.7cba4bfc85,"Metal Beads, Too",普通文本,BetterBeads/Data/WorkshopProgress.cs:105
+copy.WorkshopProgress.bfc5cc0712,"Show Clint a bead weapon made of at least 60% copper, iron, or their refined beads combined. The weapon is returned after inspection. Unlocks one effect slot and two patterns.",普通文本,BetterBeads/Data/WorkshopProgress.cs:105
+copy.WorkshopProgress.66414afe62,Heat Test,普通文本,BetterBeads/Data/WorkshopProgress.cs:106
+copy.WorkshopProgress.b4dfdb1f78,Clint wants to test heat-resistant beads. Deliver 2 Iron Bars and 1 Coal to learn furnace refining and receive two patterns.,普通文本,BetterBeads/Data/WorkshopProgress.cs:106
+copy.WorkshopProgress.7c4f80c0b5,Put It to Use,普通文本,BetterBeads/Data/WorkshopProgress.cs:107
+copy.WorkshopProgress.4e9bd301cd,"Defeat 10 monsters with a non-creative bead weapon, then report to Marlon. Unlocks two effects, Galaxy Soul upgrades, and two patterns.",普通文本,BetterBeads/Data/WorkshopProgress.cs:107
+copy.WorkshopProgress.2d9993166d,Spring Sprouts,普通文本,BetterBeads/Data/WorkshopProgress.cs:121
+copy.WorkshopProgress.1039824c5a,Summer Breeze,普通文本,BetterBeads/Data/WorkshopProgress.cs:121
+copy.WorkshopProgress.3d1710d2c9,Autumn Harvest,普通文本,BetterBeads/Data/WorkshopProgress.cs:121
+copy.WorkshopProgress.2b133801cf,Winter Starlight,普通文本,BetterBeads/Data/WorkshopProgress.cs:121
+copy.WorkshopProgress.f93cb12e8e, · Furniture,普通文本,BetterBeads/Data/WorkshopProgress.cs:122
+copy.WorkshopProgress.10be1dfa0f, · Saloon art,普通文本,BetterBeads/Data/WorkshopProgress.cs:123
+copy.WorkshopProgress.48f9d29ee0, · Clothing,普通文本,BetterBeads/Data/WorkshopProgress.cs:126
+copy.WorkshopProgress.28509538a0, · Ornament,普通文本,BetterBeads/Data/WorkshopProgress.cs:128
+copy.ArtResources.16e7a38c73,Ag,普通文本,BetterBeads/Runtime/ArtResources.cs:187 | BetterBeads/Runtime/ArtResources.cs:205
+copy.EditorPanel.5e8ad223a1,Flowers / Hardwood: ,普通文本,BetterBeads/Runtime/EditorPanel.cs:641
+copy.EditorPanel.ce7ef28b67,Allow,普通文本,BetterBeads/Runtime/EditorPanel.cs:641
+copy.EditorPanel.0f810a7901,Protect,普通文本,BetterBeads/Runtime/EditorPanel.cs:641
+copy.EditorPanel.16e7a38c73,Ag,普通文本,BetterBeads/Runtime/EditorPanel.cs:690
+copy.LibraryPanel.8d2f193af5,Filter designs,普通文本,BetterBeads/Runtime/LibraryPanel.cs:73
+copy.LibraryPanel.680a7c62bf,Preview reference patterns and copy them as independent designs.,普通文本,BetterBeads/Runtime/LibraryPanel.cs:73
+copy.LibraryPanel.ed3c1ec8a1,Reference patterns,普通文本,BetterBeads/Runtime/LibraryPanel.cs:75
+copy.LibraryPanel.235192b989,My designs · All types,普通文本,BetterBeads/Runtime/LibraryPanel.cs:76
+copy.ManufacturingService.34f97298fc,Crafting submission failed: ,普通文本,BetterBeads/Runtime/ManufacturingService.cs:118
+copy.MaterialPreparationService.b2cc1a7f40,Bead preparation failed: ,普通文本,BetterBeads/Runtime/MaterialPreparationService.cs:53
+copy.PatternDetailMenu.a12f190d18,Product,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:31
+copy.PatternDetailMenu.7d27cae3ba,Bead board,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:31
+copy.PatternDetailMenu.740f5e8102,Front,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:49
+copy.PatternDetailMenu.1cf1d4d0b2,Right,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:49
+copy.PatternDetailMenu.6a24b14f33,Left,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:49
+copy.PatternDetailMenu.2d270b6ce4,Back,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:49
+copy.PatternDetailMenu.00c615f156,Size  ,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:59
+copy.PatternDetailMenu.69b317b50b, · 2×2 tiles,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:59
+copy.PatternDetailMenu.2ae572a36a,Views  ,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:59
+copy.PatternDetailMenu.07a5e2fb39,Estimated materials  ,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:60
+copy.PatternDetailMenu.da6205e40d,Wool beads: ,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:60
+copy.PatternDetailMenu.4a89c0c09b,Metal beads: ,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:60
+copy.PatternDetailMenu.3f404ebe7e,Ordinary beads: ,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:60
+copy.PatternDetailMenu.09901d3de2, beads,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:60
+copy.PatternDetailMenu.086c3e5a40,Source  ,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:61
+copy.PatternDetailMenu.e52fd481c4,Design colors,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:68
+copy.PatternDetailMenu.cebc46741d,Owned · Copy it to change the colors,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:77
+copy.PatternDetailMenu.0f4bdadb99,Unlock: ,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:77
+copy.PatternDetailMenu.572cf45ba4,Back,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:78
+copy.PatternDetailMenu.8d88ff6d6e,Copy pattern,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:79
+copy.PatternDetailMenu.9630b9b14f,Not yet unlocked,普通文本,BetterBeads/Runtime/PatternDetailMenu.cs:79
+copy.PlayMode.c892fb6efd,Allow flowers and Hardwood for ordinary beads,普通文本,BetterBeads/Runtime/PlayMode.cs:29
+copy.PlayMode.bff4e4ef9a,Off by default. Exact materials are still listed before crafting.,普通文本,BetterBeads/Runtime/PlayMode.cs:29
+copy.ReferenceReader.9ff126739c,Try-on preview failed: ,普通文本,BetterBeads/Runtime/ReferenceReader.cs:16
+copy.ReferenceReader.ea35481ec2,Could not read reference ({0}): {1},复合占位符 {0}/{1},BetterBeads/Runtime/ReferenceReader.cs:85
+copy.RefinementContent.f607114b69,The furnace's extra ingredient was changed. Bead refining recipes were not added to avoid incorrect costs.,普通文本,BetterBeads/Runtime/RefinementContent.cs:30
+copy.RefinementContent.8b41723d1a,Complete Clint's Heat Test to refine beads.,普通文本,BetterBeads/Runtime/RefinementContent.cs:49
+copy.WeaponPanel.04ea6c801c,Gem benefits cap at 20%; exceeding this has no penalty. You can currently select {0} effects. Workshop tasks unlock advanced abilities.,复合占位符 {0}/{1},BetterBeads/Runtime/WeaponPanel.cs:89
+copy.WeaponPatches.50078dca31,Ruby: damage +{0:0.##}%,复合占位符 {0}/{1},BetterBeads/Runtime/WeaponPatches.cs:31
+copy.WeaponPatches.ba32a2d6c7,Jade: heal for {0:0.##}% of actual damage,复合占位符 {0}/{1},BetterBeads/Runtime/WeaponPatches.cs:32
+copy.WeaponPatches.a7bdbe8d5c,Amethyst: knockback +{0:0.##}%,复合占位符 {0}/{1},BetterBeads/Runtime/WeaponPatches.cs:33
+copy.WorkshopMenu.16e7a38c73,Ag,普通文本,BetterBeads/Runtime/WorkshopMenu.cs:33
+copy.WorkshopMenu.ec25e967e0,Help {0}/{1} · Use the buttons below to turn pages,复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopMenu.cs:41
+copy.WorkshopMenu.c9b9ae7a61,Previous,普通文本,BetterBeads/Runtime/WorkshopMenu.cs:59
+copy.WorkshopMenu.8a8542f696,Next,普通文本,BetterBeads/Runtime/WorkshopMenu.cs:59
+copy.WorkshopMenu.572cf45ba4,Back,普通文本,BetterBeads/Runtime/WorkshopMenu.cs:59
+copy.WorkshopService.9ce221cab6,Basic/Bead Commission/Create something a villager needs./Visit the requester to confirm and deliver your creation./-1//-1//false,普通文本,BetterBeads/Runtime/WorkshopService.cs:31
+copy.WorkshopService.693902594e,Hello!^^{0}^^No need to hurry. Bring your creation when you're ready. —{1}[#]{2},复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopService.cs:36
+copy.WorkshopService.bf83011efb,A new bead commission has been added to your journal.,普通文本,BetterBeads/Runtime/WorkshopService.cs:53 | BetterBeads/Runtime/WorkshopService.cs:213
+copy.WorkshopService.3305945ba1,Monsters defeated with bead weapons: {0}/10. Report to Marlon.,复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopService.cs:61
+copy.WorkshopService.4fc545b498,Deliver to {0}: {1}. Refreshes in {2} days.,复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopService.cs:64
+copy.WorkshopService.2514a8011f, · Bead Workshop,普通文本,BetterBeads/Runtime/WorkshopService.cs:93
+copy.WorkshopService.80d0a3e73e,Talk about beadwork or chat normally. You'll confirm the exact item before delivering it.,普通文本,BetterBeads/Runtime/WorkshopService.cs:93
+copy.WorkshopService.a651f351bf,Chat normally,普通文本,BetterBeads/Runtime/WorkshopService.cs:102
+copy.WorkshopService.ed3c1ec8a1,Reference patterns,普通文本,BetterBeads/Runtime/WorkshopService.cs:110
+copy.WorkshopService.4c88d2acef,"Collected {0}/{1} patterns. Your first commission each season awards two themed patterns. Copy them to edit freely, or draw your own designs for themes you haven't unlocked.",复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopService.cs:110
+copy.WorkshopService.a123239f96,Filter: owned → show all,普通文本,BetterBeads/Runtime/WorkshopService.cs:112
+copy.WorkshopService.c3719b7af3,Filter: all → owned only,普通文本,BetterBeads/Runtime/WorkshopService.cs:112
+copy.WorkshopService.40dadcadbc, · View,普通文本,BetterBeads/Runtime/WorkshopService.cs:116
+copy.WorkshopService.b8ac3ee042, Current progress: {0}/10.,复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopService.cs:137
+copy.WorkshopService.dc708b2721,Deliver 2 Iron Bars and 1 Coal,普通文本,BetterBeads/Runtime/WorkshopService.cs:141
+copy.WorkshopService.1d10f02813,Report combat results,普通文本,BetterBeads/Runtime/WorkshopService.cs:141
+copy.WorkshopService.0b91b690cf,Inventory slot {0} · {1},复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopService.cs:147
+copy.WorkshopService.3b5924a525,No suitable creations in your backpack,普通文本,BetterBeads/Runtime/WorkshopService.cs:149
+copy.WorkshopService.9093b5730c,Commission,普通文本,BetterBeads/Runtime/WorkshopService.cs:158
+copy.WorkshopService.32f4515785,Uses 2 Iron Bars and 1 Coal,普通文本,BetterBeads/Runtime/WorkshopService.cs:159
+copy.WorkshopService.bac7cb9fe6,Report progress; no items consumed,普通文本,BetterBeads/Runtime/WorkshopService.cs:159
+copy.WorkshopService.5dc766584b,Weapon returned after inspection,普通文本,BetterBeads/Runtime/WorkshopService.cs:159
+copy.WorkshopService.f6376fff0c,Deliver and consume the creation in inventory slot {0},复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopService.cs:159
+copy.WorkshopService.f33809c1b2,The situation has changed. Confirm again.,普通文本,BetterBeads/Runtime/WorkshopService.cs:170
+copy.WorkshopService.7bb02fafae,Move closer to the requester before delivering.,普通文本,BetterBeads/Runtime/WorkshopService.cs:177
+copy.WorkshopService.cc3abab942,This is not the right requester.,普通文本,BetterBeads/Runtime/WorkshopService.cs:179
+copy.WorkshopService.b7441e3e6e,The creation has changed. Select it again.,普通文本,BetterBeads/Runtime/WorkshopService.cs:181
+copy.WorkshopService.69cf0b7f7f,"Requirements are not met, or the reward was already claimed.",普通文本,BetterBeads/Runtime/WorkshopService.cs:183
+copy.WorkshopService.bf9af65604,You need 2 Iron Bars and 1 Coal in your backpack. Nothing was consumed.,普通文本,BetterBeads/Runtime/WorkshopService.cs:196
+copy.WorkshopService.4b4e096c66,The creation to deliver is missing.,普通文本,BetterBeads/Runtime/WorkshopService.cs:199
+copy.WorkshopService.1040839e38,You have reached the money limit.,普通文本,BetterBeads/Runtime/WorkshopService.cs:201
+copy.WorkshopService.3992eadbda,Inventory or quest state has changed. Nothing was consumed.,普通文本,BetterBeads/Runtime/WorkshopService.cs:206
+copy.WorkshopService.48d77769e1,Reward claimed. The journal will be restored on the next load: ,普通文本,BetterBeads/Runtime/WorkshopService.cs:214
+copy.WorkshopService.1de9cef50a,Delivery complete!,普通文本,BetterBeads/Runtime/WorkshopService.cs:215
+copy.WorkshopService.07bfc1a615,Save your game normally.,普通文本,BetterBeads/Runtime/WorkshopService.cs:215
+copy.WorkshopService.9a9d2f976f,Bead commission submission failed: ,普通文本,BetterBeads/Runtime/WorkshopService.cs:225
+copy.WorkshopService.f96e66d40b,"Delivery failed. Items, money, and progress from this attempt were restored.",普通文本,BetterBeads/Runtime/WorkshopService.cs:225
+copy.WorkshopService.36f33adaf0,Confirm,普通文本,BetterBeads/Runtime/WorkshopService.cs:230
+copy.WorkshopService.2cd0f3be87,Cancel,普通文本,BetterBeads/Runtime/WorkshopService.cs:230
+copy.WorkshopService.9b7840c523,You haven't unlocked a matching pattern yet. Draw your own at the workbench.,普通文本,BetterBeads/Runtime/WorkshopService.cs:235
+copy.WorkshopService.b8930ff10f,"Unlocked reference ""{0}"": {1}",复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopService.cs:236
+copy.WorkshopService.f0394d1d2f, wool beads.,普通文本,BetterBeads/Runtime/WorkshopService.cs:237
+copy.WorkshopService.cf14945c04, ordinary beads.,普通文本,BetterBeads/Runtime/WorkshopService.cs:237
+copy.WorkshopService.f3845e99a7,{0} needs one {1} with at least {2} beads per view.,复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopService.cs:238
+copy.WorkshopService.4ddaafff3d,Reward: {0}g and 75 friendship. Refreshes in {1} days.,复合占位符 {0}/{1},BetterBeads/Runtime/WorkshopService.cs:239
+copy.WorkshopService.f739df57b1,"The reward is fixed; larger designs, more beads, or expensive materials do not increase it.",普通文本,BetterBeads/Runtime/WorkshopService.cs:240
+copy.WorkshopService.cac14c7743,Robin,普通文本,BetterBeads/Runtime/WorkshopService.cs:242
+copy.WorkshopService.b15b0623b2,Clint,普通文本,BetterBeads/Runtime/WorkshopService.cs:242
+copy.WorkshopService.ddd49ff6f8,Emily,普通文本,BetterBeads/Runtime/WorkshopService.cs:242
+copy.WorkshopService.3f3584edcb,Gus,普通文本,BetterBeads/Runtime/WorkshopService.cs:242
+copy.WorkshopService.38468be9cf,Marlon,普通文本,BetterBeads/Runtime/WorkshopService.cs:242
+copy.WorkshopService.82489aee02,bead hat,普通文本,BetterBeads/Runtime/WorkshopService.cs:243
+copy.WorkshopService.f0ed5fbca3,shirt,普通文本,BetterBeads/Runtime/WorkshopService.cs:243
+copy.WorkshopService.55511e2b93,pants,普通文本,BetterBeads/Runtime/WorkshopService.cs:243
+copy.WorkshopService.e57f49ca9c,chair,普通文本,BetterBeads/Runtime/WorkshopService.cs:243
+copy.WorkshopService.306de54769,table,普通文本,BetterBeads/Runtime/WorkshopService.cs:243
+copy.WorkshopService.24f7873c62,statue,普通文本,BetterBeads/Runtime/WorkshopService.cs:243
+copy.WorkshopService.e457813606,bead art,普通文本,BetterBeads/Runtime/WorkshopService.cs:243
+copy.WorkshopService.cb08044c2d,ornament,普通文本,BetterBeads/Runtime/WorkshopService.cs:243
+simple.sword,Bead sword,普通文本,
+simple.dagger,Bead dagger,普通文本,
+simple.hammer,Bead hammer,普通文本,
+simple.ornament,Bead ornament,普通文本,
+simple.weapons,Bead weapons,普通文本,
+simple.dagger-short,Dagger,普通文本,
+simple.hammer-short,Hammer,普通文本,
+simple.ornament-short,Ornament,普通文本,
+simple.ornament-small,Small · 16×16px / 1×1 tile,普通文本,
+simple.ornament-large,Large · 32×32px / variable footprint,普通文本,
+simple.picture,Wall art,普通文本,
+simple.saved,Design saved,普通文本,
+simple.name-new,Name your design,普通文本,
+simple.name-confirm,Continue,普通文本,
+simple.name-length,Enter a design name of 1–24 characters.,普通文本,
+simple.choose-metal,"Choose copper, iron, or iridium first.",普通文本,
+simple.picture-tool,Art,普通文本,
+simple.sword-tool,Sword,普通文本,
+simple.supply-tab,Colors & costs,普通文本,
+simple.paint,Place,普通文本,
+simple.erase,Erase,普通文本,
+simple.undo,Undo,普通文本,
+simple.redo,Redo,普通文本,
+simple.clear,Clear,普通文本,
+simple.save,Save,普通文本,
+simple.make,Fuse,普通文本,
+simple.close,Close,普通文本,
+simple.clear-confirm,Clear this canvas? You can undo this.,普通文本,
+simple.cancel,Cancel,普通文本,
+simple.switch-confirm,This design has unsaved changes. Save first?,普通文本,
+simple.switch-trim,{0} edge beads will be cropped. You can undo this.,普通文本,
+simple.switch-keep-center,Keep center,普通文本,
+simple.save-switch,Save & switch,普通文本,
+simple.discard-switch,Discard & switch,普通文本,
+simple.empty,Place beads to start crafting.,普通文本,
+simple.creative,Creative mode · Free,普通文本,
+simple.no-space,Free an inventory slot.,普通文本,
+simple.owned,Available,普通文本,
+simple.missing,Missing,普通文本,
+simple.dye,Bead colors,普通文本,
+simple.damage,Damage,普通文本,
+simple.confirm,Fuse item,普通文本,
+simple.free,Free,普通文本,
+simple.search,Search designs,普通文本,
+simple.open,Open,普通文本,
+simple.rename,Rename,普通文本,
+simple.copy,Copy,普通文本,
+simple.copy-suffix, copy,普通文本,
+simple.delete,Delete,普通文本,
+simple.no-designs,No designs yet. Create your first one!,普通文本,
+simple.delete-confirm,Delete this design? Existing items are kept.,普通文本,
+simple.confirm-short,Confirm,普通文本,
+simple.save-first,Save your current changes first.,普通文本,
+simple.updated,Design updated,普通文本,
+simple.conflict,The record has changed. Select it again.,普通文本,
+simple.made-saved,Crafted!,普通文本,
+simple.received,New bead creation!,普通文本,
+simple.done,Done,普通文本,
+simple.item.(O)388,Wood,普通文本,
+simple.item.(O)334,Copper Bar,普通文本,
+simple.item.(O)335,Iron Bar,普通文本,
+simple.item.(O)337,Iridium Bar,普通文本,
+simple.metal.copper,Copper,普通文本,
+simple.metal.iron,Iron,普通文本,
+simple.metal.iridium,Iridium,普通文本,
+simple.category-select,Type,普通文本,
+simple.size-select,Size,普通文本,
+simple.library-title,My designs,普通文本,
+simple.back-to-editor,Back to workbench,普通文本,
+simple.needle,Place,普通文本,
+simple.tweezers,Erase,普通文本,
+simple.clear-canvas,Clear,普通文本,
+simple.estimated,Cost: ,普通文本,
+simple.units-available,; available: ,普通文本,
+simple.unit,items,普通文本,
+simple.picture-category,Bead art,普通文本,
+simple.reset-all-colors,Reset 20 colors,普通文本,
+simple.picker,Eyedropper,普通文本,
+simple.pick-prompt,Click a bead on the canvas to pick its color.,普通文本,
+simple.pick-filled,Choose a placed bead on the canvas.,普通文本,
+simple.color-picked,Color picked,普通文本,
+simple.template-badge,Template,普通文本,
+simple.template-missing,Could not read game texture: ,普通文本,
+simple.template-delete-confirm,Hide this template in this save?,普通文本,
+simple.template-delete-note,Your copies will not be affected.,普通文本,
+simple.template-hidden,Template hidden in this save,普通文本,
+simple.template.white-chicken,White Chicken,普通文本,
+simple.template.junimo,Junimo,普通文本,
+simple.template.stardrop,Stardrop,普通文本,
+simple.template.galaxy-sword,Galaxy Sword,普通文本,
+simple.import-reference,Import image,普通文本,
+simple.import-title,Import image,普通文本,
+simple.import-back,Back to designs,普通文本,
+simple.import-choose-file,Choose image,普通文本,
+simple.import-folder,Browse imports,普通文本,
+simple.import-folder-hint,Place PNG or JPG files in the mod's imports folder.,普通文本,
+simple.import-picker-fallback,File picker unavailable. Use the imports folder.,普通文本,
+simple.import-invalid,"Cannot read this image. Limits: 20 MB, 4096px per side, 16 million pixels.",普通文本,
+simple.import-conversion-error,Cannot create a design. Adjust the import settings.,普通文本,
+simple.import-result,Result,普通文本,
+simple.import-source,Original,普通文本,
+simple.import-beads,beads,普通文本,
+simple.import-restored,Pixels restored,普通文本,
+simple.import-reduced,Resized,普通文本,
+simple.import-restore,Restore pixels,普通文本,
+simple.import-background,Remove background,普通文本,
+simple.import-tolerance,Tolerance,普通文本,
+simple.import-outline,Soft outline,普通文本,
+simple.import-options-back,View result,普通文本,
+simple.import-category,Type,普通文本,
+simple.import-size,Size,普通文本,
+simple.import-options,Settings,普通文本,
+simple.import-alpha-note,Semi-transparent pixels become solid beads.,普通文本,
+simple.import-cancel,Cancel,普通文本,
+simple.import-apply,Edit design,普通文本,
+simple.import-picture,Art,普通文本,
+simple.import-ornament,Ornament,普通文本,
+simple.import-sword,Sword,普通文本,
+simple.import-dagger,Dagger,普通文本,
+simple.import-hammer,Hammer,普通文本,
+simple.import-folder-error,Cannot create the imports folder. Check installation permissions.,普通文本,
+simple.import-opaque-note,No transparency. Try removing a plain background in settings.,普通文本,
+simple.import-waiting,Waiting for an image…,普通文本,
+feedback.reduced,Reduce motion,普通文本,
+feedback.hover,Button hover sounds,普通文本,
+feedback.click,Button click sounds,普通文本,
+feedback.bead,Bead placement sounds,普通文本,
+feedback.success,Crafting success sound,普通文本,
+simple.fit,Fit canvas,普通文本,
+simple.place-first,Place at least one bead first.,普通文本,
+simple.missing-raw,Need {0} more {1}.,普通文本,
+simple.no-output-space,Your backpack cannot receive the item. Free some space.,普通文本,
+simple.pan-hint,Pan canvas · Home to fit,普通文本,
+simple.import-generating,Generating…,普通文本,
+simple.received-native,You made {0}!,普通文本,
+simple.received-damage,Damage: {0}–{1},普通文本,
+simple.received-saved,Added to your backpack.,普通文本,
+simple.made,Crafted!,普通文本,
+simple.already-exists,Matching design already exists: ,普通文本,
+simple.common-colors,Tray colors,普通文本,
+simple.artwork-colors,Work colors,普通文本,
+simple.beads,beads,普通文本,
+simple.no-artwork-colors,No beads on the canvas yet.,普通文本,
+simple.selected-color,Current color,普通文本,
+simple.affected-beads,beads · MARD,普通文本,
+simple.mard-short,MARD reference,普通文本,
+simple.replace-color,Replace color,普通文本,
+simple.palette-only,Changes tray colors only,普通文本,
+simple.palette-no-repaint,Does not repaint your design,普通文本,
+simple.back-colors,Back to colors,普通文本,
+simple.cancel-replacement,Cancel replacement,普通文本,
+simple.reset-slot,Reset color,普通文本,
+simple.previous-page,Previous,普通文本,
+simple.next-page,Next,普通文本,
+simple.apply-replacement,Apply replacement,普通文本,
+simple.use-paint-color,Use for painting,普通文本,
+simple.save-colors,Save tray colors,普通文本,
+simple.scene-title,Product preview,普通文本,
+simple.scene-person,Character scale reference,普通文本,
+simple.scene-footprint,Footprint,普通文本,
+simple.tiles,tiles,普通文本,
+simple.scene-unavailable,Scene unavailable; showing a scale grid.,普通文本,
+simple.scene-note,Scale preview · 16px per tile · No items placed,普通文本,
+simple.scene-fit,Fit scene,普通文本,
+simple.scene-detail,Zoom in,普通文本,
+simple.filter-sort,Filter & sort,普通文本,
+simple.scene-open,Click to preview size and footprint.,普通文本,
+simple.no-matches,No matching designs,普通文本,
+simple.all-kinds,All,普通文本,
+simple.sword-short,Sword,普通文本,
+simple.favorites-only,Favorites only,普通文本,
+simple.sort-recent,Sort: recent,普通文本,
+simple.sort-name,Sort: name,普通文本,
+simple.mard-fallback-short,MARD 20 fallback,普通文本,
+simple.beads-short,beads,普通文本,
+simple.paint-with-color,Use color,普通文本,
+simple.reset-color-short,Reset,普通文本,
+simple.reset-default-short,Defaults,普通文本,
+simple.apply-color-short,Apply,普通文本,
+simple.save-colors-short,Save colors,普通文本,
+simple.open-design-title,Open design,普通文本,
+simple.open-design-hint,"Edit this record, or start a separate design.",普通文本,
+simple.edit-original,Edit original,普通文本,
+simple.create-from-design,Create new from this,普通文本,
+simple.cost-summary,Cost: {0} × {1}; available: {2}.,普通文本,
+simple.category-label,Type: {0},普通文本,
+simple.size-label,Size: {0}×{1}px,普通文本,
+simple.metal-short.copper,Cu,普通文本,
+simple.metal-short.iron,Fe,普通文本,
+simple.metal-short.iridium,Ir,普通文本,
+simple.share,Share,普通文本,
+simple.share-title,Export and import designs,普通文本,
+simple.share-copy,Copy selected design code,普通文本,
+simple.share-chart,Export color chart,普通文本,
+simple.share-paste,Import code from clipboard,普通文本,
+simple.share-copied,Design code copied,普通文本,
+simple.share-code-file,Clipboard unavailable; code saved in exports,普通文本,
+simple.share-chart-saved,Color chart saved in exports,普通文本,
+simple.share-invalid,No valid bead design code on clipboard,普通文本,
+simple.share-error,Export failed; check the design or file access,普通文本,
+simple.share-hint,Edit after import; name it when saving. Codes are approximate.,普通文本,
+bench.unlock-mail,"Hello, farmer!^^Hey, if you like making bead art... I've got a new Bead Workbench recipe in stock. Come take a look!^^—Robin",普通文本,
+bench.unlock-mail-title,Robin's new recipe,普通文本,
+simple.speed-short,Speed,普通文本,
+simple.reach-short,Reach,普通文本,
+simple.sword-orientation,Swing direction,普通文本,
+simple.sword-diagonal,Original,普通文本,
+simple.sword-vertical,Vertical mode,普通文本,
+simple.template.sebastian,Sebastian · Standing,普通文本,
+market.unknown,Price revealed after crafting,普通文本,
+market.final-price,Sale price: {0}g,普通文本,
+market.creative-price,Creative artwork · Sale price: 1g,普通文本,
+market.collector-note,A mysterious art collector admires this piece!,普通文本,
+market.collector-short,Collector's treasure,普通文本,
+market.mail-intro,Word of your bead creations reached me:,普通文本,
+market.mail-work,{0} — {1}g,普通文本,
+market.mail-ending,Their appraised values are now attached to the pieces. I await your next creation.^^— A Mysterious Art Collector,普通文本,
+market.mail-title,A collector's letter,普通文本,
+gift.confirm-title,Give {0} to {1}?,普通文本,
+gift.confirm-price,Appraised at {0}g · This gift cannot be reclaimed,普通文本,
+gift.cancel,Cancel,普通文本,
+gift.confirm,Give painting,普通文本,
+gift.received,{0} accepted your painting.,普通文本,
+gift.inspect,{0} — a gift from {1},普通文本,
+online.waiting,"Syncing, please wait…",普通文本,
+online.split,Split-screen is not supported yet.,普通文本,
+online.version,Online mode is not ready. All players need the same RC7 version.,普通文本,
+online.session,The workbench is no longer available. Please reopen it.,普通文本,
+online.occupied,Another player is using this workbench.,普通文本,
+online.data,Sync failed. Existing data was kept.,普通文本,
+simple.unchanged,No changes to save.,普通文本,
+simple.draft-unsaved,Design not saved. You can continue at the workbench during this session.,普通文本,
+product.ornament,Bead Ornament,普通文本,
+online.settings,The host changed Creative Mode. Please confirm the craft again.,普通文本,

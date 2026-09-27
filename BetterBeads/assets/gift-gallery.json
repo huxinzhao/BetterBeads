@@ -1,0 +1,19 @@
+{
+  "Homes": [
+    {"Location":"ScienceHouse","Villagers":["Robin","Demetrius","Maru","Sebastian"]},
+    {"Location":"SeedShop","Villagers":["Pierre","Caroline","Abigail"]},
+    {"Location":"AnimalShop","Villagers":["Marnie","Shane","Jas"]},
+    {"Location":"HaleyHouse","Villagers":["Haley","Emily"]},
+    {"Location":"SamHouse","Villagers":["Jodi","Kent","Sam","Vincent"]},
+    {"Location":"JoshHouse","Villagers":["Alex","Evelyn","George"]},
+    {"Location":"Trailer","Villagers":["Pam","Penny"]},
+    {"Location":"LeahHouse","Villagers":["Leah"]},
+    {"Location":"ElliottHouse","Villagers":["Elliott"]},
+    {"Location":"HarveyRoom","Villagers":["Harvey"]},
+    {"Location":"FishShop","Villagers":["Willy"]},
+    {"Location":"Saloon","Villagers":["Gus"]},
+    {"Location":"Blacksmith","Villagers":["Clint"]},
+    {"Location":"ManorHouse","Villagers":["Lewis"]},
+    {"Location":"WizardHouse","Villagers":["Wizard"]}
+  ]
+}

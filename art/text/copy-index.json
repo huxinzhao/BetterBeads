@@ -1,0 +1,1256 @@
+[
+  {
+    "Key": "copy.ModEntry.15c24010a9",
+    "Text": "服装配置无法读取，保留文件并使用默认值：",
+    "File": "BetterBeads/ModEntry.cs",
+    "Line": 31
+  },
+  {
+    "Key": "copy.ModEntry.3c7101906f",
+    "Text": "服装预算无效，使用默认值。",
+    "File": "BetterBeads/ModEntry.cs",
+    "Line": 32
+  },
+  {
+    "Key": "copy.ModEntry.d42d13e93b",
+    "Text": "服装预算已更新为0.16默认值，自定义预算保留。",
+    "File": "BetterBeads/ModEntry.cs",
+    "Line": 36
+  },
+  {
+    "Key": "copy.ReferencePatterns.8124f7e843",
+    "Text": "土豆苗小花园",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 11
+  },
+  {
+    "Key": "copy.ReferencePatterns.d52502a3d1",
+    "Text": "josehzz · CC0 改编",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 11
+  },
+  {
+    "Key": "copy.ReferencePatterns.d754e8556f",
+    "Text": "草莓暖心木牌",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 12
+  },
+  {
+    "Key": "copy.ReferencePatterns.d52502a3d1",
+    "Text": "josehzz · CC0 改编",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 12
+  },
+  {
+    "Key": "copy.ReferencePatterns.5050ca5e35",
+    "Text": "林中木屋",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 13
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 13
+  },
+  {
+    "Key": "copy.ReferencePatterns.25b401d17e",
+    "Text": "花园木椅",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 14
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 14
+  },
+  {
+    "Key": "copy.ReferencePatterns.ed1c8e3992",
+    "Text": "向日葵草帽",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 15
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 15
+  },
+  {
+    "Key": "copy.ReferencePatterns.8143a29679",
+    "Text": "叶纹围裙",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 16
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 16
+  },
+  {
+    "Key": "copy.ReferencePatterns.0305d857d8",
+    "Text": "铜叶短刃",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 17
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 17
+  },
+  {
+    "Key": "copy.ReferencePatterns.51a2e36e01",
+    "Text": "绯红护手剑",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 18
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 18
+  },
+  {
+    "Key": "copy.ReferencePatterns.f57cd083e5",
+    "Text": "晶簇重锤",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 19
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 19
+  },
+  {
+    "Key": "copy.ReferencePatterns.e745b040dd",
+    "Text": "炼炉木牌",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 20
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 20
+  },
+  {
+    "Key": "copy.ReferencePatterns.49c131fbe8",
+    "Text": "冒险家徽记",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 21
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 21
+  },
+  {
+    "Key": "copy.ReferencePatterns.b6aded70ba",
+    "Text": "星光守卫剑",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 22
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 22
+  },
+  {
+    "Key": "copy.ReferencePatterns.f77f40736b",
+    "Text": "春日花束",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 23
+  },
+  {
+    "Key": "copy.ReferencePatterns.d52502a3d1",
+    "Text": "josehzz · CC0 改编",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 23
+  },
+  {
+    "Key": "copy.ReferencePatterns.4e0243d194",
+    "Text": "新芽盆栽",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 24
+  },
+  {
+    "Key": "copy.ReferencePatterns.d52502a3d1",
+    "Text": "josehzz · CC0 改编",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 24
+  },
+  {
+    "Key": "copy.ReferencePatterns.6cc00ad125",
+    "Text": "潮汐贝壳",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 25
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 25
+  },
+  {
+    "Key": "copy.ReferencePatterns.f4339c659f",
+    "Text": "海风茶桌",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 26
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 26
+  },
+  {
+    "Key": "copy.ReferencePatterns.0e4568fae5",
+    "Text": "丰收南瓜",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 27
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 27
+  },
+  {
+    "Key": "copy.ReferencePatterns.45a4a7f7cf",
+    "Text": "秋叶补丁裤",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 28
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 28
+  },
+  {
+    "Key": "copy.ReferencePatterns.364e8a3a60",
+    "Text": "冬夜星灯",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 29
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 29
+  },
+  {
+    "Key": "copy.ReferencePatterns.b45675acdd",
+    "Text": "围巾雪人",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 30
+  },
+  {
+    "Key": "copy.ReferencePatterns.5c77248021",
+    "Text": "BetterBeads · 原创重绘",
+    "File": "BetterBeads/Data/ReferencePatterns.cs",
+    "Line": 30
+  },
+  {
+    "Key": "copy.SpecialEffects.50078dca31",
+    "Text": "红宝石：伤害 +{0:0.##}%",
+    "File": "BetterBeads/Data/SpecialEffects.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.SpecialEffects.ba32a2d6c7",
+    "Text": "翡翠：实际伤害吸血 {0:0.##}%",
+    "File": "BetterBeads/Data/SpecialEffects.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.SpecialEffects.a7bdbe8d5c",
+    "Text": "紫水晶：击退 +{0:0.##}%",
+    "File": "BetterBeads/Data/SpecialEffects.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.WorkshopGuidance.70994f61d2",
+    "Text": "春季首次完成委托",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 8
+  },
+  {
+    "Key": "copy.WorkshopGuidance.375980e82c",
+    "Text": "夏季首次完成委托",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 8
+  },
+  {
+    "Key": "copy.WorkshopGuidance.a8e81634b7",
+    "Text": "秋季首次完成委托",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 9
+  },
+  {
+    "Key": "copy.WorkshopGuidance.972021ec66",
+    "Text": "冬季首次完成委托",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 9
+  },
+  {
+    "Key": "copy.WorkshopGuidance.aa358f4c84",
+    "Text": "入门图纸",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 10
+  },
+  {
+    "Key": "copy.WorkshopGuidance.9520f858c0",
+    "Text": "酒馆想添一幅新芽或花束挂画，迎接春日的客人。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 15
+  },
+  {
+    "Key": "copy.WorkshopGuidance.ec37c904d3",
+    "Text": "格斯想用海浪、贝壳或水果图案给酒馆添点凉意。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 15
+  },
+  {
+    "Key": "copy.WorkshopGuidance.be1d442aea",
+    "Text": "格斯想用南瓜、落叶或丰收图案装点酒馆。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 15
+  },
+  {
+    "Key": "copy.WorkshopGuidance.2d1624e06f",
+    "Text": "格斯想用星灯、雪景或暖色挂画装点冬日酒馆。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 15
+  },
+  {
+    "Key": "copy.WorkshopGuidance.d2cea8d80d",
+    "Text": "艾米丽正在搭配春游装，花朵和嫩叶都是好灵感。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 16
+  },
+  {
+    "Key": "copy.WorkshopGuidance.581d226c89",
+    "Text": "艾米丽想尝试夏日穿搭，可以用海风或向日葵配色。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 16
+  },
+  {
+    "Key": "copy.WorkshopGuidance.b3d29fd9a6",
+    "Text": "艾米丽正在搭配秋装，补丁、落叶和暖色都很合适。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 16
+  },
+  {
+    "Key": "copy.WorkshopGuidance.1845b2cc77",
+    "Text": "艾米丽想设计冬日穿搭，可以尝试雪花或星光配色。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 16
+  },
+  {
+    "Key": "copy.WorkshopGuidance.54ed104cd4",
+    "Text": "罗宾想给春日小屋添一件手作，可以尝试花园或林木主题。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 17
+  },
+  {
+    "Key": "copy.WorkshopGuidance.f92e9c6840",
+    "Text": "罗宾想布置夏日休憩角，可以尝试海滨或清凉的绿叶主题。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 17
+  },
+  {
+    "Key": "copy.WorkshopGuidance.04bc35bce3",
+    "Text": "罗宾想布置收获季小屋，可以尝试南瓜、木纹或秋叶主题。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 17
+  },
+  {
+    "Key": "copy.WorkshopGuidance.11160ff5aa",
+    "Text": "罗宾想布置冬日小屋，可以尝试雪人、松枝或温暖灯火主题。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 17
+  },
+  {
+    "Key": "copy.WorkshopGuidance.77a67a64ab",
+    "Text": "主题仅供灵感，图案和配色由你决定。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 18
+  },
+  {
+    "Key": "copy.WorkshopGuidance.7eea797f56",
+    "Text": "制作固定消耗{0}颗羊毛豆（所有方向合计）；羊毛或布料可自动折算。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 34
+  },
+  {
+    "Key": "copy.WorkshopGuidance.a617273f6e",
+    "Text": "制作至少消耗{0}颗普通豆；按实际图案与结构预算中较高者计费。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 35
+  },
+  {
+    "Key": "copy.WorkshopGuidance.c5c6c80378",
+    "Text": "16格和32格画均可交付，精细画按实际豆数收费。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 36
+  },
+  {
+    "Key": "copy.WorkshopGuidance.3c1e31a193",
+    "Text": "金",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 43
+  },
+  {
+    "Key": "copy.WorkshopGuidance.6305279d5c",
+    "Text": "友好度",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 43
+  },
+  {
+    "Key": "copy.WorkshopGuidance.207cd83136",
+    "Text": "图纸：",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 47
+  },
+  {
+    "Key": "copy.WorkshopGuidance.ea4f1d6156",
+    "Text": "单特效槽",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.WorkshopGuidance.e02e6e9a0b",
+    "Text": "熔炉精炼",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.WorkshopGuidance.fcbe6ab764",
+    "Text": "双特效槽",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.WorkshopGuidance.483b4c3034",
+    "Text": "银河之魂强化",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.WorkshopGuidance.e4d3ccb6bd",
+    "Text": "工艺：",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 50
+  },
+  {
+    "Key": "copy.WorkshopGuidance.5f7d6a1c5a",
+    "Text": "每七日自动委托",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 51
+  },
+  {
+    "Key": "copy.WorkshopGuidance.de4ff756af",
+    "Text": "奖励：",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 52
+  },
+  {
+    "Key": "copy.WorkshopGuidance.e23b1efff6",
+    "Text": "当期委托已写入日志；明天留意艾米丽和克林特的来信。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 56
+  },
+  {
+    "Key": "copy.WorkshopGuidance.a82a468b30",
+    "Text": "后续刷新可能出现服装委托；现有委托保持不变。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 57
+  },
+  {
+    "Key": "copy.WorkshopGuidance.69c425e14f",
+    "Text": "现在可以为武器选择一种宝石特效；明天留意耐热试验来信。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 58
+  },
+  {
+    "Key": "copy.WorkshopGuidance.0f3f2c01db",
+    "Text": "在武器的更多菜单取豆，再用熔炉精炼；明天开始马龙的实战任务。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 59
+  },
+  {
+    "Key": "copy.WorkshopGuidance.4be06764ef",
+    "Text": "可尝试两种宝石搭配；银河之魂强化仍需取得原生稀有材料。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 60
+  },
+  {
+    "Key": "copy.WorkshopGuidance.2dee012cc1",
+    "Text": "本期委托已完成，下个七日周期自动刷新。新图纸可在参考图纸中复制。",
+    "File": "BetterBeads/Data/WorkshopGuidance.cs",
+    "Line": 61
+  },
+  {
+    "Key": "copy.WorkshopProgress.777725ec2a",
+    "Text": "第一件手作",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 103
+  },
+  {
+    "Key": "copy.WorkshopProgress.f27727ce2b",
+    "Text": "罗宾想为工坊添一幅拼豆画。交付一幅至少32颗豆的拼豆画；图案和配色由你决定。完成后开放每周委托，获得两张图纸。",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 103
+  },
+  {
+    "Key": "copy.WorkshopProgress.1ce470add2",
+    "Text": "把作品穿出去",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 104
+  },
+  {
+    "Key": "copy.WorkshopProgress.77eb23335f",
+    "Text": "艾米丽想看看你的穿搭。交付一顶四向完整、每向至少8颗豆的拼豆帽。完成后开放服装委托，获得两张图纸。",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 104
+  },
+  {
+    "Key": "copy.WorkshopProgress.7cba4bfc85",
+    "Text": "金属也能拼",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 105
+  },
+  {
+    "Key": "copy.WorkshopProgress.bfc5cc0712",
+    "Text": "向克林特展示一件铜、铁及其精炼豆合计至少占60%的拼豆武器。武器检测后归还。完成后开放一个特效槽，获得两张图纸。",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 105
+  },
+  {
+    "Key": "copy.WorkshopProgress.66414afe62",
+    "Text": "耐热试验",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 106
+  },
+  {
+    "Key": "copy.WorkshopProgress.b4dfdb1f78",
+    "Text": "克林特准备测试拼豆的耐热性。交付2铁锭和1煤炭，学习用熔炉精炼并获得两张图纸。",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 106
+  },
+  {
+    "Key": "copy.WorkshopProgress.7c4f80c0b5",
+    "Text": "真正派上用场",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 107
+  },
+  {
+    "Key": "copy.WorkshopProgress.4e9bd301cd",
+    "Text": "用非创造模式拼豆武器击败10只怪物，再向马龙报告。开启双特效与银河之魂强化，并获得两张图纸。",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 107
+  },
+  {
+    "Key": "copy.WorkshopProgress.2d9993166d",
+    "Text": "春日新芽",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 121
+  },
+  {
+    "Key": "copy.WorkshopProgress.1039824c5a",
+    "Text": "夏日海风",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 121
+  },
+  {
+    "Key": "copy.WorkshopProgress.3d1710d2c9",
+    "Text": "秋日收获",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 121
+  },
+  {
+    "Key": "copy.WorkshopProgress.2b133801cf",
+    "Text": "冬日星光",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 121
+  },
+  {
+    "Key": "copy.WorkshopProgress.f93cb12e8e",
+    "Text": " · 家居",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 122
+  },
+  {
+    "Key": "copy.WorkshopProgress.10be1dfa0f",
+    "Text": " · 酒馆挂画",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 123
+  },
+  {
+    "Key": "copy.WorkshopProgress.48f9d29ee0",
+    "Text": " · 穿搭",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 126
+  },
+  {
+    "Key": "copy.WorkshopProgress.28509538a0",
+    "Text": " · 小摆件",
+    "File": "BetterBeads/Data/WorkshopProgress.cs",
+    "Line": 128
+  },
+  {
+    "Key": "copy.ArtResources.16e7a38c73",
+    "Text": "国Ag",
+    "File": "BetterBeads/Runtime/ArtResources.cs",
+    "Line": 187
+  },
+  {
+    "Key": "copy.ArtResources.16e7a38c73",
+    "Text": "国Ag",
+    "File": "BetterBeads/Runtime/ArtResources.cs",
+    "Line": 205
+  },
+  {
+    "Key": "copy.EditorPanel.5e8ad223a1",
+    "Text": "花卉／硬木取料：",
+    "File": "BetterBeads/Runtime/EditorPanel.cs",
+    "Line": 641
+  },
+  {
+    "Key": "copy.EditorPanel.ce7ef28b67",
+    "Text": "允许",
+    "File": "BetterBeads/Runtime/EditorPanel.cs",
+    "Line": 641
+  },
+  {
+    "Key": "copy.EditorPanel.0f810a7901",
+    "Text": "保护",
+    "File": "BetterBeads/Runtime/EditorPanel.cs",
+    "Line": 641
+  },
+  {
+    "Key": "copy.EditorPanel.16e7a38c73",
+    "Text": "国Ag",
+    "File": "BetterBeads/Runtime/EditorPanel.cs",
+    "Line": 690
+  },
+  {
+    "Key": "copy.LibraryPanel.8d2f193af5",
+    "Text": "图纸筛选",
+    "File": "BetterBeads/Runtime/LibraryPanel.cs",
+    "Line": 73
+  },
+  {
+    "Key": "copy.LibraryPanel.680a7c62bf",
+    "Text": "参考图纸可预览并复制为独立作品。",
+    "File": "BetterBeads/Runtime/LibraryPanel.cs",
+    "Line": 73
+  },
+  {
+    "Key": "copy.LibraryPanel.ed3c1ec8a1",
+    "Text": "参考图纸",
+    "File": "BetterBeads/Runtime/LibraryPanel.cs",
+    "Line": 75
+  },
+  {
+    "Key": "copy.LibraryPanel.235192b989",
+    "Text": "我的图纸 · 全部类型",
+    "File": "BetterBeads/Runtime/LibraryPanel.cs",
+    "Line": 76
+  },
+  {
+    "Key": "copy.ManufacturingService.34f97298fc",
+    "Text": "熨烫提交失败：",
+    "File": "BetterBeads/Runtime/ManufacturingService.cs",
+    "Line": 118
+  },
+  {
+    "Key": "copy.MaterialPreparationService.b2cc1a7f40",
+    "Text": "拼豆备料失败：",
+    "File": "BetterBeads/Runtime/MaterialPreparationService.cs",
+    "Line": 53
+  },
+  {
+    "Key": "copy.PatternDetailMenu.a12f190d18",
+    "Text": "看成品",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 31
+  },
+  {
+    "Key": "copy.PatternDetailMenu.7d27cae3ba",
+    "Text": "看豆盘",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 31
+  },
+  {
+    "Key": "copy.PatternDetailMenu.740f5e8102",
+    "Text": "正面",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.PatternDetailMenu.1cf1d4d0b2",
+    "Text": "右侧",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.PatternDetailMenu.6a24b14f33",
+    "Text": "左侧",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.PatternDetailMenu.2d270b6ce4",
+    "Text": "背面",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.PatternDetailMenu.00c615f156",
+    "Text": "尺寸  ",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 59
+  },
+  {
+    "Key": "copy.PatternDetailMenu.69b317b50b",
+    "Text": " · 占地2×2格",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 59
+  },
+  {
+    "Key": "copy.PatternDetailMenu.2ae572a36a",
+    "Text": "方向  ",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 59
+  },
+  {
+    "Key": "copy.PatternDetailMenu.07a5e2fb39",
+    "Text": "预计用料  ",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 60
+  },
+  {
+    "Key": "copy.PatternDetailMenu.da6205e40d",
+    "Text": "羊毛豆 ",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 60
+  },
+  {
+    "Key": "copy.PatternDetailMenu.4a89c0c09b",
+    "Text": "金属豆 ",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 60
+  },
+  {
+    "Key": "copy.PatternDetailMenu.3f404ebe7e",
+    "Text": "普通拼豆 ",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 60
+  },
+  {
+    "Key": "copy.PatternDetailMenu.09901d3de2",
+    "Text": "颗",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 60
+  },
+  {
+    "Key": "copy.PatternDetailMenu.086c3e5a40",
+    "Text": "来源  ",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 61
+  },
+  {
+    "Key": "copy.PatternDetailMenu.e52fd481c4",
+    "Text": "作品豆色",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 68
+  },
+  {
+    "Key": "copy.PatternDetailMenu.cebc46741d",
+    "Text": "已收录 · 可复制后自由改色",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 77
+  },
+  {
+    "Key": "copy.PatternDetailMenu.0f4bdadb99",
+    "Text": "解锁：",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 77
+  },
+  {
+    "Key": "copy.PatternDetailMenu.572cf45ba4",
+    "Text": "返回",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 78
+  },
+  {
+    "Key": "copy.PatternDetailMenu.8d88ff6d6e",
+    "Text": "复制图纸",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 79
+  },
+  {
+    "Key": "copy.PatternDetailMenu.9630b9b14f",
+    "Text": "尚未获得",
+    "File": "BetterBeads/Runtime/PatternDetailMenu.cs",
+    "Line": 79
+  },
+  {
+    "Key": "copy.PlayMode.c892fb6efd",
+    "Text": "允许普通豆消耗花卉与硬木",
+    "File": "BetterBeads/Runtime/PlayMode.cs",
+    "Line": 29
+  },
+  {
+    "Key": "copy.PlayMode.bff4e4ef9a",
+    "Text": "默认关闭。开启后仍会在熨烫确认页列出实际消耗。",
+    "File": "BetterBeads/Runtime/PlayMode.cs",
+    "Line": 29
+  },
+  {
+    "Key": "copy.ReferenceReader.9ff126739c",
+    "Text": "穿戴预览失败：",
+    "File": "BetterBeads/Runtime/ReferenceReader.cs",
+    "Line": 16
+  },
+  {
+    "Key": "copy.ReferenceReader.ea35481ec2",
+    "Text": "读取参考图失败（{0}）：{1}",
+    "File": "BetterBeads/Runtime/ReferenceReader.cs",
+    "Line": 85
+  },
+  {
+    "Key": "copy.RefinementContent.f607114b69",
+    "Text": "熔炉的额外耗材已变更，未添加拼豆精炼配方，以免按错误成本扣料。",
+    "File": "BetterBeads/Runtime/RefinementContent.cs",
+    "Line": 30
+  },
+  {
+    "Key": "copy.RefinementContent.8b41723d1a",
+    "Text": "完成克林特的「耐热试验」后可精炼拼豆。",
+    "File": "BetterBeads/Runtime/RefinementContent.cs",
+    "Line": 49
+  },
+  {
+    "Key": "copy.WeaponPanel.04ea6c801c",
+    "Text": "宝石占比达到20%时收益封顶，超过后不惩罚。当前可选{0}项；高级能力由工坊任务开放。",
+    "File": "BetterBeads/Runtime/WeaponPanel.cs",
+    "Line": 89
+  },
+  {
+    "Key": "copy.WeaponPatches.50078dca31",
+    "Text": "红宝石：伤害 +{0:0.##}%",
+    "File": "BetterBeads/Runtime/WeaponPatches.cs",
+    "Line": 31
+  },
+  {
+    "Key": "copy.WeaponPatches.ba32a2d6c7",
+    "Text": "翡翠：实际伤害吸血 {0:0.##}%",
+    "File": "BetterBeads/Runtime/WeaponPatches.cs",
+    "Line": 32
+  },
+  {
+    "Key": "copy.WeaponPatches.a7bdbe8d5c",
+    "Text": "紫水晶：击退 +{0:0.##}%",
+    "File": "BetterBeads/Runtime/WeaponPatches.cs",
+    "Line": 33
+  },
+  {
+    "Key": "copy.WorkshopMenu.16e7a38c73",
+    "Text": "国Ag",
+    "File": "BetterBeads/Runtime/WorkshopMenu.cs",
+    "Line": 33
+  },
+  {
+    "Key": "copy.WorkshopMenu.ec25e967e0",
+    "Text": "说明 {0}/{1} · 使用下方翻页阅读",
+    "File": "BetterBeads/Runtime/WorkshopMenu.cs",
+    "Line": 41
+  },
+  {
+    "Key": "copy.WorkshopMenu.c9b9ae7a61",
+    "Text": "上一页",
+    "File": "BetterBeads/Runtime/WorkshopMenu.cs",
+    "Line": 59
+  },
+  {
+    "Key": "copy.WorkshopMenu.8a8542f696",
+    "Text": "下一页",
+    "File": "BetterBeads/Runtime/WorkshopMenu.cs",
+    "Line": 59
+  },
+  {
+    "Key": "copy.WorkshopMenu.572cf45ba4",
+    "Text": "返回",
+    "File": "BetterBeads/Runtime/WorkshopMenu.cs",
+    "Line": 59
+  },
+  {
+    "Key": "copy.WorkshopService.9ce221cab6",
+    "Text": "Basic/拼豆委托/制作一件村民需要的作品。/前往委托人处确认并交付作品。/-1//-1//false",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 31
+  },
+  {
+    "Key": "copy.WorkshopService.693902594e",
+    "Text": "你好！^^{0}^^不必赶时间；准备好后带上作品来找我。——{1}[#]{2}",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 36
+  },
+  {
+    "Key": "copy.WorkshopService.bf83011efb",
+    "Text": "新的拼豆委托已写入任务日志。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 53
+  },
+  {
+    "Key": "copy.WorkshopService.3305945ba1",
+    "Text": "拼豆武器击败怪物：{0}/10；向马龙报告。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 61
+  },
+  {
+    "Key": "copy.WorkshopService.4fc545b498",
+    "Text": "向{0}交付：{1}；{2}天后刷新。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 64
+  },
+  {
+    "Key": "copy.WorkshopService.2514a8011f",
+    "Text": " · 拼豆工坊",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 93
+  },
+  {
+    "Key": "copy.WorkshopService.80d0a3e73e",
+    "Text": "可以聊聊拼豆，也可以照常交谈。交付前会再次确认具体物品。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 93
+  },
+  {
+    "Key": "copy.WorkshopService.a651f351bf",
+    "Text": "正常聊天",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 102
+  },
+  {
+    "Key": "copy.WorkshopService.ed3c1ec8a1",
+    "Text": "参考图纸",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 110
+  },
+  {
+    "Key": "copy.WorkshopService.4c88d2acef",
+    "Text": "已收录{0}/{1}张。每个季节首次完成委托可获得两张主题图纸。图纸可复制后自由修改；未获得的主题也可自行手绘。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 110
+  },
+  {
+    "Key": "copy.WorkshopService.a123239f96",
+    "Text": "筛选：已获得 → 查看全部",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 112
+  },
+  {
+    "Key": "copy.WorkshopService.c3719b7af3",
+    "Text": "筛选：全部 → 只看已获得",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 112
+  },
+  {
+    "Key": "copy.WorkshopService.40dadcadbc",
+    "Text": " · 查看",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 116
+  },
+  {
+    "Key": "copy.WorkshopService.b8ac3ee042",
+    "Text": " 当前进度：{0}/10。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 137
+  },
+  {
+    "Key": "copy.WorkshopService.dc708b2721",
+    "Text": "交付2铁锭与1煤炭",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 141
+  },
+  {
+    "Key": "copy.WorkshopService.1d10f02813",
+    "Text": "报告实战结果",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 141
+  },
+  {
+    "Key": "copy.WorkshopService.0b91b690cf",
+    "Text": "背包第{0}格 · {1}",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 147
+  },
+  {
+    "Key": "copy.WorkshopService.3b5924a525",
+    "Text": "背包中没有符合条件的作品",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 149
+  },
+  {
+    "Key": "copy.WorkshopService.9093b5730c",
+    "Text": "委托",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 158
+  },
+  {
+    "Key": "copy.WorkshopService.32f4515785",
+    "Text": "消耗2铁锭、1煤炭",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 159
+  },
+  {
+    "Key": "copy.WorkshopService.bac7cb9fe6",
+    "Text": "报告进度，不消耗物品",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 159
+  },
+  {
+    "Key": "copy.WorkshopService.5dc766584b",
+    "Text": "检测后归还武器",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 159
+  },
+  {
+    "Key": "copy.WorkshopService.f6376fff0c",
+    "Text": "交付并消耗背包第{0}格的作品",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 159
+  },
+  {
+    "Key": "copy.WorkshopService.f33809c1b2",
+    "Text": "状态已变化，请重新确认。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 170
+  },
+  {
+    "Key": "copy.WorkshopService.7bb02fafae",
+    "Text": "请靠近委托人后交付。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 177
+  },
+  {
+    "Key": "copy.WorkshopService.cc3abab942",
+    "Text": "委托人不匹配。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 179
+  },
+  {
+    "Key": "copy.WorkshopService.b7441e3e6e",
+    "Text": "作品已变化，请重新选择。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 181
+  },
+  {
+    "Key": "copy.WorkshopService.69cf0b7f7f",
+    "Text": "尚未满足条件，或奖励已领取。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 183
+  },
+  {
+    "Key": "copy.WorkshopService.bf9af65604",
+    "Text": "背包需要2铁锭和1煤炭；本次没有扣料。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 196
+  },
+  {
+    "Key": "copy.WorkshopService.4b4e096c66",
+    "Text": "缺少交付作品。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 199
+  },
+  {
+    "Key": "copy.WorkshopService.1040839e38",
+    "Text": "金币已达到上限。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 201
+  },
+  {
+    "Key": "copy.WorkshopService.3992eadbda",
+    "Text": "库存或任务状态已变化，本次没有扣料。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 206
+  },
+  {
+    "Key": "copy.WorkshopService.bf83011efb",
+    "Text": "新的拼豆委托已写入任务日志。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 213
+  },
+  {
+    "Key": "copy.WorkshopService.48d77769e1",
+    "Text": "奖励已领取，任务日志将在下次加载恢复：",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 214
+  },
+  {
+    "Key": "copy.WorkshopService.1de9cef50a",
+    "Text": "交付完成！",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 215
+  },
+  {
+    "Key": "copy.WorkshopService.07bfc1a615",
+    "Text": "请正常保存游戏。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 215
+  },
+  {
+    "Key": "copy.WorkshopService.9a9d2f976f",
+    "Text": "拼豆委托提交失败：",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 225
+  },
+  {
+    "Key": "copy.WorkshopService.f96e66d40b",
+    "Text": "交付失败，已恢复本次物品、金币和进度。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 225
+  },
+  {
+    "Key": "copy.WorkshopService.36f33adaf0",
+    "Text": "确认",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 230
+  },
+  {
+    "Key": "copy.WorkshopService.2cd0f3be87",
+    "Text": "取消",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 230
+  },
+  {
+    "Key": "copy.WorkshopService.9b7840c523",
+    "Text": "暂无已获得的对应图纸，可直接在拼豆台手绘。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 235
+  },
+  {
+    "Key": "copy.WorkshopService.b8930ff10f",
+    "Text": "已获得参考「{0}」：{1}颗",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 236
+  },
+  {
+    "Key": "copy.WorkshopService.f0394d1d2f",
+    "Text": "羊毛豆。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 237
+  },
+  {
+    "Key": "copy.WorkshopService.cf14945c04",
+    "Text": "普通豆。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 237
+  },
+  {
+    "Key": "copy.WorkshopService.f3845e99a7",
+    "Text": "{0}需要1件{1}，每个视图至少{2}颗豆。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 238
+  },
+  {
+    "Key": "copy.WorkshopService.4ddaafff3d",
+    "Text": "奖励{0}金和75友好度；{1}天后刷新。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 239
+  },
+  {
+    "Key": "copy.WorkshopService.f739df57b1",
+    "Text": "报酬固定，不随尺寸、豆数或昂贵材料增加。",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 240
+  },
+  {
+    "Key": "copy.WorkshopService.cac14c7743",
+    "Text": "罗宾",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 242
+  },
+  {
+    "Key": "copy.WorkshopService.b15b0623b2",
+    "Text": "克林特",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 242
+  },
+  {
+    "Key": "copy.WorkshopService.ddd49ff6f8",
+    "Text": "艾米丽",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 242
+  },
+  {
+    "Key": "copy.WorkshopService.3f3584edcb",
+    "Text": "格斯",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 242
+  },
+  {
+    "Key": "copy.WorkshopService.38468be9cf",
+    "Text": "马龙",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 242
+  },
+  {
+    "Key": "copy.WorkshopService.82489aee02",
+    "Text": "拼豆帽",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 243
+  },
+  {
+    "Key": "copy.WorkshopService.f0ed5fbca3",
+    "Text": "上衣",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 243
+  },
+  {
+    "Key": "copy.WorkshopService.55511e2b93",
+    "Text": "长裤",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 243
+  },
+  {
+    "Key": "copy.WorkshopService.e57f49ca9c",
+    "Text": "椅子",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 243
+  },
+  {
+    "Key": "copy.WorkshopService.306de54769",
+    "Text": "桌子",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 243
+  },
+  {
+    "Key": "copy.WorkshopService.24f7873c62",
+    "Text": "雕像",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 243
+  },
+  {
+    "Key": "copy.WorkshopService.e457813606",
+    "Text": "拼豆画",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 243
+  },
+  {
+    "Key": "copy.WorkshopService.cb08044c2d",
+    "Text": "摆件",
+    "File": "BetterBeads/Runtime/WorkshopService.cs",
+    "Line": 243
+  }
+]

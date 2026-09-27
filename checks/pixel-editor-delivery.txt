@@ -1,0 +1,9 @@
+Pixel editor direct-save delivery
+Entry: 打开像素编辑器.cmd -> art/start-editor.ps1 -> art/editor.html
+No server or developer runtime required; desktop Edge/Chrome with user-selected folder permission
+16 focused checks passed; actual temporary PNG writes and backups verified through filesystem-handle adapter
+Browser: page render, 42-resource list, 4-direction hat search inspected; zero captured JS errors after final reload
+Native browser folder chooser and permission grant not automated
+Editing package: 123 entries, SHA256 matched sources
+Game DLL remains 0.16.4; no actual artwork, saves or Mods modified
+Temporary localhost preview server stopped

@@ -1,0 +1,14 @@
+0.16.4 Art and copy editing interfaces
+Content checks: 39 passed, 0 failed (--content-editing-only)
+PNG parity: 26 editable views exactly match built-in reference pixels
+Catalog: 42 runtime PNGs, 539 text keys, 209 localized source expressions
+Extraction idempotency: second run added 0 expressions, retained existing translations
+Release build: 0 warnings, 0 errors (missing namespace from initial compile corrected)
+Runtime ZIP: 49 entries; exact whitelist and SHA256 matched current build
+Editing ZIP: 130 entries (includes pixel and text direct-save editors); all entry hashes matched workspace sources
+Game: NOT_RUN; image hot reload and display not tested in game
+No Mods or saves modified; existing pattern IDs and copied designs retained
+Guide: docs/CONTENT_EDITING.md
+Editor follow-up: 16 focused checks; see checks/pixel-editor-delivery.txt
+
+Text editor follow-up: 15 focused checks; browser search/selection/preview passed; see checks/text-editor-delivery.txt

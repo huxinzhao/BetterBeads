@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><TargetFramework>net6.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><PlatformTarget>x64</PlatformTarget>
+    <GamePath Condition="'$(GamePath)' == ''">D:\steam\steamapps\common\Stardew Valley</GamePath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BetterBeads"><HintPath>../../BetterBeads/bin/Current/net6.0/BetterBeads.dll</HintPath><Private>true</Private></Reference>
+    <Reference Include="Stardew Valley"><HintPath>$(GamePath)/Stardew Valley.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

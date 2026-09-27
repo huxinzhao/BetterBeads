@@ -1,0 +1,9 @@
+Version: 0.16.2
+Targeted pattern checks: 28 passed, 0 failed
+Build: 0 warnings, 0 errors
+Runtime package: 23 files; entry, translations and assets verified
+Art package: 81 files; every entry verified against source SHA256
+Added independent Picture32 template; retained Picture16 snapshots and blueprints
+Preview: final art and bead board are switchable; all images marked not game screenshots
+Game: NOT_RUN; no saves or Mods directory modified
+Hashes: checks/release-0.16.2-sha256.txt

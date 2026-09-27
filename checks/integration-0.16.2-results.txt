@@ -1,0 +1,48 @@
+PASS System.Boolean StardewValley.Object::checkForAction(StardewValley.Farmer,System.Boolean)
+PASS System.Int32 StardewValley.Object::salePrice(System.Boolean)
+PASS System.Int32 StardewValley.Object::sellToStorePrice(System.Int64)
+PASS System.Void StardewValley.Tools.MeleeWeapon::ReloadData()
+PASS System.Void StardewValley.Tools.MeleeWeapon::drawInMenu(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,System.Single,StardewValley.StackDrawType,Microsoft.Xna.Framework.Color,System.Boolean)
+PASS System.Int32 StardewValley.Tools.MeleeWeapon::maximumStackSize()
+PASS System.Int32 StardewValley.Tools.MeleeWeapon::salePrice(System.Boolean)
+PASS System.Void StardewValley.Tools.MeleeWeapon::drawTooltip(Microsoft.Xna.Framework.Graphics.SpriteBatch,System.Int32&,System.Int32&,Microsoft.Xna.Framework.Graphics.SpriteFont,System.Single,System.Text.StringBuilder)
+PASS System.Void StardewValley.Tools.MeleeWeapon::setFarmerAnimating(StardewValley.Farmer)
+PASS System.Void StardewValley.Tools.MeleeWeapon::animateSpecialMove(StardewValley.Farmer)
+PASS System.Void StardewValley.Tools.MeleeWeapon::DoDamage(StardewValley.GameLocation,System.Int32,System.Int32,System.Int32,System.Int32,StardewValley.Farmer)
+PASS System.Boolean StardewValley.Tools.MeleeWeapon::CanForge(StardewValley.Item)
+PASS System.Boolean StardewValley.Tools.MeleeWeapon::CanAddEnchantment(StardewValley.Enchantments.BaseEnchantment)
+PASS System.Boolean StardewValley.Tools.MeleeWeapon::Forge(StardewValley.Item,System.Boolean)
+PASS System.Void StardewValley.Objects.Furniture::drawInMenu(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,System.Single,StardewValley.StackDrawType,Microsoft.Xna.Framework.Color,System.Boolean)
+PASS System.Void StardewValley.Objects.Furniture::draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,System.Int32,System.Int32,System.Single)
+PASS System.Void StardewValley.Objects.Furniture::drawWhenHeld(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,StardewValley.Farmer)
+PASS System.Int32 StardewValley.Objects.Furniture::maximumStackSize()
+PASS System.Int32 StardewValley.Objects.Furniture::salePrice(System.Boolean)
+PASS System.Boolean StardewValley.NPC::checkAction(StardewValley.Farmer,StardewValley.GameLocation)
+PASS System.Boolean StardewValley.Item::canStackWith(StardewValley.ISalable)
+PASS StardewValley.Item StardewValley.Item::getOne()
+PASS System.Int32 StardewValley.Item::salePrice(System.Boolean)
+PASS Microsoft.Xna.Framework.Graphics.Texture2D StardewValley.ItemTypeDefinitions.ParsedItemData::GetTexture()
+PASS Microsoft.Xna.Framework.Rectangle StardewValley.ItemTypeDefinitions.ParsedItemData::GetSourceRect(System.Int32,System.Nullable`1<System.Int32>)
+PASS System.Void StardewValley.Objects.Hat::drawInMenu(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,System.Single,StardewValley.StackDrawType,Microsoft.Xna.Framework.Color,System.Boolean)
+PASS System.Void StardewValley.Objects.Hat::draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,System.Single,System.Int32,System.Boolean)
+PASS System.Int32 StardewValley.Objects.Hat::maximumStackSize()
+PASS System.Boolean StardewValley.Game1::shouldTimePass(System.Boolean)
+PASS StardewValley.Quests.Quest StardewValley.Quests.Quest::getQuestFromId(System.String)
+PASS System.Void StardewValley.Objects.Clothing::drawInMenu(Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Vector2,System.Single,System.Single,System.Single,StardewValley.StackDrawType,Microsoft.Xna.Framework.Color,System.Boolean)
+PASS System.Int32 StardewValley.Objects.Clothing::maximumStackSize()
+PASS StardewValley.ItemTypeDefinitions.ParsedItemData StardewValley.ItemRegistry::GetData(System.String)
+PASS System.Void StardewValley.Farmer::GetDisplayShirt(Microsoft.Xna.Framework.Graphics.Texture2D&,System.Int32&)
+PASS System.Void StardewValley.Farmer::GetDisplayPants(Microsoft.Xna.Framework.Graphics.Texture2D&,System.Int32&)
+PASS System.Void StardewValley.Farmer::addQuest(System.String)
+PASS System.Void StardewValley.Farmer::removeQuest(System.String)
+PASS System.Void StardewValley.Farmer::changeFriendship(System.Int32,StardewValley.NPC)
+PASS System.Void StardewValley.FarmerRenderer::drawHairAndAccesories(Microsoft.Xna.Framework.Graphics.SpriteBatch,System.Int32,StardewValley.Farmer,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,System.Single,System.Int32,System.Single,Microsoft.Xna.Framework.Color,System.Single)
+PASS 原生Basic任务、NPC交互、友好度与任务文本字段；实际剧情交付未运行。
+PASS 原生菜单边框、菜单贴图及背包物品格取图接口。未启动游戏。
+PASS 工作台交互参数与商店配方学习调用。
+PASS 普通箱子库存、容量、特殊容器过滤及锁状态接口；实际跨容器扣料仍待游戏验收。
+PASS 服装取纹理参数、渲染调用与单个椅子前景加载入口。穿戴动画和坐姿仍待实测。
+PASS 武器绘制上下文参数、取图路径及原生类型。未执行游戏绘制或战斗。
+PASS 效果说明入口与单次怪物实际扣血调用。未执行游戏战斗。
+PASS 锻造预览复制、银河之魂入口与精炼产物委托签名。
+PASS 发布包 0.16.2：入口、两份翻译与正式美术资源，无游戏程序集或开发文件。

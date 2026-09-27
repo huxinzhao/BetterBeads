@@ -1,0 +1,3 @@
+PASS scaled UI batch state bindings match installed MonoGame
+PASS ProductPatches.Apply: all product, clothing and weapon patches registered against installed game assemblies
+PASS furniture overload: Void draw(Microsoft.Xna.Framework.Graphics.SpriteBatch, Int32, Int32, Single)

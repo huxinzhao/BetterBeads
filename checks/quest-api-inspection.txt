@@ -1,0 +1,678 @@
+IL_0000: ldarg.0
+IL_0001: call System.String[] StardewValley.Quests.Quest::GetRawQuestFields(System.String)
+IL_0006: stloc.0
+IL_0007: ldloc.0
+IL_0008: brtrue.s IL_000c
+IL_000a: ldnull
+IL_000b: ret
+IL_000c: ldloc.0
+IL_000d: ldc.i4.0
+IL_000e: ldloca.s V_1
+IL_0010: ldloca.s V_2
+IL_0012: ldc.i4.0
+IL_0013: ldstr "string questType"
+IL_0018: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_001d: brfalse IL_00a9
+IL_0022: ldloc.0
+IL_0023: ldc.i4.1
+IL_0024: ldloca.s V_3
+IL_0026: ldloca.s V_2
+IL_0028: ldc.i4.0
+IL_0029: ldstr "string title"
+IL_002e: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_0033: brfalse.s IL_00a9
+IL_0035: ldloc.0
+IL_0036: ldc.i4.2
+IL_0037: ldloca.s V_4
+IL_0039: ldloca.s V_2
+IL_003b: ldc.i4.0
+IL_003c: ldstr "string description"
+IL_0041: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_0046: brfalse.s IL_00a9
+IL_0048: ldloc.0
+IL_0049: ldc.i4.3
+IL_004a: ldloca.s V_5
+IL_004c: ldloca.s V_2
+IL_004e: ldnull
+IL_004f: ldc.i4.0
+IL_0050: ldstr "string objective"
+IL_0055: call System.Boolean StardewValley.ArgUtility::TryGetOptional(System.String[],System.Int32,System.String&,System.String&,System.String,System.Boolean,System.String)
+IL_005a: brfalse.s IL_00a9
+IL_005c: ldloc.0
+IL_005d: ldc.i4.5
+IL_005e: ldloca.s V_6
+IL_0060: ldloca.s V_2
+IL_0062: ldnull
+IL_0063: ldc.i4.0
+IL_0064: ldstr "string rawNextQuests"
+IL_0069: call System.Boolean StardewValley.ArgUtility::TryGetOptional(System.String[],System.Int32,System.String&,System.String&,System.String,System.Boolean,System.String)
+IL_006e: brfalse.s IL_00a9
+IL_0070: ldloc.0
+IL_0071: ldc.i4.6
+IL_0072: ldloca.s V_7
+IL_0074: ldloca.s V_2
+IL_0076: ldstr "int moneyReward"
+IL_007b: call System.Boolean StardewValley.ArgUtility::TryGetInt(System.String[],System.Int32,System.Int32&,System.String&,System.String)
+IL_0080: brfalse.s IL_00a9
+IL_0082: ldloc.0
+IL_0083: ldc.i4.7
+IL_0084: ldloca.s V_8
+IL_0086: ldloca.s V_2
+IL_0088: ldnull
+IL_0089: ldc.i4.0
+IL_008a: ldstr "string rewardDescription"
+IL_008f: call System.Boolean StardewValley.ArgUtility::TryGetOptional(System.String[],System.Int32,System.String&,System.String&,System.String,System.Boolean,System.String)
+IL_0094: brfalse.s IL_00a9
+IL_0096: ldloc.0
+IL_0097: ldc.i4.8
+IL_0098: ldloca.s V_9
+IL_009a: ldloca.s V_2
+IL_009c: ldc.i4.0
+IL_009d: ldstr "bool canBeCancelled"
+IL_00a2: call System.Boolean StardewValley.ArgUtility::TryGetOptionalBool(System.String[],System.Int32,System.Boolean&,System.String&,System.Boolean,System.String)
+IL_00a7: brtrue.s IL_00b1
+IL_00a9: ldarg.0
+IL_00aa: ldloc.2
+IL_00ab: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogParseError(System.String,System.String)
+IL_00b0: ret
+IL_00b1: ldloc.s V_6
+IL_00b3: call System.String[] StardewValley.ArgUtility::SplitBySpace(System.String)
+IL_00b8: stloc.s V_10
+IL_00ba: ldloc.1
+IL_00bb: brfalse IL_0685
+IL_00c0: ldloc.1
+IL_00c1: call System.Int32 System.String::get_Length()
+IL_00c6: stloc.s V_12
+IL_00c8: ldloc.s V_12
+IL_00ca: ldc.i4.5
+IL_00cb: sub
+IL_00cc: switch IL_01ad,IL_01c2,IL_0198,IL_00fe,IL_0685,IL_0685,IL_01d7,IL_0183,IL_0685,IL_01ec
+IL_00f9: br IL_0685
+IL_00fe: ldloc.1
+IL_00ff: ldc.i4.2
+IL_0100: call System.Char System.String::get_Chars(System.Int32)
+IL_0105: stloc.s V_13
+IL_0107: ldloc.s V_13
+IL_0109: ldc.i4.s 99
+IL_010b: bgt.un.s IL_011e
+IL_010d: ldloc.s V_13
+IL_010f: ldc.i4.s 97
+IL_0111: beq.s IL_012f
+IL_0113: ldloc.s V_13
+IL_0115: ldc.i4.s 99
+IL_0117: beq.s IL_0144
+IL_0119: br IL_0685
+IL_011e: ldloc.s V_13
+IL_0120: ldc.i4.s 105
+IL_0122: beq.s IL_0159
+IL_0124: ldloc.s V_13
+IL_0126: ldc.i4.s 115
+IL_0128: beq.s IL_016e
+IL_012a: br IL_0685
+IL_012f: ldloc.1
+IL_0130: ldstr "Crafting"
+IL_0135: call System.Boolean System.String::op_Equality(System.String,System.String)
+IL_013a: brtrue IL_0201
+IL_013f: br IL_0685
+IL_0144: ldloc.1
+IL_0145: ldstr "Location"
+IL_014a: call System.Boolean System.String::op_Equality(System.String,System.String)
+IL_014f: brtrue IL_02cc
+IL_0154: br IL_0685
+IL_0159: ldloc.1
+IL_015a: ldstr "Building"
+IL_015f: call System.Boolean System.String::op_Equality(System.String,System.String)
+IL_0164: brtrue IL_0318
+IL_0169: br IL_0685
+IL_016e: ldloc.1
+IL_016f: ldstr "LostItem"
+IL_0174: call System.Boolean System.String::op_Equality(System.String,System.String)
+IL_0179: brtrue IL_0572
+IL_017e: br IL_0685
+IL_0183: ldloc.1
+IL_0184: ldstr "ItemDelivery"
+IL_0189: call System.Boolean System.String::op_Equality(System.String,System.String)
+IL_018e: brtrue IL_0357
+IL_0193: br IL_0685
+IL_0198: ldloc.1
+IL_0199: ldstr "Monster"
+IL_019e: call System.Boolean System.String::op_Equality(System.String,System.String)
+IL_01a3: brtrue IL_03f5
+IL_01a8: br IL_0685
+IL_01ad: ldloc.1
+IL_01ae: ldstr "Basic"
+IL_01b3: call System.Boolean System.String::op_Equality(System.String,System.String)
+IL_01b8: brtrue IL_04f2
+IL_01bd: br IL_0685
+IL_01c2: ldloc.1
+IL_01c3: ldstr "Social"
+IL_01c8: call System.Boolean System.String::op_Equality(System.String,System.String)
+IL_01cd: brtrue IL_050b
+IL_01d2: br IL_0685
+IL_01d7: ldloc.1
+IL_01d8: ldstr "ItemHarvest"
+IL_01dd: call System.Boolean System.String::op_Equality(System.String,System.String)
+IL_01e2: brtrue IL_051d
+IL_01e7: br IL_0685
+IL_01ec: ldloc.1
+IL_01ed: ldstr "SecretLostItem"
+IL_01f2: call System.Boolean System.String::op_Equality(System.String,System.String)
+IL_01f7: brtrue IL_0607
+IL_01fc: br IL_0685
+IL_0201: ldloc.0
+IL_0202: ldloca.s V_14
+IL_0204: ldloca.s V_2
+IL_0206: ldc.i4.0
+IL_0207: call System.Boolean StardewValley.Quests.Quest::TryParseConditions(System.String[],System.String[]&,System.String&,System.Boolean)
+IL_020c: brtrue.s IL_0216
+IL_020e: ldarg.0
+IL_020f: ldloc.2
+IL_0210: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogParseError(System.String,System.String)
+IL_0215: ret
+IL_0216: ldloc.s V_14
+IL_0218: ldc.i4.0
+IL_0219: ldloca.s V_15
+IL_021b: ldloca.s V_2
+IL_021d: ldc.i4.0
+IL_021e: ldstr "string itemId"
+IL_0223: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_0228: brtrue.s IL_0232
+IL_022a: ldarg.0
+IL_022b: ldloc.2
+IL_022c: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogConditionsParseError(System.String,System.String)
+IL_0231: ret
+IL_0232: ldloca.s V_16
+IL_0234: initobj System.Nullable`1<System.Boolean>
+IL_023a: ldloc.s V_14
+IL_023c: ldc.i4.1
+IL_023d: call System.Boolean StardewValley.ArgUtility::HasIndex<System.String>(T[],System.Int32)
+IL_0242: brfalse.s IL_0269
+IL_0244: ldloc.s V_14
+IL_0246: ldc.i4.1
+IL_0247: ldloca.s V_17
+IL_0249: ldloca.s V_2
+IL_024b: ldc.i4.0
+IL_024c: ldstr "bool isBigCraftableValue"
+IL_0251: call System.Boolean StardewValley.ArgUtility::TryGetOptionalBool(System.String[],System.Int32,System.Boolean&,System.String&,System.Boolean,System.String)
+IL_0256: brtrue.s IL_0260
+IL_0258: ldarg.0
+IL_0259: ldloc.2
+IL_025a: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogConditionsParseError(System.String,System.String)
+IL_025f: ret
+IL_0260: ldloca.s V_16
+IL_0262: ldloc.s V_17
+IL_0264: call System.Void System.Nullable`1<System.Boolean>::.ctor(!0)
+IL_0269: ldloc.s V_15
+IL_026b: call System.Boolean StardewValley.ItemRegistry::IsQualifiedItemId(System.String)
+IL_0270: brtrue.s IL_02b1
+IL_0272: ldloca.s V_16
+IL_0274: call System.Boolean System.Nullable`1<System.Boolean>::get_HasValue()
+IL_0279: brfalse.s IL_02a2
+IL_027b: ldloca.s V_16
+IL_027d: call !0 System.Nullable`1<System.Boolean>::get_Value()
+IL_0282: brtrue.s IL_0292
+IL_0284: ldstr "(O)"
+IL_0289: ldloc.s V_15
+IL_028b: call System.String System.String::Concat(System.String,System.String)
+IL_0290: br.s IL_029e
+IL_0292: ldstr "(BC)"
+IL_0297: ldloc.s V_15
+IL_0299: call System.String System.String::Concat(System.String,System.String)
+IL_029e: stloc.s V_15
+IL_02a0: br.s IL_02b1
+IL_02a2: ldloc.s V_15
+IL_02a4: call System.String StardewValley.ItemRegistry::QualifyItemId(System.String)
+IL_02a9: dup
+IL_02aa: brtrue.s IL_02af
+IL_02ac: pop
+IL_02ad: ldloc.s V_15
+IL_02af: stloc.s V_15
+IL_02b1: ldloc.s V_15
+IL_02b3: newobj System.Void StardewValley.Quests.CraftingQuest::.ctor(System.String)
+IL_02b8: stloc.s V_11
+IL_02ba: ldloc.s V_11
+IL_02bc: ldfld Netcode.NetInt StardewValley.Quests.Quest::questType
+IL_02c1: ldc.i4.2
+IL_02c2: callvirt System.Void Netcode.NetFieldBase`2<System.Int32,Netcode.NetInt>::set_Value(T)
+IL_02c7: br IL_069c
+IL_02cc: ldloc.0
+IL_02cd: ldloca.s V_18
+IL_02cf: ldloca.s V_2
+IL_02d1: ldc.i4.0
+IL_02d2: call System.Boolean StardewValley.Quests.Quest::TryParseConditions(System.String[],System.String[]&,System.String&,System.Boolean)
+IL_02d7: brtrue.s IL_02e1
+IL_02d9: ldarg.0
+IL_02da: ldloc.2
+IL_02db: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogParseError(System.String,System.String)
+IL_02e0: ret
+IL_02e1: ldloc.s V_18
+IL_02e3: ldc.i4.0
+IL_02e4: ldloca.s V_19
+IL_02e6: ldloca.s V_2
+IL_02e8: ldc.i4.0
+IL_02e9: ldstr "string locationName"
+IL_02ee: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_02f3: brtrue.s IL_02fd
+IL_02f5: ldarg.0
+IL_02f6: ldloc.2
+IL_02f7: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogConditionsParseError(System.String,System.String)
+IL_02fc: ret
+IL_02fd: ldloc.s V_19
+IL_02ff: newobj System.Void StardewValley.Quests.GoSomewhereQuest::.ctor(System.String)
+IL_0304: stloc.s V_11
+IL_0306: ldloc.s V_11
+IL_0308: ldfld Netcode.NetInt StardewValley.Quests.Quest::questType
+IL_030d: ldc.i4.6
+IL_030e: callvirt System.Void Netcode.NetFieldBase`2<System.Int32,Netcode.NetInt>::set_Value(T)
+IL_0313: br IL_069c
+IL_0318: ldloc.0
+IL_0319: ldloca.s V_20
+IL_031b: ldloca.s V_2
+IL_031d: ldc.i4.0
+IL_031e: call System.Boolean StardewValley.Quests.Quest::TryParseConditions(System.String[],System.String[]&,System.String&,System.Boolean)
+IL_0323: brtrue.s IL_032d
+IL_0325: ldarg.0
+IL_0326: ldloc.2
+IL_0327: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogParseError(System.String,System.String)
+IL_032c: ret
+IL_032d: ldloc.s V_20
+IL_032f: ldc.i4.0
+IL_0330: ldloca.s V_21
+IL_0332: ldloca.s V_2
+IL_0334: ldc.i4.0
+IL_0335: ldstr "string buildingType"
+IL_033a: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_033f: brtrue.s IL_0349
+IL_0341: ldarg.0
+IL_0342: ldloc.2
+IL_0343: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogConditionsParseError(System.String,System.String)
+IL_0348: ret
+IL_0349: ldloc.s V_21
+IL_034b: newobj System.Void StardewValley.Quests.HaveBuildingQuest::.ctor(System.String)
+IL_0350: stloc.s V_11
+IL_0352: br IL_069c
+IL_0357: ldloc.0
+IL_0358: ldloca.s V_22
+IL_035a: ldloca.s V_2
+IL_035c: ldc.i4.0
+IL_035d: call System.Boolean StardewValley.Quests.Quest::TryParseConditions(System.String[],System.String[]&,System.String&,System.Boolean)
+IL_0362: brfalse.s IL_0378
+IL_0364: ldloc.0
+IL_0365: ldc.i4.s 9
+IL_0367: ldloca.s V_23
+IL_0369: ldloca.s V_2
+IL_036b: ldc.i4.0
+IL_036c: ldstr "string targetMessage"
+IL_0371: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_0376: brtrue.s IL_0380
+IL_0378: ldarg.0
+IL_0379: ldloc.2
+IL_037a: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogParseError(System.String,System.String)
+IL_037f: ret
+IL_0380: ldloc.s V_22
+IL_0382: ldc.i4.0
+IL_0383: ldloca.s V_24
+IL_0385: ldloca.s V_2
+IL_0387: ldc.i4.0
+IL_0388: ldstr "string npcName"
+IL_038d: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_0392: brfalse.s IL_03bc
+IL_0394: ldloc.s V_22
+IL_0396: ldc.i4.1
+IL_0397: ldloca.s V_25
+IL_0399: ldloca.s V_2
+IL_039b: ldc.i4.0
+IL_039c: ldstr "string itemId"
+IL_03a1: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_03a6: brfalse.s IL_03bc
+IL_03a8: ldloc.s V_22
+IL_03aa: ldc.i4.2
+IL_03ab: ldloca.s V_26
+IL_03ad: ldloca.s V_2
+IL_03af: ldc.i4.1
+IL_03b0: ldstr "int numberRequired"
+IL_03b5: call System.Boolean StardewValley.ArgUtility::TryGetOptionalInt(System.String[],System.Int32,System.Int32&,System.String&,System.Int32,System.String)
+IL_03ba: brtrue.s IL_03c4
+IL_03bc: ldarg.0
+IL_03bd: ldloc.2
+IL_03be: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogConditionsParseError(System.String,System.String)
+IL_03c3: ret
+IL_03c4: ldloc.s V_24
+IL_03c6: ldloc.s V_25
+IL_03c8: newobj System.Void StardewValley.Quests.ItemDeliveryQuest::.ctor(System.String,System.String)
+IL_03cd: dup
+IL_03ce: ldloc.s V_23
+IL_03d0: stfld System.String StardewValley.Quests.ItemDeliveryQuest::targetMessage
+IL_03d5: dup
+IL_03d6: ldfld Netcode.NetInt StardewValley.Quests.ItemDeliveryQuest::number
+IL_03db: ldloc.s V_26
+IL_03dd: callvirt System.Void Netcode.NetFieldBase`2<System.Int32,Netcode.NetInt>::set_Value(T)
+IL_03e2: dup
+IL_03e3: ldfld Netcode.NetInt StardewValley.Quests.Quest::questType
+IL_03e8: ldc.i4.3
+IL_03e9: callvirt System.Void Netcode.NetFieldBase`2<System.Int32,Netcode.NetInt>::set_Value(T)
+IL_03ee: stloc.s V_11
+IL_03f0: br IL_069c
+IL_03f5: ldloc.0
+IL_03f6: ldloca.s V_27
+IL_03f8: ldloca.s V_2
+IL_03fa: ldc.i4.0
+IL_03fb: call System.Boolean StardewValley.Quests.Quest::TryParseConditions(System.String[],System.String[]&,System.String&,System.Boolean)
+IL_0400: brtrue.s IL_040a
+IL_0402: ldarg.0
+IL_0403: ldloc.2
+IL_0404: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogParseError(System.String,System.String)
+IL_0409: ret
+IL_040a: ldloc.s V_27
+IL_040c: ldc.i4.0
+IL_040d: ldloca.s V_28
+IL_040f: ldloca.s V_2
+IL_0411: ldc.i4.0
+IL_0412: ldstr "string monsterName"
+IL_0417: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_041c: brfalse.s IL_045a
+IL_041e: ldloc.s V_27
+IL_0420: ldc.i4.1
+IL_0421: ldloca.s V_29
+IL_0423: ldloca.s V_2
+IL_0425: ldstr "int numberToKill"
+IL_042a: call System.Boolean StardewValley.ArgUtility::TryGetInt(System.String[],System.Int32,System.Int32&,System.String&,System.String)
+IL_042f: brfalse.s IL_045a
+IL_0431: ldloc.s V_27
+IL_0433: ldc.i4.2
+IL_0434: ldloca.s V_30
+IL_0436: ldloca.s V_2
+IL_0438: ldnull
+IL_0439: ldc.i4.1
+IL_043a: ldstr "string targetNpc"
+IL_043f: call System.Boolean StardewValley.ArgUtility::TryGetOptional(System.String[],System.Int32,System.String&,System.String&,System.String,System.Boolean,System.String)
+IL_0444: brfalse.s IL_045a
+IL_0446: ldloc.s V_27
+IL_0448: ldc.i4.3
+IL_0449: ldloca.s V_31
+IL_044b: ldloca.s V_2
+IL_044d: ldc.i4.1
+IL_044e: ldstr "bool ignoreFarmMonsters"
+IL_0453: call System.Boolean StardewValley.ArgUtility::TryGetOptionalBool(System.String[],System.Int32,System.Boolean&,System.String&,System.Boolean,System.String)
+IL_0458: brtrue.s IL_0462
+IL_045a: ldarg.0
+IL_045b: ldloc.2
+IL_045c: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogConditionsParseError(System.String,System.String)
+IL_0461: ret
+IL_0462: newobj System.Void StardewValley.Quests.SlayMonsterQuest::.ctor()
+IL_0467: stloc.s V_32
+IL_0469: ldloc.s V_32
+IL_046b: callvirt System.Void StardewValley.Quests.SlayMonsterQuest::loadQuestInfo()
+IL_0470: ldloc.s V_32
+IL_0472: ldfld Netcode.NetRef`1<StardewValley.Monsters.Monster> StardewValley.Quests.SlayMonsterQuest::monster
+IL_0477: callvirt T Netcode.NetFieldBase`2<StardewValley.Monsters.Monster,Netcode.NetRef`1<StardewValley.Monsters.Monster>>::get_Value()
+IL_047c: ldloc.s V_28
+IL_047e: ldc.i4.s 95
+IL_0480: ldc.i4.s 32
+IL_0482: callvirt System.String System.String::Replace(System.Char,System.Char)
+IL_0487: callvirt System.Void StardewValley.Character::set_Name(System.String)
+IL_048c: ldloc.s V_32
+IL_048e: ldfld Netcode.NetString StardewValley.Quests.SlayMonsterQuest::monsterName
+IL_0493: ldloc.s V_32
+IL_0495: ldfld Netcode.NetRef`1<StardewValley.Monsters.Monster> StardewValley.Quests.SlayMonsterQuest::monster
+IL_049a: callvirt T Netcode.NetFieldBase`2<StardewValley.Monsters.Monster,Netcode.NetRef`1<StardewValley.Monsters.Monster>>::get_Value()
+IL_049f: callvirt System.String StardewValley.Character::get_Name()
+IL_04a4: callvirt System.Void Netcode.NetFieldBase`2<System.String,Netcode.NetString>::set_Value(T)
+IL_04a9: ldloc.s V_32
+IL_04ab: ldfld Netcode.NetInt StardewValley.Quests.SlayMonsterQuest::numberToKill
+IL_04b0: ldloc.s V_29
+IL_04b2: callvirt System.Void Netcode.NetFieldBase`2<System.Int32,Netcode.NetInt>::set_Value(T)
+IL_04b7: ldloc.s V_32
+IL_04b9: ldfld Netcode.NetBool StardewValley.Quests.SlayMonsterQuest::ignoreFarmMonsters
+IL_04be: ldloc.s V_31
+IL_04c0: callvirt System.Void Netcode.NetFieldBase`2<System.Boolean,Netcode.NetBool>::set_Value(T)
+IL_04c5: ldloc.s V_32
+IL_04c7: ldfld Netcode.NetString StardewValley.Quests.SlayMonsterQuest::target
+IL_04cc: ldloc.s V_30
+IL_04ce: dup
+IL_04cf: brtrue.s IL_04d7
+IL_04d1: pop
+IL_04d2: ldstr "null"
+IL_04d7: callvirt System.Void Netcode.NetFieldBase`2<System.String,Netcode.NetString>::set_Value(T)
+IL_04dc: ldloc.s V_32
+IL_04de: ldfld Netcode.NetInt StardewValley.Quests.Quest::questType
+IL_04e3: ldc.i4.4
+IL_04e4: callvirt System.Void Netcode.NetFieldBase`2<System.Int32,Netcode.NetInt>::set_Value(T)
+IL_04e9: ldloc.s V_32
+IL_04eb: stloc.s V_11
+IL_04ed: br IL_069c
+IL_04f2: newobj System.Void StardewValley.Quests.Quest::.ctor()
+IL_04f7: stloc.s V_11
+IL_04f9: ldloc.s V_11
+IL_04fb: ldfld Netcode.NetInt StardewValley.Quests.Quest::questType
+IL_0500: ldc.i4.1
+IL_0501: callvirt System.Void Netcode.NetFieldBase`2<System.Int32,Netcode.NetInt>::set_Value(T)
+IL_0506: br IL_069c
+IL_050b: newobj System.Void StardewValley.Quests.SocializeQuest::.ctor()
+IL_0510: dup
+IL_0511: callvirt System.Void StardewValley.Quests.SocializeQuest::loadQuestInfo()
+IL_0516: stloc.s V_11
+IL_0518: br IL_069c
+IL_051d: ldloc.0
+IL_051e: ldloca.s V_33
+IL_0520: ldloca.s V_2
+IL_0522: ldc.i4.0
+IL_0523: call System.Boolean StardewValley.Quests.Quest::TryParseConditions(System.String[],System.String[]&,System.String&,System.Boolean)
+IL_0528: brtrue.s IL_0532
+IL_052a: ldarg.0
+IL_052b: ldloc.2
+IL_052c: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogParseError(System.String,System.String)
+IL_0531: ret
+IL_0532: ldloc.s V_33
+IL_0534: ldc.i4.0
+IL_0535: ldloca.s V_34
+IL_0537: ldloca.s V_2
+IL_0539: ldc.i4.0
+IL_053a: ldstr "string itemId"
+IL_053f: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_0544: brfalse.s IL_055a
+IL_0546: ldloc.s V_33
+IL_0548: ldc.i4.1
+IL_0549: ldloca.s V_35
+IL_054b: ldloca.s V_2
+IL_054d: ldc.i4.1
+IL_054e: ldstr "int numberRequired"
+IL_0553: call System.Boolean StardewValley.ArgUtility::TryGetOptionalInt(System.String[],System.Int32,System.Int32&,System.String&,System.Int32,System.String)
+IL_0558: brtrue.s IL_0562
+IL_055a: ldarg.0
+IL_055b: ldloc.2
+IL_055c: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogConditionsParseError(System.String,System.String)
+IL_0561: ret
+IL_0562: ldloc.s V_34
+IL_0564: ldloc.s V_35
+IL_0566: newobj System.Void StardewValley.Quests.ItemHarvestQuest::.ctor(System.String,System.Int32)
+IL_056b: stloc.s V_11
+IL_056d: br IL_069c
+IL_0572: ldloc.0
+IL_0573: ldloca.s V_36
+IL_0575: ldloca.s V_2
+IL_0577: ldc.i4.0
+IL_0578: call System.Boolean StardewValley.Quests.Quest::TryParseConditions(System.String[],System.String[]&,System.String&,System.Boolean)
+IL_057d: brtrue.s IL_0587
+IL_057f: ldarg.0
+IL_0580: ldloc.2
+IL_0581: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogParseError(System.String,System.String)
+IL_0586: ret
+IL_0587: ldloc.s V_36
+IL_0589: ldc.i4.0
+IL_058a: ldloca.s V_37
+IL_058c: ldloca.s V_2
+IL_058e: ldc.i4.0
+IL_058f: ldstr "string npcName"
+IL_0594: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_0599: brfalse.s IL_05e9
+IL_059b: ldloc.s V_36
+IL_059d: ldc.i4.1
+IL_059e: ldloca.s V_38
+IL_05a0: ldloca.s V_2
+IL_05a2: ldc.i4.0
+IL_05a3: ldstr "string itemId"
+IL_05a8: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_05ad: brfalse.s IL_05e9
+IL_05af: ldloc.s V_36
+IL_05b1: ldc.i4.2
+IL_05b2: ldloca.s V_39
+IL_05b4: ldloca.s V_2
+IL_05b6: ldc.i4.0
+IL_05b7: ldstr "string locationOfItem"
+IL_05bc: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_05c1: brfalse.s IL_05e9
+IL_05c3: ldloc.s V_36
+IL_05c5: ldc.i4.3
+IL_05c6: ldloca.s V_40
+IL_05c8: ldloca.s V_2
+IL_05ca: ldstr "int tileX"
+IL_05cf: call System.Boolean StardewValley.ArgUtility::TryGetInt(System.String[],System.Int32,System.Int32&,System.String&,System.String)
+IL_05d4: brfalse.s IL_05e9
+IL_05d6: ldloc.s V_36
+IL_05d8: ldc.i4.4
+IL_05d9: ldloca.s V_41
+IL_05db: ldloca.s V_2
+IL_05dd: ldstr "int tileY"
+IL_05e2: call System.Boolean StardewValley.ArgUtility::TryGetInt(System.String[],System.Int32,System.Int32&,System.String&,System.String)
+IL_05e7: brtrue.s IL_05f1
+IL_05e9: ldarg.0
+IL_05ea: ldloc.2
+IL_05eb: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogConditionsParseError(System.String,System.String)
+IL_05f0: ret
+IL_05f1: ldloc.s V_37
+IL_05f3: ldloc.s V_39
+IL_05f5: ldloc.s V_38
+IL_05f7: ldloc.s V_40
+IL_05f9: ldloc.s V_41
+IL_05fb: newobj System.Void StardewValley.Quests.LostItemQuest::.ctor(System.String,System.String,System.String,System.Int32,System.Int32)
+IL_0600: stloc.s V_11
+IL_0602: br IL_069c
+IL_0607: ldloc.0
+IL_0608: ldloca.s V_42
+IL_060a: ldloca.s V_2
+IL_060c: ldc.i4.0
+IL_060d: call System.Boolean StardewValley.Quests.Quest::TryParseConditions(System.String[],System.String[]&,System.String&,System.Boolean)
+IL_0612: brtrue.s IL_061c
+IL_0614: ldarg.0
+IL_0615: ldloc.2
+IL_0616: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogParseError(System.String,System.String)
+IL_061b: ret
+IL_061c: ldloc.s V_42
+IL_061e: ldc.i4.0
+IL_061f: ldloca.s V_43
+IL_0621: ldloca.s V_2
+IL_0623: ldc.i4.0
+IL_0624: ldstr "string npcName"
+IL_0629: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_062e: brfalse.s IL_066c
+IL_0630: ldloc.s V_42
+IL_0632: ldc.i4.1
+IL_0633: ldloca.s V_44
+IL_0635: ldloca.s V_2
+IL_0637: ldc.i4.0
+IL_0638: ldstr "string itemId"
+IL_063d: call System.Boolean StardewValley.ArgUtility::TryGet(System.String[],System.Int32,System.String&,System.String&,System.Boolean,System.String)
+IL_0642: brfalse.s IL_066c
+IL_0644: ldloc.s V_42
+IL_0646: ldc.i4.2
+IL_0647: ldloca.s V_45
+IL_0649: ldloca.s V_2
+IL_064b: ldstr "int friendshipReward"
+IL_0650: call System.Boolean StardewValley.ArgUtility::TryGetInt(System.String[],System.Int32,System.Int32&,System.String&,System.String)
+IL_0655: brfalse.s IL_066c
+IL_0657: ldloc.s V_42
+IL_0659: ldc.i4.3
+IL_065a: ldloca.s V_46
+IL_065c: ldloca.s V_2
+IL_065e: ldnull
+IL_065f: ldc.i4.0
+IL_0660: ldstr "string exclusiveQuestId"
+IL_0665: call System.Boolean StardewValley.ArgUtility::TryGetOptional(System.String[],System.Int32,System.String&,System.String&,System.String,System.Boolean,System.String)
+IL_066a: brtrue.s IL_0674
+IL_066c: ldarg.0
+IL_066d: ldloc.2
+IL_066e: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogConditionsParseError(System.String,System.String)
+IL_0673: ret
+IL_0674: ldloc.s V_43
+IL_0676: ldloc.s V_44
+IL_0678: ldloc.s V_45
+IL_067a: ldloc.s V_46
+IL_067c: newobj System.Void StardewValley.Quests.SecretLostItemQuest::.ctor(System.String,System.String,System.Int32,System.String)
+IL_0681: stloc.s V_11
+IL_0683: br.s IL_069c
+IL_0685: ldarg.0
+IL_0686: ldstr "quest type '"
+IL_068b: ldloc.1
+IL_068c: ldstr "' doesn't match a known type."
+IL_0691: call System.String System.String::Concat(System.String,System.String,System.String)
+IL_0696: call StardewValley.Quests.Quest StardewValley.Quests.Quest::LogParseError(System.String,System.String)
+IL_069b: ret
+IL_069c: ldloc.s V_11
+IL_069e: ldfld Netcode.NetString StardewValley.Quests.Quest::id
+IL_06a3: ldarg.0
+IL_06a4: callvirt System.Void Netcode.NetFieldBase`2<System.String,Netcode.NetString>::set_Value(T)
+IL_06a9: ldloc.s V_11
+IL_06ab: ldloc.3
+IL_06ac: callvirt System.Void StardewValley.Quests.Quest::set_questTitle(System.String)
+IL_06b1: ldloc.s V_11
+IL_06b3: ldloc.s V_4
+IL_06b5: callvirt System.Void StardewValley.Quests.Quest::set_questDescription(System.String)
+IL_06ba: ldloc.s V_11
+IL_06bc: ldloc.s V_5
+IL_06be: callvirt System.Void StardewValley.Quests.Quest::set_currentObjective(System.String)
+IL_06c3: ldloc.s V_10
+IL_06c5: stloc.s V_47
+IL_06c7: ldc.i4.0
+IL_06c8: stloc.s V_12
+IL_06ca: br.s IL_0703
+IL_06cc: ldloc.s V_47
+IL_06ce: ldloc.s V_12
+IL_06d0: ldelem.ref
+IL_06d1: stloc.s V_48
+IL_06d3: ldloc.s V_48
+IL_06d5: ldc.i4.s 104
+IL_06d7: callvirt System.Boolean System.String::StartsWith(System.Char)
+IL_06dc: brfalse.s IL_06ef
+IL_06de: call System.Boolean StardewValley.Game1::get_IsMasterGame()
+IL_06e3: brfalse.s IL_06fd
+IL_06e5: ldloc.s V_48
+IL_06e7: ldc.i4.1
+IL_06e8: callvirt System.String System.String::Substring(System.Int32)
+IL_06ed: stloc.s V_48
+IL_06ef: ldloc.s V_11
+IL_06f1: ldfld Netcode.NetStringList StardewValley.Quests.Quest::nextQuests
+IL_06f6: ldloc.s V_48
+IL_06f8: callvirt System.Void Netcode.NetList`2<System.String,Netcode.NetString>::Add(T)
+IL_06fd: ldloc.s V_12
+IL_06ff: ldc.i4.1
+IL_0700: add
+IL_0701: stloc.s V_12
+IL_0703: ldloc.s V_12
+IL_0705: ldloc.s V_47
+IL_0707: ldlen
+IL_0708: conv.i4
+IL_0709: blt.s IL_06cc
+IL_070b: ldloc.s V_11
+IL_070d: ldfld Netcode.NetBool StardewValley.Quests.Quest::showNew
+IL_0712: ldc.i4.1
+IL_0713: callvirt System.Void Netcode.NetFieldBase`2<System.Boolean,Netcode.NetBool>::set_Value(T)
+IL_0718: ldloc.s V_11
+IL_071a: ldfld Netcode.NetInt StardewValley.Quests.Quest::moneyReward
+IL_071f: ldloc.s V_7
+IL_0721: callvirt System.Void Netcode.NetFieldBase`2<System.Int32,Netcode.NetInt>::set_Value(T)
+IL_0726: ldloc.s V_11
+IL_0728: ldfld Netcode.NetString StardewValley.Quests.Quest::rewardDescription
+IL_072d: ldloc.s V_7
+IL_072f: ldc.i4.m1
+IL_0730: beq.s IL_0736
+IL_0732: ldloc.s V_8
+IL_0734: br.s IL_0737
+IL_0736: ldnull
+IL_0737: callvirt System.Void Netcode.NetFieldBase`2<System.String,Netcode.NetString>::set_Value(T)
+IL_073c: ldloc.s V_11
+IL_073e: ldfld Netcode.NetBool StardewValley.Quests.Quest::canBeCancelled
+IL_0743: ldloc.s V_9
+IL_0745: callvirt System.Void Netcode.NetFieldBase`2<System.Boolean,Netcode.NetBool>::set_Value(T)
+IL_074a: ldloc.s V_11
+IL_074c: ret

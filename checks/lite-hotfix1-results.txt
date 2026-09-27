@@ -1,0 +1,8 @@
+Furniture draw entry crash hotfix (2026-09-24)
+Cause: name-only AccessTools.Method(Furniture, draw) matches inherited overloads.
+Fix: register front-texture transpiler with each declared draw MethodInfo in the existing draw-patch loop.
+Release Lite build: 0 warnings, 0 errors.
+Offline actual Harmony registration against installed game assemblies: PASS ProductPatches.Apply (includes clothing and weapon patches).
+Furniture overload patched: draw(SpriteBatch, Int32, Int32, Single).
+ZIP: 23 entries, all SHA256 matched staging files.
+No game launch, graphics rendering, save or Mods modification performed.

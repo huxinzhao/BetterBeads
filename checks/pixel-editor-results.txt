@@ -1,0 +1,17 @@
+PASS 1: 页面脚本可解析且所有固定控件引用存在
+PASS 2: 编辑器覆盖全部42张运行PNG
+PASS 3: 连续画笔补齐像素且一笔只记一次撤销
+PASS 4: 编辑后标记未保存
+PASS 5: 撤销恢复干净状态
+PASS 6: 重做恢复整笔像素
+PASS 7: 填色不穿过边界，也不影响相邻图块
+PASS 8: 撤销到已保存状态不误报修改
+PASS 9: 新笔画清除旧重做记录，橡皮恢复透明
+PASS 10: 图集裁切外不写入，也不产生空撤销
+PASS 11: 保存返回新PNG指纹
+PASS 12: 备份与旧PNG逐字节一致，原文件与新PNG逐字节一致
+PASS 13: 外部文件变化时拒绝覆盖
+PASS 14: 备份失败时不碰原文件
+PASS 15: 写入失败不返回保存成功
+PASS 16: 备份期间发生外部修改，二次复核阻止覆盖
+16 targeted editor checks passed. Test files only: C:\Users\xinzh\Desktop\星露谷拼豆mod\.tools\pixel-editor-check-NH2n1a

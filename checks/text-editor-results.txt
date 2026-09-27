@@ -1,0 +1,16 @@
+PASS 1: 全部539条原文满足占位符和控制标记规则
+PASS 2: 允许重排SMAPI与数字占位符
+PASS 3: 拒绝删除、重编号或损坏动态参数
+PASS 4: 保留信件与原生任务控制字段
+PASS 5: 直接序列化多行文字，保留全部键与自定义条目
+PASS 6: 切换条目不会丢草稿，还原仅影响当前条目
+PASS 7: 非法内容不能保存，也不能新增内部键
+PASS 8: 格式校验可修复已被外部改坏的已知文案
+PASS 9: 未知合法键包括特殊属性名都能保留
+PASS 10: 空文案、非文本JSON结构受到保护
+PASS 11: 页面脚本与控件绑定完整
+PASS 12: 离线文案目录与默认JSON一致
+PASS 13: 实际JSON保存和备份一致，仅修改当前文件
+PASS 14: 外部改动冲突不覆盖JSON
+PASS 15: 保存后重置修改状态
+15 checks passed; temporary files only: C:\Users\xinzh\Desktop\星露谷拼豆mod\.tools\text-editor-check-0DHIKE

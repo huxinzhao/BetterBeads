@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';import fs from 'node:fs/promises';import path from 'node:path';import vm from 'node:vm';import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),{CopyDocument,validate}=require('../art/text-core.js'),{savePng:saveFile,fingerprint}=require('../art/pixel-core.js');let count=0;
+function check(name,action){action();console.log('PASS '+(++count)+': '+name);}
+const catalog=JSON.parse(await fs.readFile('BetterBeads/i18n/default.json','utf8'));
+check('全部文案满足占位符和控制标记规则',()=>{assert.ok(Object.keys(catalog).length>=731);for(const [k,v] of Object.entries(catalog))assert.equal(validate(k,v,v),'',k);});
+const chinese=JSON.parse(await fs.readFile('BetterBeads/i18n/zh.json','utf8'));
+check('中英文的数字与命名占位符一致',()=>{assert.deepEqual(Object.keys(catalog).sort(),Object.keys(chinese).sort());for(const [k,v] of Object.entries(catalog))assert.equal(validate(k,chinese[k],v),'',k);});
+check('非copy键中的数字占位符也受到保护',()=>{assert.ok(validate('simple.cost-summary','Cost: {0} × {1}; have {2}.','Cost: {0} × {1}.'));assert.equal(validate('simple.cost-summary','{0} / {1}','{1} / {0}'),'');});
+check('允许重排SMAPI与数字占位符',()=>{assert.equal(validate('test','{{count}}个{{name}}','{{name}}：{{count}}个'),'');assert.equal(validate('copy.test','{0:0.##} / {1}','{1}与{0:0.##}'),'');});
+check('拒绝删除、重编号或损坏动态参数',()=>{for(const v of ['没有数量','{1}','{0','{0:00}'])assert.ok(validate('copy.test','数量{0}',v));assert.ok(validate('test','{{count}}','{{counts}}'));});
+check('保留信件与原生任务控制字段',()=>{assert.ok(validate('mail','你好^^正文[#]标题','你好正文[#]标题'));assert.ok(validate('quest','Basic/标题/描述/目标/-1//-1//false','Basic/新题/描述/目标/999//-1//false'));assert.equal(validate('quest','Basic/标题/描述/目标/-1//-1//false','Basic/新题/新描述/新目标/-1//-1//false'),'');});
+const d=new CopyDocument({'a':'原文','copy.count':'需{0}颗豆','unknown.custom':'自定义'});
+d.set('a','新文案\n含"引号"与\\路径');
+check('直接序列化多行文字，保留全部键与自定义条目',()=>{const p=JSON.parse(d.serialize());assert.equal(p.a,'新文案\n含"引号"与\\路径');assert.equal(p['unknown.custom'],'自定义');assert.deepEqual(Object.keys(p),Object.keys(d.saved));});
+check('切换条目不会丢草稿，还原仅影响当前条目',()=>{d.set('unknown.custom','另一个修改');d.reset('a');assert.equal(d.changed.length,1);assert.equal(d.values['unknown.custom'],'另一个修改');});
+check('非法内容不能保存，也不能新增内部键',()=>{d.set('copy.count','删除参数');assert.throws(()=>d.serialize());assert.throws(()=>d.set('new.key','x'));d.reset('copy.count');});
+check('格式校验可修复已被外部改坏的已知文案',()=>{const repaired=new CopyDocument({'copy.count':'错误{99}'},{'copy.count':'正确{0}'});repaired.set('copy.count','修复{0}');assert.equal(repaired.issues().length,0);});
+check('未知合法键包括特殊属性名都能保留',()=>{const p=new CopyDocument(JSON.parse('{"__proto__":"文字","constructor":"标题"}'));assert.equal(JSON.parse(p.serialize()).__proto__,'文字');});
+check('空文案、非文本JSON结构受到保护',()=>{assert.ok(validate('a','非空',' '));assert.throws(()=>new CopyDocument({a:3}));});
+const html=await fs.readFile('art/text-editor.html','utf8'),js=await fs.readFile('art/text-editor.js','utf8');
+check('页面脚本与控件绑定完整',()=>{new vm.Script(js);const ids=new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]));for(const m of js.matchAll(/\$\('([^']+)'\)/g))assert.ok(ids.has(m[1]),m[1]);});
+const offline={window:{}};vm.runInNewContext(await fs.readFile('art/text-data.js','utf8'),offline);
+check('离线文案目录与默认JSON一致',()=>assert.equal(JSON.stringify(offline.window.BEAD_COPY_CATALOG),JSON.stringify(catalog)));
+check('离线中文目录与中文JSON一致',()=>assert.equal(JSON.stringify(offline.window.BEAD_COPY_CHINESE),JSON.stringify(chinese)));
+const tmp=await fs.mkdtemp(path.resolve('.tools/text-editor-check-')),file=path.join(tmp,'zh.json'),other=path.join(tmp,'default.json');const old=Buffer.from(JSON.stringify(d.saved)),next=new TextEncoder().encode(d.serialize());await fs.writeFile(file,old);await fs.writeFile(other,'{"untouched":"保留"}');
+function h(p){return{async getFile(){return{async arrayBuffer(){const b=await fs.readFile(p);return b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength);}};},async createWritable(){let bytes;return{async write(b){bytes=Buffer.from(b);},async close(){await fs.writeFile(p,bytes);},async abort(){}};}};}
+let initial=await fingerprint(old);await saveFile(h(file),{getFileHandle:async n=>h(path.join(tmp,n))},'backup.bak',initial,next);
+assert.deepEqual(await fs.readFile(path.join(tmp,'backup.bak')),old);assert.deepEqual(JSON.parse(await fs.readFile(file,'utf8')),JSON.parse(d.serialize()));assert.equal(await fs.readFile(other,'utf8'),'{"untouched":"保留"}');console.log('PASS '+(++count)+': 实际JSON保存和备份一致，仅修改当前文件');
+await assert.rejects(saveFile(h(file),{getFileHandle:async n=>h(path.join(tmp,n))},'conflict.bak',initial,old),/其他程序/);assert.deepEqual(await fs.readFile(file),Buffer.from(next));console.log('PASS '+(++count)+': 外部改动冲突不覆盖JSON');
+d.markSaved();check('保存后重置修改状态',()=>assert.equal(d.dirty,false));
+console.log(`${count} checks passed; temporary files only: ${tmp}`);

@@ -1,0 +1,6 @@
+Text editor: 15 focused checks passed (checks/text-editor-results.txt)
+Browser: search, selection, placeholder display and visual layout checked; no console errors
+Save: temporary filesystem adapter verified real JSON writes, backup and conflict handling
+Native browser directory permission flow: not automated
+Editing ZIP: 130 entries, all hashes matched; both backup directories excluded
+Existing i18n content unchanged; no game, Mods or saves modified

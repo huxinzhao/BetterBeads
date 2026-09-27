@@ -1,0 +1,18 @@
+[size=5][b]Better Beads · 1.0.0 RC7[/b][/size]
+
+Turn your own pixel designs into wall art, ornaments and weapons.
+
+- Draw, recolor, import images and share designs.
+- Subtle fused-bead texture on paintings and ornaments; swords, daggers and hammers in 16, 24 or 32 pixels.
+- Individual artwork appraisals and selling. Gift paintings to villagers; at six hearts, supported homes display them from the next day.
+- Online co-op candidate: personal libraries and palettes, shared nearby chests and NPC displays. One user per workbench; separate benches work together. No manual host approval.
+
+[b]Install:[/b] Stardew Valley 1.6 and SMAPI 4.5.1 or a newer compatible version. Place the BetterBeads folder in Mods; install only one copy. Reach Foraging 2 for Robin's letter, then buy the recipe from Robin. Every online player needs this same RC7 package. No split-screen support.
+
+[b]Controls:[/b] Left-click to place, right-click to erase, wheel to zoom, middle-drag or Space + left-drag to pan. Ctrl+S saves, Ctrl+Z/Y undo/redo, Home fits the canvas. Fusing never forces a design save; unsaved drafts last only for this session.
+
+Uses your backpack and ordinary chests within five tiles on the same map. Creative Mode follows the host. English and Chinese included; Generic Mod Config Menu is optional.
+
+[b]Release candidate:[/b] Builds and offline checks passed. Real two-player sessions, disconnect recovery, weapon swings and furniture layering still need in-game acceptance. Exit the game and back up saves and customized assets before upgrading. This is not the final stable release.
+
+Bug reports are welcome! If you enjoy the mod, please leave an endorsement to support it.

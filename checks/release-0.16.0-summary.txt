@@ -1,0 +1,10 @@
+Version: 0.16.0
+Release build: PASS, 0 warnings, 0 errors
+Validation: one full run; changed legacy assertions updated; affected regression groups 225 PASS; final gameplay group 37 PASS (overlapping coverage, not additive)
+Representative balance table: 21 compositions across sword, dagger, hammer
+Offline visuals: wide 1280x900, compact 480x420, 20 reference patterns; reviewed; NOT game screenshots
+Native interfaces, translations and runtime package content hashes: PASS
+Artwork: 16 PNG, 82 sprites; PASS
+In-game runtime: NOT_RUN; no saves or game Mods directory changed
+dist/BetterBeads-0.16.0.zip : 23 files
+dist/BetterBeads-Art-0.16.0.zip : 47 files

@@ -1,0 +1,12 @@
+Copyright (c) 2026 xinzh. All rights reserved.
+
+Better Beads currently has no general open-source license. Public source availability
+does not grant a general license to redistribute or publish modified versions.
+Contact the author for permissions not otherwise granted by law or the hosting platform.
+
+Third-party code, data, icons, and game artwork are excluded from this notice and
+retain their respective rights and licenses. See THIRD_PARTY_NOTICES.md.
+
+当前保留作者版权，暂不采用 MIT、GPL 等通用开源许可。
+公开源码不等于授权重新发布或发布修改版；其他权限请联系作者确认。
+第三方内容不受本声明重新授权，仍遵循其各自许可。

@@ -1,0 +1,915 @@
+{
+  "Schema": "mard221-v1",
+  "SourceId": "mard-221-alfonse-doudou",
+  "SourceVersion": "2026-05-19",
+  "SourceUrl": "https://github.com/HansBug/pindou-color-data/tree/main/mard-221-alfonse-doudou",
+  "License": "MIT",
+  "Colors": [
+    {
+      "Code": "A1",
+      "Hex": "#FAF5CD"
+    },
+    {
+      "Code": "A2",
+      "Hex": "#FCFED6"
+    },
+    {
+      "Code": "A3",
+      "Hex": "#FCFF92"
+    },
+    {
+      "Code": "A4",
+      "Hex": "#F7EC5C"
+    },
+    {
+      "Code": "A5",
+      "Hex": "#F0D83A"
+    },
+    {
+      "Code": "A6",
+      "Hex": "#FDA951"
+    },
+    {
+      "Code": "A7",
+      "Hex": "#FA8C4F"
+    },
+    {
+      "Code": "A8",
+      "Hex": "#FBDA4D"
+    },
+    {
+      "Code": "A9",
+      "Hex": "#F79D5F"
+    },
+    {
+      "Code": "A10",
+      "Hex": "#F47E38"
+    },
+    {
+      "Code": "A11",
+      "Hex": "#FEDB99"
+    },
+    {
+      "Code": "A12",
+      "Hex": "#FDA276"
+    },
+    {
+      "Code": "A13",
+      "Hex": "#FEC667"
+    },
+    {
+      "Code": "A14",
+      "Hex": "#F75842"
+    },
+    {
+      "Code": "A15",
+      "Hex": "#FBF65E"
+    },
+    {
+      "Code": "A16",
+      "Hex": "#FEFF97"
+    },
+    {
+      "Code": "A17",
+      "Hex": "#FDE173"
+    },
+    {
+      "Code": "A18",
+      "Hex": "#FCBF80"
+    },
+    {
+      "Code": "A19",
+      "Hex": "#FD7E77"
+    },
+    {
+      "Code": "A20",
+      "Hex": "#F9D666"
+    },
+    {
+      "Code": "A21",
+      "Hex": "#FAE393"
+    },
+    {
+      "Code": "A22",
+      "Hex": "#EDF878"
+    },
+    {
+      "Code": "A23",
+      "Hex": "#E4C8BA"
+    },
+    {
+      "Code": "A24",
+      "Hex": "#F3F6A9"
+    },
+    {
+      "Code": "A25",
+      "Hex": "#FDF785"
+    },
+    {
+      "Code": "A26",
+      "Hex": "#FFC734"
+    },
+    {
+      "Code": "B1",
+      "Hex": "#DFF13B"
+    },
+    {
+      "Code": "B2",
+      "Hex": "#64F343"
+    },
+    {
+      "Code": "B3",
+      "Hex": "#A1F586"
+    },
+    {
+      "Code": "B4",
+      "Hex": "#5FDF34"
+    },
+    {
+      "Code": "B5",
+      "Hex": "#39E158"
+    },
+    {
+      "Code": "B6",
+      "Hex": "#64E0A4"
+    },
+    {
+      "Code": "B7",
+      "Hex": "#3EAE7C"
+    },
+    {
+      "Code": "B8",
+      "Hex": "#1D9B54"
+    },
+    {
+      "Code": "B9",
+      "Hex": "#2A5037"
+    },
+    {
+      "Code": "B10",
+      "Hex": "#9AD1BA"
+    },
+    {
+      "Code": "B11",
+      "Hex": "#627032"
+    },
+    {
+      "Code": "B12",
+      "Hex": "#1A6E3D"
+    },
+    {
+      "Code": "B13",
+      "Hex": "#C8E87D"
+    },
+    {
+      "Code": "B14",
+      "Hex": "#ABE84F"
+    },
+    {
+      "Code": "B15",
+      "Hex": "#305335"
+    },
+    {
+      "Code": "B16",
+      "Hex": "#C0ED9C"
+    },
+    {
+      "Code": "B17",
+      "Hex": "#9EB33E"
+    },
+    {
+      "Code": "B18",
+      "Hex": "#E6ED4F"
+    },
+    {
+      "Code": "B19",
+      "Hex": "#26B78E"
+    },
+    {
+      "Code": "B20",
+      "Hex": "#CBECCF"
+    },
+    {
+      "Code": "B21",
+      "Hex": "#18616A"
+    },
+    {
+      "Code": "B22",
+      "Hex": "#0A4241"
+    },
+    {
+      "Code": "B23",
+      "Hex": "#343B1A"
+    },
+    {
+      "Code": "B24",
+      "Hex": "#E8FAA6"
+    },
+    {
+      "Code": "B25",
+      "Hex": "#4E846D"
+    },
+    {
+      "Code": "B26",
+      "Hex": "#907C35"
+    },
+    {
+      "Code": "B27",
+      "Hex": "#D0E0AF"
+    },
+    {
+      "Code": "B28",
+      "Hex": "#9EE5BB"
+    },
+    {
+      "Code": "B29",
+      "Hex": "#C6DF5F"
+    },
+    {
+      "Code": "B30",
+      "Hex": "#E3FBB1"
+    },
+    {
+      "Code": "B31",
+      "Hex": "#B4E691"
+    },
+    {
+      "Code": "B32",
+      "Hex": "#92AD60"
+    },
+    {
+      "Code": "C1",
+      "Hex": "#F0FEE4"
+    },
+    {
+      "Code": "C2",
+      "Hex": "#ABF8FE"
+    },
+    {
+      "Code": "C3",
+      "Hex": "#A2E0F7"
+    },
+    {
+      "Code": "C4",
+      "Hex": "#44CDFB"
+    },
+    {
+      "Code": "C5",
+      "Hex": "#06AADF"
+    },
+    {
+      "Code": "C6",
+      "Hex": "#54A7E9"
+    },
+    {
+      "Code": "C7",
+      "Hex": "#3977CA"
+    },
+    {
+      "Code": "C8",
+      "Hex": "#0F52BD"
+    },
+    {
+      "Code": "C9",
+      "Hex": "#3349C3"
+    },
+    {
+      "Code": "C10",
+      "Hex": "#3CBCE3"
+    },
+    {
+      "Code": "C11",
+      "Hex": "#2ADED3"
+    },
+    {
+      "Code": "C12",
+      "Hex": "#1E334E"
+    },
+    {
+      "Code": "C13",
+      "Hex": "#CDE7FE"
+    },
+    {
+      "Code": "C14",
+      "Hex": "#D5FCF7"
+    },
+    {
+      "Code": "C15",
+      "Hex": "#21C5C4"
+    },
+    {
+      "Code": "C16",
+      "Hex": "#1858A2"
+    },
+    {
+      "Code": "C17",
+      "Hex": "#02D1F3"
+    },
+    {
+      "Code": "C18",
+      "Hex": "#213244"
+    },
+    {
+      "Code": "C19",
+      "Hex": "#18869D"
+    },
+    {
+      "Code": "C20",
+      "Hex": "#1A70A9"
+    },
+    {
+      "Code": "C21",
+      "Hex": "#BCDDFC"
+    },
+    {
+      "Code": "C22",
+      "Hex": "#6BB1BB"
+    },
+    {
+      "Code": "C23",
+      "Hex": "#C8E2FD"
+    },
+    {
+      "Code": "C24",
+      "Hex": "#7EC5F9"
+    },
+    {
+      "Code": "C25",
+      "Hex": "#A9E8E0"
+    },
+    {
+      "Code": "C26",
+      "Hex": "#42ADCF"
+    },
+    {
+      "Code": "C27",
+      "Hex": "#D0DEF9"
+    },
+    {
+      "Code": "C28",
+      "Hex": "#BDCEE8"
+    },
+    {
+      "Code": "C29",
+      "Hex": "#364A89"
+    },
+    {
+      "Code": "D1",
+      "Hex": "#ACB7EF"
+    },
+    {
+      "Code": "D2",
+      "Hex": "#868DD3"
+    },
+    {
+      "Code": "D3",
+      "Hex": "#3554AF"
+    },
+    {
+      "Code": "D4",
+      "Hex": "#162D7B"
+    },
+    {
+      "Code": "D5",
+      "Hex": "#B34EC6"
+    },
+    {
+      "Code": "D6",
+      "Hex": "#B37BDC"
+    },
+    {
+      "Code": "D7",
+      "Hex": "#8758A9"
+    },
+    {
+      "Code": "D8",
+      "Hex": "#E3D2FE"
+    },
+    {
+      "Code": "D9",
+      "Hex": "#D5B9F4"
+    },
+    {
+      "Code": "D10",
+      "Hex": "#301A49"
+    },
+    {
+      "Code": "D11",
+      "Hex": "#BEB9E2"
+    },
+    {
+      "Code": "D12",
+      "Hex": "#DC99CE"
+    },
+    {
+      "Code": "D13",
+      "Hex": "#B5038D"
+    },
+    {
+      "Code": "D14",
+      "Hex": "#862993"
+    },
+    {
+      "Code": "D15",
+      "Hex": "#2F1F8C"
+    },
+    {
+      "Code": "D16",
+      "Hex": "#E2E4F0"
+    },
+    {
+      "Code": "D17",
+      "Hex": "#C7D3F9"
+    },
+    {
+      "Code": "D18",
+      "Hex": "#9A64B8"
+    },
+    {
+      "Code": "D19",
+      "Hex": "#D8C2D9"
+    },
+    {
+      "Code": "D20",
+      "Hex": "#9A35AD"
+    },
+    {
+      "Code": "D21",
+      "Hex": "#940595"
+    },
+    {
+      "Code": "D22",
+      "Hex": "#38389A"
+    },
+    {
+      "Code": "D23",
+      "Hex": "#EADBF8"
+    },
+    {
+      "Code": "D24",
+      "Hex": "#768AE1"
+    },
+    {
+      "Code": "D25",
+      "Hex": "#4950C2"
+    },
+    {
+      "Code": "D26",
+      "Hex": "#D6C6EB"
+    },
+    {
+      "Code": "E1",
+      "Hex": "#F6D4CB"
+    },
+    {
+      "Code": "E2",
+      "Hex": "#FCC1DD"
+    },
+    {
+      "Code": "E3",
+      "Hex": "#F6BDE8"
+    },
+    {
+      "Code": "E4",
+      "Hex": "#E8649E"
+    },
+    {
+      "Code": "E5",
+      "Hex": "#F0569F"
+    },
+    {
+      "Code": "E6",
+      "Hex": "#EB4172"
+    },
+    {
+      "Code": "E7",
+      "Hex": "#C53674"
+    },
+    {
+      "Code": "E8",
+      "Hex": "#FDDBE9"
+    },
+    {
+      "Code": "E9",
+      "Hex": "#E376C7"
+    },
+    {
+      "Code": "E10",
+      "Hex": "#D13B95"
+    },
+    {
+      "Code": "E11",
+      "Hex": "#F7DAD4"
+    },
+    {
+      "Code": "E12",
+      "Hex": "#F693BF"
+    },
+    {
+      "Code": "E13",
+      "Hex": "#B5026A"
+    },
+    {
+      "Code": "E14",
+      "Hex": "#FAD4BF"
+    },
+    {
+      "Code": "E15",
+      "Hex": "#F5C9CA"
+    },
+    {
+      "Code": "E16",
+      "Hex": "#FBF4EC"
+    },
+    {
+      "Code": "E17",
+      "Hex": "#F7E3EC"
+    },
+    {
+      "Code": "E18",
+      "Hex": "#F9C8DB"
+    },
+    {
+      "Code": "E19",
+      "Hex": "#F6BBD1"
+    },
+    {
+      "Code": "E20",
+      "Hex": "#D7C6CE"
+    },
+    {
+      "Code": "E21",
+      "Hex": "#C09DA4"
+    },
+    {
+      "Code": "E22",
+      "Hex": "#B38C9F"
+    },
+    {
+      "Code": "E23",
+      "Hex": "#937D8A"
+    },
+    {
+      "Code": "E24",
+      "Hex": "#DEBEE5"
+    },
+    {
+      "Code": "F1",
+      "Hex": "#FE9381"
+    },
+    {
+      "Code": "F2",
+      "Hex": "#F63D4B"
+    },
+    {
+      "Code": "F3",
+      "Hex": "#EE4E3E"
+    },
+    {
+      "Code": "F4",
+      "Hex": "#FB2A40"
+    },
+    {
+      "Code": "F5",
+      "Hex": "#E10328"
+    },
+    {
+      "Code": "F6",
+      "Hex": "#913635"
+    },
+    {
+      "Code": "F7",
+      "Hex": "#911932"
+    },
+    {
+      "Code": "F8",
+      "Hex": "#BB0126"
+    },
+    {
+      "Code": "F9",
+      "Hex": "#E0677A"
+    },
+    {
+      "Code": "F10",
+      "Hex": "#874628"
+    },
+    {
+      "Code": "F11",
+      "Hex": "#592323"
+    },
+    {
+      "Code": "F12",
+      "Hex": "#F3536B"
+    },
+    {
+      "Code": "F13",
+      "Hex": "#F45C45"
+    },
+    {
+      "Code": "F14",
+      "Hex": "#FCADB2"
+    },
+    {
+      "Code": "F15",
+      "Hex": "#D50527"
+    },
+    {
+      "Code": "F16",
+      "Hex": "#F8C0A9"
+    },
+    {
+      "Code": "F17",
+      "Hex": "#E89B7D"
+    },
+    {
+      "Code": "F18",
+      "Hex": "#D07F4A"
+    },
+    {
+      "Code": "F19",
+      "Hex": "#BE454A"
+    },
+    {
+      "Code": "F20",
+      "Hex": "#C69495"
+    },
+    {
+      "Code": "F21",
+      "Hex": "#F2B8C6"
+    },
+    {
+      "Code": "F22",
+      "Hex": "#F7C3D0"
+    },
+    {
+      "Code": "F23",
+      "Hex": "#ED806C"
+    },
+    {
+      "Code": "F24",
+      "Hex": "#E09DAF"
+    },
+    {
+      "Code": "F25",
+      "Hex": "#E84854"
+    },
+    {
+      "Code": "G1",
+      "Hex": "#FFE4D3"
+    },
+    {
+      "Code": "G2",
+      "Hex": "#FCC6AC"
+    },
+    {
+      "Code": "G3",
+      "Hex": "#F1C4A5"
+    },
+    {
+      "Code": "G4",
+      "Hex": "#DCB387"
+    },
+    {
+      "Code": "G5",
+      "Hex": "#E7B34E"
+    },
+    {
+      "Code": "G6",
+      "Hex": "#E3A014"
+    },
+    {
+      "Code": "G7",
+      "Hex": "#985C3A"
+    },
+    {
+      "Code": "G8",
+      "Hex": "#713D2F"
+    },
+    {
+      "Code": "G9",
+      "Hex": "#E4B685"
+    },
+    {
+      "Code": "G10",
+      "Hex": "#DA8C42"
+    },
+    {
+      "Code": "G11",
+      "Hex": "#DAC898"
+    },
+    {
+      "Code": "G12",
+      "Hex": "#FEC993"
+    },
+    {
+      "Code": "G13",
+      "Hex": "#B2714B"
+    },
+    {
+      "Code": "G14",
+      "Hex": "#8B684C"
+    },
+    {
+      "Code": "G15",
+      "Hex": "#F6F8E3"
+    },
+    {
+      "Code": "G16",
+      "Hex": "#F2D8C1"
+    },
+    {
+      "Code": "G17",
+      "Hex": "#77544E"
+    },
+    {
+      "Code": "G18",
+      "Hex": "#FFE3D5"
+    },
+    {
+      "Code": "G19",
+      "Hex": "#DD7D41"
+    },
+    {
+      "Code": "G20",
+      "Hex": "#A5452F"
+    },
+    {
+      "Code": "G21",
+      "Hex": "#B38561"
+    },
+    {
+      "Code": "H1",
+      "Hex": "#FFFFFF"
+    },
+    {
+      "Code": "H2",
+      "Hex": "#FBFBFB"
+    },
+    {
+      "Code": "H3",
+      "Hex": "#B4B4B4"
+    },
+    {
+      "Code": "H4",
+      "Hex": "#878787"
+    },
+    {
+      "Code": "H5",
+      "Hex": "#464648"
+    },
+    {
+      "Code": "H6",
+      "Hex": "#2C2C2C"
+    },
+    {
+      "Code": "H7",
+      "Hex": "#010101"
+    },
+    {
+      "Code": "H8",
+      "Hex": "#E7D6DC"
+    },
+    {
+      "Code": "H9",
+      "Hex": "#EFEDEE"
+    },
+    {
+      "Code": "H10",
+      "Hex": "#EBEBEB"
+    },
+    {
+      "Code": "H11",
+      "Hex": "#CDCDCD"
+    },
+    {
+      "Code": "H12",
+      "Hex": "#FDF6EE"
+    },
+    {
+      "Code": "H13",
+      "Hex": "#F4EDF1"
+    },
+    {
+      "Code": "H14",
+      "Hex": "#CED7D4"
+    },
+    {
+      "Code": "H15",
+      "Hex": "#9AA6A6"
+    },
+    {
+      "Code": "H16",
+      "Hex": "#1B1213"
+    },
+    {
+      "Code": "H17",
+      "Hex": "#F0EEEF"
+    },
+    {
+      "Code": "H18",
+      "Hex": "#FCFFF6"
+    },
+    {
+      "Code": "H19",
+      "Hex": "#F2EEE5"
+    },
+    {
+      "Code": "H20",
+      "Hex": "#96A09F"
+    },
+    {
+      "Code": "H21",
+      "Hex": "#F8FBE6"
+    },
+    {
+      "Code": "H22",
+      "Hex": "#CACAD2"
+    },
+    {
+      "Code": "H23",
+      "Hex": "#9B9C94"
+    },
+    {
+      "Code": "M1",
+      "Hex": "#BBC6B6"
+    },
+    {
+      "Code": "M2",
+      "Hex": "#909994"
+    },
+    {
+      "Code": "M3",
+      "Hex": "#697E81"
+    },
+    {
+      "Code": "M4",
+      "Hex": "#E0D4BC"
+    },
+    {
+      "Code": "M5",
+      "Hex": "#D1CCAF"
+    },
+    {
+      "Code": "M6",
+      "Hex": "#B0AA86"
+    },
+    {
+      "Code": "M7",
+      "Hex": "#B0A796"
+    },
+    {
+      "Code": "M8",
+      "Hex": "#AE8082"
+    },
+    {
+      "Code": "M9",
+      "Hex": "#A68862"
+    },
+    {
+      "Code": "M10",
+      "Hex": "#C4B3BB"
+    },
+    {
+      "Code": "M11",
+      "Hex": "#9D7693"
+    },
+    {
+      "Code": "M12",
+      "Hex": "#644B51"
+    },
+    {
+      "Code": "M13",
+      "Hex": "#C79266"
+    },
+    {
+      "Code": "M14",
+      "Hex": "#C27563"
+    },
+    {
+      "Code": "M15",
+      "Hex": "#747D7A"
+    }
+  ],
+  "DefaultCodes": [
+    "G8",
+    "G17",
+    "G13",
+    "G4",
+    "A14",
+    "A10",
+    "A6",
+    "A13",
+    "H5",
+    "H4",
+    "H23",
+    "H10",
+    "E13",
+    "E7",
+    "E12",
+    "E18",
+    "D22",
+    "D7",
+    "D6",
+    "D9"
+  ]
+}

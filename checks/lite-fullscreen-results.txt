@@ -1,0 +1,21 @@
+PASS layout bounds and input regions (480, 420)
+PASS layout bounds and input regions (640, 480)
+PASS layout bounds and input regions (854, 480)
+PASS layout bounds and input regions (1024, 768)
+PASS layout bounds and input regions (1280, 720)
+PASS layout bounds and input regions (1280, 900)
+PASS layout bounds and input regions (1920, 1080)
+PASS layout bounds and input regions (2560, 1440)
+PASS fullscreen expands frame, canvas and material sidebar
+PASS normal mode has two effect slots without story progress
+PASS only supported advanced capabilities enabled
+PASS normal material costs remain default
+PASS valid player design permitted without task state
+PASS malformed design remains rejected
+PASS no presets, backups or debug symbols packaged
+PASS zh retains core copy and removes task/preset copy
+PASS default retains core copy and removes task/preset copy
+PASS excluded systems absent from compiled DLL
+PASS core systems present
+PASS isolated test progress storage
+20 focused checks passed

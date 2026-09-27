@@ -1,0 +1,20 @@
+PASS scaled controls fit (480, 420)
+PASS scaled pointer targets correct bead (480, 420)
+PASS scaled controls fit (640, 480)
+PASS scaled pointer targets correct bead (640, 480)
+PASS scaled controls fit (854, 480)
+PASS scaled pointer targets correct bead (854, 480)
+PASS scaled controls fit (1024, 768)
+PASS scaled pointer targets correct bead (1024, 768)
+PASS scaled controls fit (1280, 720)
+PASS scaled pointer targets correct bead (1280, 720)
+PASS scaled controls fit (1280, 900)
+PASS scaled pointer targets correct bead (1280, 900)
+PASS scaled controls fit (1920, 1080)
+PASS scaled pointer targets correct bead (1920, 1080)
+PASS scaled controls fit (2560, 1440)
+PASS scaled pointer targets correct bead (2560, 1440)
+PASS fullscreen text at least native font height
+PASS 16-grid artwork expands beyond old 512px cap
+PASS buttons and palette grow with viewport, not just background
+19 focused UI checks passed

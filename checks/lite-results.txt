@@ -1,0 +1,12 @@
+PASS normal mode has two effect slots without story progress
+PASS only supported advanced capabilities enabled
+PASS normal material costs remain default
+PASS valid player design permitted without task state
+PASS malformed design remains rejected
+PASS no presets, backups or debug symbols packaged
+PASS zh retains core copy and removes task/preset copy
+PASS default retains core copy and removes task/preset copy
+PASS excluded systems absent from compiled DLL
+PASS core systems present
+PASS isolated test progress storage
+11 focused checks passed

@@ -1,0 +1,9 @@
+Version: 0.16.1
+Gameplay targeted checks: 49 passed, 0 failed
+Build: 0 warnings, 0 errors
+Integration: passed against local Stardew Valley / SMAPI assemblies; game not launched
+Offline previews: reference-patterns.png, pattern-detail-wide.png, pattern-detail-compact.png (not game screenshots)
+dist/BetterBeads-0.16.1.zip : 23 files
+dist/BetterBeads-Art-0.16.1.zip : 75 files
+SHA256: checks/release-0.16.1-sha256.txt
+Game runtime: NOT_RUN; no saves or Mods directory modified

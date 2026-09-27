@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+    <DefineConstants>BEADS_LITE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../BetterBeads/Data/*.cs" Exclude="../../BetterBeads/Data/WorkshopProgress.cs;../../BetterBeads/Data/WorkshopGuidance.cs;../../BetterBeads/Data/ReferencePattern*.cs;../../BetterBeads/Data/PatternDetailLayout.cs" />
+    <Compile Include="../../BetterBeads/Runtime/FeatureAccess.cs" />
+  </ItemGroup>
+</Project>

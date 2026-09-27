@@ -1,0 +1,11 @@
+0.16.3 工坊引导与季节委托
+Targeted checks: 26 passed, 0 failed (--workshop-polish-only)
+Release build: 0 warnings, 0 errors
+Runtime ZIP: 23 entries, exact whitelist and SHA256 matched build
+Art ZIP: 82 entries, all SHA256 matched workspace sources
+Translations: both JSON valid; key sets match
+Gameplay/save schema/old product data: unchanged
+Existing commissions retained; new winter fallback may request statue
+Game: NOT_RUN; no saves or Mods directory modified
+No unrelated full suite or repeated game-interface audit run
+Analysis and incomplete inventory: docs/GAMEPLAY_REVIEW_0163.md

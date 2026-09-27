@@ -1,25 +1,3 @@
-[Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/53029) · [Downloads](https://github.com/huxinzhao/BetterBeads/releases)
-
-![Better Beads](release/publish-1.0.0-RC7/images/01-cover.png)
-
-把能想到的任意图案做成挂画、摆件和武器。
-
-- 自由摆豆、调色、统一换色，导入图片或分享图纸。
-- 挂画与摆件带轻微拼豆质感；剑、匕首、锤支持16／24／32格。
-- 作品独立估价，可出售；挂画可送给村民，达到6心后次日在适配住宅展示。
-- 在线多人候选支持：各自保留图纸与豆色，共用箱子和村民展示位。
-
-需要星露谷1.6、SMAPI 4.5.1或更新兼容版本。将包内 BetterBeads 文件夹放入 Mods，觅食2级后配方在罗宾处购买。
-
-**操作**：左键摆豆，右键擦除，滚轮缩放，中键或空格＋左键平移。Ctrl+S保存，Ctrl+Z／Y撤销重做，Home适应画布。未保存草稿只保留在本次游戏。
-
-从背包和同地图周围5格普通箱子取料。支持中文、英文；Generic Mod Config Menu可选。
-
-欢迎反馈 Bug；如果喜欢这个模组，也请点个 Endorse 支持一下！
-
-
----
-
 # Better Beads · 1.0.0 RC7
 
 Turn your own pixel designs into wall art, ornaments and weapons.
@@ -37,7 +15,4 @@ Uses your backpack and ordinary chests within five tiles on the same map. Creati
 
 **Release candidate:** Builds and offline checks passed. Real two-player sessions, disconnect recovery, weapon swings and furniture layering still need in-game acceptance. Exit the game and back up saves and customized assets before upgrading. This is not the final stable release.
 
-## Development
-See BUILD.md. Project code is all rights reserved; third-party notices remain applicable.
-
-Bug reports are welcome! If you enjoy the mod, please leave an endorsement on Nexus Mods.
+Bug reports are welcome! If you enjoy the mod, please leave an endorsement to support it.
