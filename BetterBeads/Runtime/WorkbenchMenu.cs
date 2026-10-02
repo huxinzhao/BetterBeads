@@ -25,6 +25,19 @@ internal sealed class WorkbenchMenu : IClickableMenu
     private EditorLayout geometry=null!;
     private Point layoutViewport;
     private WorkbenchScale uiScale;
+#if BEADS_LITE
+    private UiRect? padFocus;
+    private int padFocusIndex;
+    private string padScope="";
+    private GamePadState previousPad;
+    private double nextPadMove;
+    private bool dispatchingPad;
+    private ControllerTextEntry? padText;
+    private static double PadNow=>System.Diagnostics.Stopwatch.GetTimestamp()/(double)System.Diagnostics.Stopwatch.Frequency;
+    internal void OfferRecovery(DraftRecoveryEntry entry,Func<bool,bool> resolve)=>editor?.OfferRecovery(entry,resolve,
+        ()=>{closing=true;ReleaseInputs();ReleasePreview();exitThisMenu();});
+    internal void ShowRecoveryError()=>editor?.ShowNotice(ContentText.Get("simple.recovery-unreadable","恢复缓存无法读取，原文件已保留；请勿直接覆盖。"));
+#endif
 
     public WorkbenchMenu(SaveProgress progress, ITranslationHelper text, InventoryService? service, EditorDocument? draft,ReferenceReader referenceReader,ManufacturingService? manufacturing,string modDirectory="") : base(0, 0, 800, 520, true)
     {
@@ -62,6 +75,9 @@ internal sealed class WorkbenchMenu : IClickableMenu
         var editorLayout = EditorLayout.Calculate(uiScale.Width,uiScale.Height);
 #endif
         geometry=editorLayout;
+#if BEADS_LITE
+        padText?.Relayout(editorLayout.Frame);
+#endif
         layoutViewport=new Point(Game1.uiViewport.Width,Game1.uiViewport.Height);
         width=editorLayout.Frame.Width; height=editorLayout.Frame.Height;
         xPositionOnScreen = editorLayout.Frame.X;
@@ -88,8 +104,21 @@ internal sealed class WorkbenchMenu : IClickableMenu
         if(OnlineSession.Busy)return;
 #endif
         EnsureLayout();
+#if BEADS_LITE
+        if(!dispatchingPad){WorkbenchInput.Pointer();if(editor?.ControllerCanvasActive==true)editor.ControllerLeaveCanvas();}
+#endif
         using var ui=WorkbenchUi.Enter(uiScale);
         x=uiScale.Logical(x);y=uiScale.Logical(y);
+#if BEADS_LITE
+        if(padText?.Active==true)
+        {
+            foreach(var key in padText.Targets)if(key.Contains(x,y)){padText.Select(key);break;}
+            return;
+        }
+        if(WorkbenchInput.Touch&&Game1.keyboardDispatcher.Subscriber is TextBox entry
+            &&new UiRect(geometry.Frame.X+16,geometry.Frame.Y+12,96,40).Contains(x,y))
+        {padText=new(entry,geometry.Frame);return;}
+#endif
 #if BEADS_LITE
         ArtResources.Press(FeedbackTarget(x,y));
 #else
@@ -117,7 +146,7 @@ internal sealed class WorkbenchMenu : IClickableMenu
         if(selected==1 && editor?.PaletteOpen==true)
         {
             upperRightCloseButton.bounds=ArtResources.Rect(editor.PaletteCloseButton);
-            if(upperRightCloseButton.containsPoint(x,y)){editor.ClosePalette();editor.Suspend();return;}
+            if(upperRightCloseButton.containsPoint(x,y)){editor.ClosePaletteOrSearch();editor.Suspend();return;}
         }
         if(selected==1 && editor?.HasOverlay==true) {editor.Click(x,y);return;}
 #if BEADS_LITE
@@ -165,6 +194,7 @@ internal sealed class WorkbenchMenu : IClickableMenu
         ) editor?.Update();
 #if BEADS_LITE
         if(!closePrompt && selected==2)library?.UpdateImport();
+        UpdatePad();
 #endif
     }
     public override void receiveScrollWheelAction(int direction)
@@ -180,6 +210,12 @@ internal sealed class WorkbenchMenu : IClickableMenu
     {
 #if BEADS_LITE
         if(OnlineSession.Busy)return;
+        if(padText?.Active==true)
+        {
+            if(key==Keys.Escape)padText.Close(true);
+            else if(key==Keys.Enter)padText.Close(false);
+            return;
+        }
 #endif
         if(closePrompt){if(key==Keys.Escape)CancelPending();return;}
         if(selected==2 && library?.Key(key)==true)return;
@@ -251,11 +287,22 @@ internal sealed class WorkbenchMenu : IClickableMenu
 #if BEADS_LITE
         if(OnlineSession.Busy)return;
 #endif
-        if(button==Buttons.B){if(closePrompt)CancelPending();else if(library?.HasModal==true)library.Key(Keys.Escape);
+        if(button==Buttons.B){
+#if BEADS_LITE
+            WorkbenchInput.Pad();
+            if(padText?.Active==true){padText.Close(true);return;}
+            if(editor?.ControllerPickerEditing==true){editor.ControllerStopPicker();return;}
+            if(selected==1&&editor?.ControllerCanvasActive==true){editor.ControllerLeaveCanvas();return;}
+#endif
+            if(closePrompt)CancelPending();else if(library?.HasModal==true)library.Key(Keys.Escape);
 #if BEADS_LITE
             else if(selected==2)ReturnToEditor();
 #endif
             else if(editor?.HasOverlay==true)editor.Key(Keys.Escape);else TryClose();return;}
+#if BEADS_LITE
+        WorkbenchInput.Pad();
+        if(WorkbenchInput.Controller)return;
+#endif
         if(!closePrompt)base.receiveGamePadButton(button);
     }
     protected override void cleanupBeforeExit() { ReleasePreview(); ReleaseInputs();
@@ -264,16 +311,24 @@ internal sealed class WorkbenchMenu : IClickableMenu
 #endif
         ArtResources.ResetMotion(); base.cleanupBeforeExit(); }
     public void ReleasePreview(){editor?.CloseFitting();editor?.ClosePalette();}
-    public void ReleaseInputs() { editor?.Suspend(); library?.ReleaseFocus(); }
+    public void ReleaseInputs() { editor?.Suspend(); library?.ReleaseFocus();
+#if BEADS_LITE
+        if(padText?.Active==true)padText.Close(false);
+#endif
+    }
 
     public override void draw(SpriteBatch b)
     {
         EnsureLayout();
         using var ui=WorkbenchUi.Enter(uiScale);
         using(new ScaledUiBatch(b,uiScale.Factor))DrawContent(b);
-        if(selected==1 && !closePrompt)editor?.DrawHover(b);
+        if(selected==1 && !closePrompt
 #if BEADS_LITE
-        ArtResources.DrawHint(b);
+            &&!WorkbenchInput.Touch
+#endif
+            )editor?.DrawHover(b);
+#if BEADS_LITE
+        if(!WorkbenchInput.Touch)ArtResources.DrawHint(b);
 #endif
         ArtResources.ReleasePreviewRetired();
 #if BEADS_LITE
@@ -351,9 +406,139 @@ internal sealed class WorkbenchMenu : IClickableMenu
                 ArtResources.ButtonText(b,new(r.X,r.Y,r.Width,r.Height),text.Get(keys[i]).ToString());
             }
         }
+#if BEADS_LITE
+        if(WorkbenchInput.Touch&&padText?.Active!=true&&Game1.keyboardDispatcher.Subscriber is TextBox)
+            ArtResources.ButtonText(b,new(geometry.Frame.X+16,geometry.Frame.Y+12,96,40),ContentText.Get("input.keyboard","键盘"));
+        if(padText?.Active==true)padText.Draw(b);
+        DrawPadFocus(b);
+#endif
 
     }
 #if BEADS_LITE
+    private UiRect[] PadTargets()
+    {
+        if(padText?.Active==true)return padText.Targets.ToArray();
+        if(closePrompt)return closeChoices.Select(r=>new UiRect(r.X,r.Y,r.Width,r.Height)).Where(r=>r.Width>0).ToArray();
+        if(selected==1)
+        {
+            if(editor is null)return Array.Empty<UiRect>();
+            var controls=editor.ControllerTargets;
+            if(editor.HasOverlay)return editor.PaletteOpen?controls.Append(editor.PaletteCloseButton).ToArray():controls.ToArray();
+            return controls.Append(geometry.Canvas).Append(geometry.EditorTab).Append(geometry.LibraryTab).Append(geometry.CloseButton).ToArray();
+        }
+        if(selected==2&&library is not null)
+            return library.HasModal?library.ControllerTargets.ToArray():library.ControllerTargets.Append(geometry.CloseButton).ToArray();
+        return Array.Empty<UiRect>();
+    }
+    private void SyncPadFocus(UiRect[] targets)
+    {
+        string scope=padText?.Active==true?"keyboard:"+padText.Page:
+            selected+":"+(closePrompt?"close":selected==1?editor?.FeedbackScope:library?.FeedbackScope);
+        if(padScope!=scope||padFocus is null||!targets.Contains(padFocus.Value))
+        {
+            if(padScope!=scope)padFocusIndex=0;
+            padScope=scope;
+            padFocus=targets.Length>0?targets[Math.Clamp(padFocusIndex,0,targets.Length-1)]:null;
+        }
+    }
+    private void MovePadFocus(int dx,int dy,UiRect[] targets)
+    {
+        if(targets.Length==0)return;
+        SyncPadFocus(targets);
+        padFocusIndex=DirectionalFocus.Move(targets,Array.IndexOf(targets,padFocus!.Value),dx,dy);
+        padFocus=targets[padFocusIndex];
+    }
+    private static (int X,int Y) PadDirection(GamePadState state)
+    {
+        int x=state.IsButtonDown(Buttons.DPadLeft)?-1:state.IsButtonDown(Buttons.DPadRight)?1:0;
+        int y=state.IsButtonDown(Buttons.DPadUp)?-1:state.IsButtonDown(Buttons.DPadDown)?1:0;
+        if(x!=0||y!=0)return x!=0?(x,0):(0,y);
+        float sx=state.ThumbSticks.Left.X,sy=state.ThumbSticks.Left.Y;
+        if(Math.Abs(sx)<.55f&&Math.Abs(sy)<.55f)return(0,0);
+        return Math.Abs(sx)>=Math.Abs(sy)?(Math.Sign(sx),0):(0,-Math.Sign(sy));
+    }
+    private void ClickPadFocus()
+    {
+        var targets=PadTargets();SyncPadFocus(targets);
+        if(padFocus is not {} focus)return;
+        if(padText?.Active==true){padText.Select(focus);return;}
+        if(selected==1&&editor?.ControllerPickerEditing==true){editor.ControllerStopPicker();return;}
+        if(selected==1&&editor?.ControllerTryPicker(focus)==true)return;
+        if(selected==1&&editor?.HasOverlay!=true&&focus==geometry.Canvas){editor?.ControllerEnterCanvas();return;}
+        int x=(int)((focus.X+focus.Width/2f)*uiScale.Factor);
+        int y=(int)((focus.Y+focus.Height/2f)*uiScale.Factor);
+        dispatchingPad=true;
+        try{receiveLeftClick(x,y);}finally{dispatchingPad=false;}
+        if(Game1.keyboardDispatcher.Subscriber is TextBox entry)padText=new(entry,geometry.Frame);
+    }
+    private void UpdatePad()
+    {
+        var state=GamePad.GetState(PlayerIndex.One);
+        if(!state.IsConnected){previousPad=state;return;}
+        if(!WorkbenchInput.Controller){previousPad=state;return;}
+        if(OnlineSession.Busy){editor?.ControllerLeaveCanvas();previousPad=state;return;}
+        bool Pressed(Buttons button)=>state.IsButtonDown(button)&&!previousPad.IsButtonDown(button);
+        if(padText?.Active==true)
+        {
+            var (dx,dy)=PadDirection(state);
+            if((dx!=0||dy!=0)&&PadNow>=nextPadMove){MovePadFocus(dx,dy,PadTargets());nextPadMove=PadNow+.13;}
+            if(Pressed(Buttons.A))ClickPadFocus();
+        }
+        else if(editor?.ControllerCanvasActive==true&&selected==1)
+        {
+            if(Pressed(Buttons.Y))editor.ControllerColors();
+            if(Pressed(Buttons.LeftShoulder))editor.ControllerUndo();
+            if(Pressed(Buttons.RightShoulder))editor.ControllerRedo();
+            if(Pressed(Buttons.LeftTrigger))editor.ControllerZoom(-1);
+            if(Pressed(Buttons.RightTrigger))editor.ControllerZoom(1);
+            editor.ControllerTick(state);
+        }
+        else if(!closePrompt)
+        {
+            if(selected==1&&editor?.HasOverlay!=true)
+            {
+                if(Pressed(Buttons.Y))editor?.ControllerColors();
+                if(Pressed(Buttons.LeftShoulder))editor?.ControllerUndo();
+                if(Pressed(Buttons.RightShoulder))editor?.ControllerRedo();
+            }
+            var (dx,dy)=PadDirection(state);
+            if((dx!=0||dy!=0)&&PadNow>=nextPadMove)
+            {if(editor?.ControllerPickerEditing==true)editor.ControllerAdjustPicker(dx,dy);else MovePadFocus(dx,dy,PadTargets());nextPadMove=PadNow+.13;}
+            if(Pressed(Buttons.A))ClickPadFocus();
+        }
+        else
+        {
+            var (dx,dy)=PadDirection(state);
+            if((dx!=0||dy!=0)&&PadNow>=nextPadMove){MovePadFocus(dx,dy,PadTargets());nextPadMove=PadNow+.13;}
+            if(Pressed(Buttons.A))ClickPadFocus();
+        }
+        previousPad=state;
+    }
+    private void DrawPadFocus(SpriteBatch b)
+    {
+        if(!WorkbenchInput.Controller)return;
+        bool canvas=editor?.ControllerCanvasActive==true;
+        if(!canvas)
+        {
+            var targets=PadTargets();SyncPadFocus(targets);
+            if(padFocus is {} r)
+            {
+                var ink=new Color(255,242,120);
+                void Bar(int x,int y,int w,int h){if(w>0&&h>0)b.Draw(Game1.staminaRect,new Rectangle(x,y,w,h),ink);}
+                Bar(r.X,r.Y,r.Width,3);Bar(r.X,r.Bottom-3,r.Width,3);
+                Bar(r.X,r.Y,3,r.Height);Bar(r.Right-3,r.Y,3,r.Height);
+            }
+        }
+        if(padText?.Active==true||selected!=1||closePrompt||editor?.HasOverlay==true)return;
+        var hint=SimpleEditorLayout.ControllerHint(geometry);
+        if(hint.Height<18)return;
+        string keys=geometry.UsesDrawers
+            ?canvas?ContentText.Get("input.controller-draw-compact","A摆豆 · X擦除"):
+                ContentText.Get("input.controller-menu-compact","A确定 · B返回")
+            :canvas?ContentText.Get("input.controller-draw-help","方向键移动 · A摆豆 · X擦除 · B返回"):
+                ContentText.Get("input.controller-help-short","A确定 · B返回 · Y豆色");
+        ArtResources.TextLine(b,keys,new(hint.X+4,hint.Y,hint.Width-8,hint.Height),ArtResources.Ink);
+    }
     private UiRect? FeedbackTarget(int x,int y)
     {
         if(closePrompt)

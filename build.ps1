@@ -1,6 +1,16 @@
 param([string]$GamePath = 'D:\steam\steamapps\common\Stardew Valley', [ValidatePattern('^[a-zA-Z0-9.-]*$')][string]$PackageTag = '')
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath $PSScriptRoot
+function AssertReleaseManifest($releaseManifest) {
+    if ($releaseManifest.UniqueID -cne 'xinzh.BetterBeads' -or $releaseManifest.EntryDll -cne 'BetterBeads.dll' -or
+        $releaseManifest.Name -cne 'Better Beads' -or $releaseManifest.Version -cne '1.1.0') {
+        throw '发布清单的名称、版本或入口错误。'
+    }
+    if (@($releaseManifest.UpdateKeys) -cnotcontains 'Nexus:53029') {
+        throw '发布清单缺少 Nexus:53029，玩家无法通过 SMAPI 获得 Nexus 更新提示。'
+    }
+}
+AssertReleaseManifest (Get-Content -LiteralPath 'BetterBeads/manifest.json' -Raw | ConvertFrom-Json)
 $env:DOTNET_CLI_HOME = Join-Path $PSScriptRoot '.tools\cli-home'
 $env:NUGET_PACKAGES = Join-Path $PSScriptRoot '.tools\packages'
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
@@ -34,10 +44,11 @@ try {
         Copy-Item -LiteralPath (Join-Path "$output\assets" $relativeAsset) -Destination $assetDestination
     }
     $manifest = Get-Content -LiteralPath "$package\manifest.json" -Raw | ConvertFrom-Json
+    AssertReleaseManifest $manifest
     if ($manifest.UniqueID -ne 'xinzh.BetterBeads' -or !(Test-Path -LiteralPath "$package\$($manifest.EntryDll)")) {
         throw '发布包入口或唯一 ID 错误。'
     }
-    if ($manifest.Version -ne '1.0.0' -or $manifest.Name -ne 'Better Beads') { throw '发布包版本或名称错误。' }
+    if ($manifest.Version -ne '1.1.0' -or $manifest.Name -ne 'Better Beads') { throw '发布包版本或名称错误。' }
     New-Item -ItemType Directory -Force "$package\imports" | Out-Null
     Copy-Item -LiteralPath 'BetterBeads\imports\README.txt' -Destination "$package\imports\README.txt" -Force
     foreach ($locale in @('zh','default')) {
@@ -49,16 +60,20 @@ try {
     }
     $suffix = if ($PackageTag) { "-$PackageTag" } else { '' }
     $zipPath = "dist\BetterBeads-$($manifest.Version)$suffix.zip"
-    Compress-Archive -LiteralPath $package -DestinationPath $zipPath -Force
-    $verify = [System.IO.Compression.ZipFile]::OpenRead((Join-Path $PSScriptRoot $zipPath))
+    # Keep the previous archive intact until the complete replacement passes verification.
+    $pendingZip = Join-Path $stagingRoot 'verified-package.zip'
+    Compress-Archive -LiteralPath $package -DestinationPath $pendingZip
+    $verify = [System.IO.Compression.ZipFile]::OpenRead($pendingZip)
     try {
         foreach ($entry in $verify.Entries | Where-Object { $_.Name }) {
             $stream = $entry.Open(); $hasher = [Security.Cryptography.SHA256]::Create()
             try { $hash = [Convert]::ToHexString($hasher.ComputeHash($stream)) } finally { $stream.Dispose(); $hasher.Dispose() }
             if ($hash -ne (Get-FileHash -LiteralPath (Join-Path $stagingRoot $entry.FullName)).Hash) { throw "包内文件校验失败：$($entry.FullName)" }
         }
-        Write-Host "发布包：$zipPath；$($verify.Entries.Count) 个条目逐项校验通过。"
+        $verifiedCount = $verify.Entries.Count
     } finally { $verify.Dispose() }
+    Move-Item -LiteralPath $pendingZip -Destination (Join-Path $PSScriptRoot $zipPath) -Force
+    Write-Host "发布包：$zipPath；$verifiedCount 个条目逐项校验通过。"
 } finally {
     # Delete only this build's temporary staging directory, never a shared output.
     if (Test-Path -LiteralPath $stagingRoot) {

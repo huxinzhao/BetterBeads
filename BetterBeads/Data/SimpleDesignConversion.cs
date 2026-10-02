@@ -27,6 +27,7 @@ public static class SimpleDesignConversion
         }
         result.TemplateId=target.TemplateId;
         result.Use=target.Use;
+        result.BackgroundRgba=SimpleCrafting.IsDecoration(target.Use)?source.BackgroundRgba:0xEADFC6FF;
         result.SwordOrientation=target.Use==ProductUse.Sword&&source.Use==ProductUse.Sword?source.SwordOrientation:SwordOrientation.Diagonal;
         result.Views=new(){["front"]=newGrid};
         result.SupplementaryMaterials=SimpleCrafting.IsWeapon(target.Use)?new(){{metal,0}}:new();

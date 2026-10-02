@@ -1,5 +1,28 @@
 namespace BetterBeads.Data;
 
+internal sealed record PaletteSearchLayout(UiRect Dialog,UiRect Search,UiRect Close,UiRect[] Results,UiRect Previous,UiRect Next,UiRect PageInfo,UiRect Status)
+{
+    internal static PaletteSearchLayout Calculate(UiRect frame)
+    {
+        var parent=CreativeDialogLayout.Calculate(frame).Dialog;
+        int inset=16;
+        var search=new UiRect(parent.X+inset,parent.Y+64,parent.Width-inset*2,44);
+        int columns=parent.Width<600?3:5;
+        int rows=parent.Height<440?3:4;
+        int gap=8;
+        int cellWidth=(parent.Width-inset*2-gap*(columns-1))/columns;
+        int top=search.Bottom+16;
+        int bottom=parent.Bottom-88;
+        int cellHeight=Math.Max(48,Math.Min(64,(bottom-top-gap*(rows-1))/rows));
+        var cells=Enumerable.Range(0,columns*rows).Select(i=>new UiRect(parent.X+inset+i%columns*(cellWidth+gap),top+i/columns*(cellHeight+gap),cellWidth,cellHeight)).ToArray();
+        int footer=parent.Bottom-56;
+        return new(parent,search,new(parent.Right-56,parent.Y+16,40,40),cells,
+            new(parent.X+inset,footer,48,40),new(parent.Right-inset-48,footer,48,40),
+            new(parent.X+inset+56,footer,parent.Width-inset*2-112,40),
+            new(parent.X+inset,footer-32,parent.Width-inset*2,24));
+    }
+}
+
 internal sealed record CreativeDialogLayout(UiRect Dialog,UiRect CommonTab,UiRect WorkTab,UiRect Close,UiRect Body,UiRect Left,UiRect Right,
     UiRect Back,UiRect Next,UiRect Apply,UiRect[] Cells,ColorPickerLayout Picker,UiRect BeforeCard,UiRect AfterCard,
     UiRect Preview,UiRect Info,UiRect PreviousPage,UiRect NextPage,UiRect PageInfo,bool Compact)
@@ -40,7 +63,7 @@ internal sealed record ScenePreviewLayout(UiRect Dialog,UiRect Close,UiRect Stag
         int width=Math.Min(760,frame.Width-16),height=Math.Min(600,frame.Height-16);
         var box=new UiRect(frame.X+(frame.Width-width)/2,frame.Y+(frame.Height-height)/2,width,height);
         return new(box,new(box.Right-56,box.Y+16,40,40),new(box.X+16,box.Y+64,width-32,height-200),
-            new(box.X+16,box.Bottom-128,width-32,24),new(box.X+16,box.Bottom-96,width-32,24),new(box.X+16,box.Bottom-56,width-32,40));
+            new(box.X+16,box.Bottom-128,width-32,24),new(box.X+16,box.Bottom-96,width-32,24),new(box.X+16,box.Bottom-60,width-32,44));
     }
 }
 
@@ -62,7 +85,7 @@ internal sealed record LiteLibraryLayout(UiRect Search,UiRect Filter,UiRect Impo
     internal UiRect Preview(int index)=>new(Rows.X+4,Rows.Y+index*64+6,44,44);
 }
 
-internal sealed record LibraryShareLayout(UiRect Dialog,UiRect Close,UiRect Copy,UiRect Chart,UiRect Paste,UiRect Note)
+internal sealed record LibraryShareLayout(UiRect Dialog,UiRect Close,UiRect Copy,UiRect Chart,UiRect Paste,UiRect ImportFile,UiRect Note)
 {
     internal static LibraryShareLayout Calculate(UiRect frame)
     {
@@ -74,19 +97,35 @@ internal sealed record LibraryShareLayout(UiRect Dialog,UiRect Close,UiRect Copy
             new(box.X+16,first,width-32,buttonHeight),
             new(box.X+16,first+buttonHeight+8,width-32,buttonHeight),
             new(box.X+16,first+(buttonHeight+8)*2,width-32,buttonHeight),
+            new(box.X+16,first+(buttonHeight+8)*3,width-32,buttonHeight),
             new(box.X+16,box.Bottom-34,width-32,24));
     }
 }
 
-internal sealed record LibraryFilterLayout(UiRect Dialog,UiRect[] Categories,UiRect Favorites,UiRect Sort,UiRect Done)
+internal sealed record LibraryShareFilesLayout(UiRect Dialog,UiRect Title,UiRect[] Rows,UiRect Previous,UiRect Next,UiRect Back,UiRect Note)
+{
+    internal static LibraryShareFilesLayout Calculate(UiRect frame)
+    {
+        int width=Math.Min(520,frame.Width-24),height=Math.Min(376,frame.Height-24);
+        var box=new UiRect(frame.X+(frame.Width-width)/2,frame.Y+(frame.Height-height)/2,width,height);
+        int count=Math.Clamp((height-160)/48,1,4);
+        var rows=Enumerable.Range(0,count).Select(i=>new UiRect(box.X+16,box.Y+64+i*48,width-32,42)).ToArray();
+        return new(box,new(box.X+16,box.Y+12,width-32,40),rows,
+            new(box.X+16,box.Bottom-56,72,40),new(box.X+96,box.Bottom-56,72,40),
+            new(box.Right-128,box.Bottom-56,112,40),new(box.X+16,box.Bottom-96,width-32,24));
+    }
+}
+
+internal sealed record LibraryFilterLayout(UiRect Dialog,UiRect[] Categories,UiRect Favorites,UiRect Sort,UiRect Done,UiRect Previous,UiRect Next)
 {
     internal static LibraryFilterLayout Calculate(UiRect frame)
     {
-        int width=Math.Min(520,frame.Width-16),height=Math.Min(408,frame.Height-16);
+        int width=Math.Min(580,frame.Width-16),height=Math.Min(408,frame.Height-16);
         var box=new UiRect(frame.X+(frame.Width-width)/2,frame.Y+(frame.Height-height)/2,width,height);
-        int half=(width-40)/2;
-        return new(box,Enumerable.Range(0,6).Select(i=>new UiRect(box.X+16+i%2*(half+8),box.Y+56+i/2*48,half,40)).ToArray(),
-            new(box.X+16,box.Bottom-152,width-32,40),new(box.X+16,box.Bottom-104,width-32,40),new(box.X+16,box.Bottom-56,width-32,40));
+        bool paged=height<392;int columns=paged?2:3,count=paged?5:10,cell=(width-32-(columns-1)*8)/columns;
+        return new(box,Enumerable.Range(0,count).Select(i=>new UiRect(box.X+16+i%columns*(cell+8),box.Y+56+i/columns*44,cell,40)).ToArray(),
+            new(box.X+16,box.Bottom-152,width-32,40),new(box.X+16,box.Bottom-104,width-32,40),new(box.X+16,box.Bottom-56,width-32,40),
+            new(box.Right-112,box.Y+8,40,40),new(box.Right-64,box.Y+8,40,40));
     }
 }
 

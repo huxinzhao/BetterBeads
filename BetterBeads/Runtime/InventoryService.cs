@@ -48,6 +48,25 @@ internal sealed class InventoryService
             &&string.IsNullOrEmpty(c.globalInventoryId.Value)
             &&c.specialChestType.Value is Chest.SpecialChestTypes.None or Chest.SpecialChestTypes.BigChest
             &&!c.GetMutex().IsLocked()).ToArray();
+#if BEADS_LITE
+    public IReadOnlyList<Chest> RequiredChests(Blueprint design,bool creative)
+    {
+        if(creative)return Array.Empty<Chest>();
+        var cost=SimpleCrafting.Cost(design);long needed=cost.Count;
+        int Count(IEnumerable<Item?> items)=>items.Select(Describe).Where(s=>s?.ItemId==cost.Item&&s.RawMaterial is not null)
+            .Aggregate(0,(n,s)=>(int)Math.Min(int.MaxValue,(long)n+s!.Count));
+        needed-=Count(Owner.Items.Take(Owner.MaxItems));var seen=new HashSet<IInventory>{Owner.Items};
+        IEnumerable<(Chest Source,long Count)> Sources()
+        {
+            foreach(var chest in AvailableChests())
+            {
+                var items=chest.GetItemsForPlayer(Owner.UniqueMultiplayerID);if(!seen.Add(items))continue;
+                yield return (chest,Count(items));
+            }
+        }
+        return MaterialSupply.NeededSources(needed,Sources());
+    }
+#endif
     private bool IsBead(Item item)=>Catalog.Materials.Any(m=>item.QualifiedItemId==BeadItems.BeadId(m.Id));
     internal static bool IsPlainObject(Item item)=>item.GetType()==typeof(StardewValley.Object) && item is StardewValley.Object obj && !obj.bigCraftable.Value && !obj.IsRecipe
         && !obj.questItem.Value && string.IsNullOrEmpty(obj.questId.Value) && !obj.modData.Any();

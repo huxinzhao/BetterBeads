@@ -40,9 +40,11 @@ public sealed class CanvasTransform
         OffsetY = (int)Math.Clamp((long)OffsetY + dy, -100000, 100000);
     }
     public void ZoomAt(int screenX, int screenY, int delta)
+        =>ZoomStepsAt(screenX,screenY,Math.Sign(delta));
+    public void ZoomStepsAt(int screenX,int screenY,int steps)
     {
         if (!Viewport.Contains(screenX, screenY)) return;
-        int next = Math.Clamp(Zoom + Math.Sign(delta), 1, 128);
+        int next = Math.Clamp(Zoom + steps, 1, 128);
         double localX = (screenX - Viewport.X - OffsetX) / (double)Zoom;
         double localY = (screenY - Viewport.Y - OffsetY) / (double)Zoom;
         OffsetX = (int)Math.Round(screenX - Viewport.X - localX * next);

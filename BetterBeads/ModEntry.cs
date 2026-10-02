@@ -23,6 +23,7 @@ public sealed class ModEntry : Mod
     private OnlineSession? online;
     private CollectorMailContent? collectorMail;
     private GiftGalleryService? giftGallery;
+    private DraftRecovery? recovery;
 #endif
 #if !BEADS_LITE
     private WorkshopService? workshop;
@@ -46,6 +47,11 @@ public sealed class ModEntry : Mod
         }
 #endif
         session = new(helper, Monitor);
+#if BEADS_LITE
+        recovery=new(helper.DirectoryPath,Monitor);
+        helper.Events.GameLoop.UpdateTicked+=(_,e)=>{if(Context.IsWorldReady&&e.IsMultipleOf(60))recovery.Checkpoint(draft);};
+        helper.Events.Display.MenuChanged+=(_,e)=>{if(e.OldMenu is WorkbenchMenu)recovery.Checkpoint(draft);};
+#endif
         FurnitureTemplates.Configure(DefaultManufacturing.Furniture().Concat(SimpleCrafting.Frames()).Concat(SimpleCrafting.Ornaments()).Concat(FurnitureFinish.Definitions()));
         ClothingSettings clothing;
         try{clothing=helper.Data.ReadJsonFile<ClothingSettings>("assets/clothing.json")??new();}
@@ -151,6 +157,10 @@ DefaultManufacturing.Recipes().Concat(DefaultWeapons.Recipes()).Concat(ClothingT
 #endif
         helper.Events.Content.AssetRequested += new ProductContent(helper.Translation).OnAssetRequested;
         ProductPatches.Apply(ModManifest.UniqueID, products, textures,helper.Translation);
+        ShapeCombat.Register(helper,Monitor,products);
+#if BEADS_LITE
+        DecorationPlacement.Apply(ModManifest.UniqueID,products,helper,Monitor);
+#endif
 #if !BEADS_LITE
         workshop=new WorkshopService(helper,Monitor,()=>session.Progress,products);
 #endif
@@ -174,6 +184,9 @@ DefaultManufacturing.Recipes().Concat(DefaultWeapons.Recipes()).Concat(ClothingT
         helper.Events.GameLoop.Saving += (_, _) => {beadCrafting?.Synchronize();session.Save();};
         helper.Events.GameLoop.ReturnedToTitle += (_, _) =>
         {
+#if BEADS_LITE
+            recovery?.Checkpoint(draft);
+#endif
             workbench?.ReleasePreview();
             workbench?.ReleaseInputs();
             workbench = null;
@@ -216,6 +229,11 @@ DefaultManufacturing.Recipes().Concat(DefaultWeapons.Recipes()).Concat(ClothingT
         processing?.Bind(bench,settings.NearbyChestRadius);
 #endif
         workbench = new WorkbenchMenu(session.Progress, Helper.Translation, processing, draft,new ReferenceReader(Monitor),manufacturing,Helper.DirectoryPath);
+#if BEADS_LITE
+        if(recovery?.Pending is {} pending&&draft is not null)
+            workbench.OfferRecovery(pending,restore=>recovery.Resolve(draft,restore));
+        else if(recovery?.ReadError==true)workbench.ShowRecoveryError();
+#endif
         Game1.activeClickableMenu = workbench;
     }
 
@@ -231,10 +249,12 @@ DefaultManufacturing.Recipes().Concat(DefaultWeapons.Recipes()).Concat(ClothingT
     }
     private void CreateDraft()
     {
+        if(draft is not null)return;
         if (session?.Progress is not null && processing is not null)
         {
 #if BEADS_LITE
             draft=new EditorDocument(SimpleCrafting.Blank(SimpleCrafting.Picture16),processing.Catalog,"front");
+            recovery?.Bind(Game1.uniqueIDForThisGame,Game1.player.UniqueMultiplayerID);
 #else
             draft = new EditorDocument(new Blueprint {
                 Name = Helper.Translation.Get("editor.untitled").ToString(), Use = ProductUse.Picture, TemplateId = ProductTemplates.Picture,

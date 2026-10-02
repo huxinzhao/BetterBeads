@@ -22,6 +22,8 @@ internal sealed class GiftGalleryService
     private readonly GiftGallerySettings settings;
     private GameLocation? placedLocation;
     private List<Placement> placements=new();
+    private readonly HashSet<string> shownUnavailable=new();
+    private readonly Dictionary<GameLocation,List<Rectangle>> siteCache=new();
     private bool bypass;
     private bool received;
     private NPC? giftingTo;
@@ -77,6 +79,7 @@ internal sealed class GiftGalleryService
         if(!Context.IsWorldReady||progress() is not {} data
             ||!ReferenceEquals(giver.ActiveObject,item)||!ReferenceEquals(products.Read(item),products.Read(giver.ActiveObject))
             ||Painting(item)?.InstanceId!=snapshot.InstanceId)return;
+        if(OnlineSession.Current?.CanRecordGift==false){Game1.showRedMessage(OnlineSession.Text("data"));return;}
         bypass=true;received=false;giftingTo=npc;giftingItem=item;
         try
         {
@@ -84,14 +87,21 @@ internal sealed class GiftGalleryService
             if(received&&!ReferenceEquals(giver.ActiveObject,item))
             {
                 OnlineSession.Current?.Gift(npc.Name,snapshot);
-                Game1.addHUDMessage(new HUDMessage(ContentText.Format("gift.received",$"{npc.displayName}收下了你的画作。")));
+                var site=CurrentSite(npc,snapshot);
+                string key=GiftFeedback.Key(site,giver.getFriendshipHeartLevelForNPC(npc.Name));
+                string next=ContentText.Get(key,key switch{
+                    "gift.display-hearts"=>"画作已记录，达到6心后的次日才会展示。",
+                    "gift.display-unsupported"=>"当前住宅暂不适配展示，赠画记录仍会保留。",
+                    "gift.display-unavailable"=>"当前挂点不可用；记录已保留，请检查住宅布局。",
+                    _=>"计划次日在当前住宅展示；挂点需保持可用。"});
+                Game1.addHUDMessage(new HUDMessage(ContentText.Format("gift.received",$"{npc.displayName}收下了你的画作。")+" "+next));
             }
         }
         catch(Exception ex){monitor.Log("Bead painting gift failed: "+ex,LogLevel.Error);}
         finally{bypass=false;received=false;giftingTo=null;giftingItem=null;}
     }
-    public void Invalidate(){placedLocation=null;placements.Clear();}
-    public void Clear(){Invalidate();bypass=false;received=false;giftingTo=null;giftingItem=null;}
+    public void Invalidate(){placedLocation=null;placements.Clear();siteCache.Clear();}
+    public void Clear(){Invalidate();shownUnavailable.Clear();bypass=false;received=false;giftingTo=null;giftingItem=null;}
 
     private void EnsurePlaced(GameLocation location)
     {
@@ -103,41 +113,64 @@ internal sealed class GiftGalleryService
             var home=settings.Homes.FirstOrDefault(h=>h.Location==location.NameOrUniqueName);
             IEnumerable<string> names=location is FarmHouse house && !string.IsNullOrWhiteSpace(Game1.GetPlayer(house.OwnerId)?.spouse)
                 ?new[]{Game1.GetPlayer(house.OwnerId)!.spouse}:(IEnumerable<string>?)home?.Villagers??Array.Empty<string>();
-            var slots=new List<Rectangle>();
-            if(location is not DecoratableLocation decorated)return;
-            int mapWidth=location.Map?.Layers.FirstOrDefault()?.LayerWidth??0;
-            int mapHeight=location.Map?.Layers.FirstOrDefault()?.LayerHeight??0;
-            for(int y=0;y<mapHeight-2;y++)for(int x=0;x<mapWidth-3;x++)
-            {
-                if(decorated.GetWallTopY(x,y)!=y || !Enumerable.Range(x,3).All(px=>decorated.isTileOnWall(px,y)&&decorated.isTileOnWall(px,y+1)))continue;
-                var candidate=new Rectangle(x*64,y*64,3*64,3*64);
-                if(slots.Any(s=>s.Intersects(candidate)))continue;
-                slots.Add(candidate);
-            }
-            if(location is FarmHouse farmHouse)
-            {
-                var corner=farmHouse.GetSpouseRoomCorner();
-                slots=slots.Where(s=>s.X/64>=corner.X&&s.X/64<corner.X+7
-                    &&s.Y/64>=corner.Y&&s.Y/64<corner.Y+6).ToList();
-            }
-            int slot=0;
             foreach(string name in names)
             {
-                int index=home?.WallSlots.GetValueOrDefault(name,slot)??slot;
-                slot++;
                 if(!data.GiftGalleryRecords.TryGetValue(name,out var record)||record.Displayed is not {} painting)continue;
-                if(location is not FarmHouse && Game1.getAllFarmers().Any(f=>f.spouse==name))continue;
-                if(location is not FarmHouse && Game1.getCharacterFromName(name)?.DefaultMap!=location.Name)continue;
-                if(index>=slots.Count||location.furniture.Any(f=>f.GetBoundingBox().Intersects(slots[index])))continue;
-                var bounds=slots[index];
-                int pixels=painting.Design.Views["front"].Width+(FurnitureFinish.IsNew(painting.FurnitureVariantId)?0:16);
-                var pictureBounds=new Rectangle(bounds.X+(bounds.Width-pixels*4)/2,bounds.Y,pixels*4,pixels*4);
-                placements.Add(new(name,painting,pictureBounds));
+                var state=FindSite(location,name,painting,out var bounds);
+                if(state==GallerySiteState.Ready)placements.Add(new(name,painting,bounds));
+                else if(state==GallerySiteState.Unavailable&&shownUnavailable.Add(location.NameOrUniqueName+":"+name+":"+painting.InstanceId))
+                {
+                    monitor.Log("Gift gallery has no usable wall slot: "+location.NameOrUniqueName+" / "+name,LogLevel.Warn);
+                    Game1.addHUDMessage(new HUDMessage(ContentText.Format("gift.display-blocked",$"{Game1.getCharacterFromName(name)?.displayName??name}的挂画暂未显示：住宅挂点不可用。")));
+                }
             }
         }
         catch(Exception ex){placements.Clear();monitor.Log("Gift gallery skipped an incompatible home map: "+ex.Message,LogLevel.Warn);}
     }
 
+    private GallerySiteState CurrentSite(NPC npc,ProductSnapshot painting)
+    {
+        try
+        {
+            var spouse=Game1.getAllFarmers().FirstOrDefault(f=>f.spouse==npc.Name);
+            var home=spouse is not null?Utility.getHomeOfFarmer(spouse):Game1.getLocationFromName(npc.DefaultMap);
+            return home is null?GallerySiteState.Unsupported:FindSite(home,npc.Name,painting,out _);
+        }
+        catch{return GallerySiteState.Unavailable;}
+    }
+    private GallerySiteState FindSite(GameLocation location,string name,ProductSnapshot painting,out Rectangle bounds)
+    {
+        bounds=Rectangle.Empty;
+        if(!settings.IsValid||location is not DecoratableLocation decorated)return GallerySiteState.Unsupported;
+        var home=settings.Homes.FirstOrDefault(h=>h.Location==location.NameOrUniqueName);
+        bool spouse=location is FarmHouse house&&Game1.GetPlayer(house.OwnerId)?.spouse==name;
+        int index=spouse?0:home?.Villagers.IndexOf(name)??-1;
+        if(index<0||!spouse&&(Game1.getAllFarmers().Any(f=>f.spouse==name)
+            ||Game1.getCharacterFromName(name)?.DefaultMap!=location.Name))return GallerySiteState.Unsupported;
+        if(!spouse)index=home!.WallSlots.GetValueOrDefault(name,index);
+        if(!siteCache.TryGetValue(location,out var slots))
+        {
+        slots=new List<Rectangle>();
+        int width=location.Map?.Layers.FirstOrDefault()?.LayerWidth??0,height=location.Map?.Layers.FirstOrDefault()?.LayerHeight??0;
+        for(int y=0;y<height-2;y++)for(int x=0;x<width-3;x++)
+        {
+            if(decorated.GetWallTopY(x,y)!=y||!Enumerable.Range(x,3).All(px=>decorated.isTileOnWall(px,y)&&decorated.isTileOnWall(px,y+1)))continue;
+            var candidate=new Rectangle(x*64,y*64,3*64,3*64);
+            if(slots.Any(s=>s.Intersects(candidate)))continue;
+            slots.Add(candidate);
+        }
+        if(location is FarmHouse farmHouse)
+        {
+            var corner=farmHouse.GetSpouseRoomCorner();
+            slots=slots.Where(s=>s.X/64>=corner.X&&s.X/64<corner.X+7&&s.Y/64>=corner.Y&&s.Y/64<corner.Y+6).ToList();
+        }
+        siteCache[location]=slots;
+        }
+        if(index>=slots.Count||location.furniture.Any(f=>f.GetBoundingBox().Intersects(slots[index])))return GallerySiteState.Unavailable;
+        var slot=slots[index];int pixels=painting.Design.Views["front"].Width+(FurnitureFinish.IsNew(painting.FurnitureVariantId)?0:16);
+        bounds=new Rectangle(slot.X+(slot.Width-pixels*4)/2,slot.Y,pixels*4,pixels*4);
+        return GallerySiteState.Ready;
+    }
     private void Draw(object? sender,RenderedWorldEventArgs e)
     {
         if(!Context.IsWorldReady||Game1.eventUp||Game1.currentLocation is not {} location)return;

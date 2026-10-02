@@ -1,0 +1,12 @@
+PASS native bottom-wall tile uses Buildings; unrelated, missing and outside tiles are excluded
+PASS floor validation only accepts native Back tiles
+PASS native decoration can replace a previously applied bead surface
+PASS native failure restores artwork record and applied wallpaper identity
+PASS failure restores both actual map layers and their properties
+PASS first placement failure does not leave new native or mod records
+PASS clicking a non-decoratable tile cannot alter the region
+PASS floor rollback restores native identity, tile data and previously empty cells
+PASS busy online transaction exits controller painting and does not undo
+PASS held button after waiting is not replayed as a new undo
+PASS release and fresh press still undo normally after online waiting ends
+PASS 11 reliability runtime checks. Native failure is injected; no game is launched.

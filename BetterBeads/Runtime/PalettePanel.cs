@@ -11,6 +11,16 @@ internal sealed partial class EditorPanel
     private List<uint>? paletteDraft;
     private int favoriteIndex;
     private bool dyePage;
+#if BEADS_LITE
+    private bool backgroundPage;
+    private uint backgroundCandidate;
+    private void BeginBackgroundPalette()
+    {
+        BeginPalette();backgroundPage=true;dyePage=true;
+        backgroundCandidate=document.Snapshot().BackgroundRgba;
+        (hue,saturation,value)=BeadPalette.ToHsv(backgroundCandidate);
+    }
+#endif
     private double hue,saturation,value;
     private string paletteDrag="";
     private ColorPickerLayout? paletteLayout;
@@ -21,7 +31,7 @@ internal sealed partial class EditorPanel
         ;
     public UiRect PaletteCloseButton=>
 #if BEADS_LITE
-        CreativeDialogLayout.Calculate(layout.Frame).Close;
+        paletteSearchOpen?PaletteSearchLayout.Calculate(layout.Frame).Close:CreativeDialogLayout.Calculate(layout.Frame).Close;
 #else
         ColorPickerLayout.Calculate(layout.Frame).Close;
 #endif
@@ -30,8 +40,17 @@ internal sealed partial class EditorPanel
     public void ClosePalette()
     {paletteDraft=null;dyePage=false;paletteDrag="";paletteTexture?.Dispose();hueTexture?.Dispose();paletteTexture=hueTexture=null;textureHue=double.NaN;
 #if BEADS_LITE
-        workColorsPage=false;artworkPaletteCache.Clear();workColorVersion=-1;
+        ClosePaletteSearch();
+        ControllerStopPicker();
+        workColorsPage=false;backgroundPage=false;artworkPaletteCache.Clear();workColorVersion=-1;
 #endif
+    }
+    public void ClosePaletteOrSearch()
+    {
+#if BEADS_LITE
+        if(paletteSearchOpen){ClosePaletteSearch();return;}
+#endif
+        ClosePalette();
     }
     private void BeginPalette()
     {
@@ -62,7 +81,13 @@ internal sealed partial class EditorPanel
             value=1-Math.Clamp((y-area.Y)/(double)Math.Max(1,area.Height-1),0,1);
         }
         uint picked=BeadPalette.FromHsv(hue,saturation,value);
+        SetPaletteCandidate(picked);
+    }
+    private void SetPaletteCandidate(uint picked)
+    {
+        if(paletteDraft is null)return;
 #if BEADS_LITE
+        if(backgroundPage){backgroundCandidate=picked;return;}
         if(workColorsPage){workTo=picked;return;}
 #endif
         paletteDraft[favoriteIndex]=picked;

@@ -3,7 +3,7 @@ namespace BetterBeads.Data;
 public enum BrushTool { Paint, Erase, Material }
 
 /// <summary>Detached draft, bounded undo history, and tools with no inventory side effects.</summary>
-public sealed class EditorDocument
+public sealed partial class EditorDocument
 {
     private Blueprint draft;
     private readonly ProcessingCatalog catalog;
@@ -203,6 +203,8 @@ public sealed class EditorDocument
     {draft.SupplementaryMaterials=new(){{metal,0}};foreach(var c in draft.Views.Values.SelectMany(g=>g.Cells).Where(c=>c is not null))c!.MaterialId=metal;});
     public bool SetSwordOrientation(SwordOrientation orientation)=>draft.Use==ProductUse.Sword
         && Enum.IsDefined(orientation)&&Change(()=>draft.SwordOrientation=orientation);
+    public bool SetBackground(uint rgba)=>SimpleCrafting.IsDecoration(draft.Use)
+        &&(rgba&255)==255&&Change(()=>draft.BackgroundRgba=rgba);
     public bool SetSupplementaryMaterial(string id,int amount) => WeaponMaterials.IsWeapon(draft.Use)
         && amount>=0 && (amount==0 || LegalMaterial(id)) && Change(()=>
         {

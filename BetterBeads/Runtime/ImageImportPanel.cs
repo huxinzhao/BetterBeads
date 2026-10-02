@@ -28,7 +28,7 @@ internal sealed class ImageImportPanel : IDisposable
     private int chooserGeneration;
     private string filename="",message="";
     private int page,tolerance=24;
-    private string kind="picture";
+    private ProductUse kind=ProductUse.Picture;
     private bool large,restore=true,removeBackground,outline=true,showOriginal,settingsPage;
     private int weaponSize=16;
     private bool dirty=true;
@@ -41,6 +41,7 @@ internal sealed class ImageImportPanel : IDisposable
     private bool preparedDirty=true,opaqueImage;
     public bool Active {get;private set;}
     public UiRect? HoverControl(int x,int y)=>controls.HitTest(x,y);
+    public IReadOnlyList<UiRect> ControllerTargets=>controls.Targets;
     private static string T(string key,string fallback)=>ContentText.Get("simple.import-"+key,fallback);
     public ImageImportPanel(string modDirectory,Action<Blueprint> accept)
     {folder=Path.Combine(modDirectory,"imports");this.accept=accept;}
@@ -141,18 +142,13 @@ internal sealed class ImageImportPanel : IDisposable
             texture?.Dispose();texture=decoded;decoded=null;
             pixels=rgba;prepared=null;preparedDirty=true;autoSize=true;
             filename=Path.GetFileName(path);
-            kind="picture";large=texture.Width>16||texture.Height>16;
+            kind=ProductUse.Picture;large=texture.Width>16||texture.Height>16;
             removeBackground=false;outline=true;restore=true;showOriginal=false;dirty=true;message="";
         }
         catch(Exception){message=T("invalid","图片无法读取，或超过 20MB、4096 像素限制");}
         finally{decoded?.Dispose();}
     }
-    private string Template()=>kind switch
-    {
-        "ornament"=>large?SimpleCrafting.LargeOrnament:SimpleCrafting.Ornament,
-        "sword"=>SimpleCrafting.WeaponId(ProductUse.Sword,weaponSize),"dagger"=>SimpleCrafting.WeaponId(ProductUse.Dagger,weaponSize),"hammer"=>SimpleCrafting.WeaponId(ProductUse.Hammer,weaponSize),
-        _=>large?SimpleCrafting.Picture32:SimpleCrafting.Picture16
-    };
+    private string Template()=>ProductCategories.For(kind)!.TemplateFor(SimpleCrafting.IsWeapon(kind)?weaponSize:large?32:16);
     private void Refresh()
     {
         if(!dirty||pixels is null||texture is null)return;
@@ -181,8 +177,13 @@ internal sealed class ImageImportPanel : IDisposable
         Button(b,geometry.Back,T("back","返回我的图纸"),Close);
         if(!(pixels is not null&&geometry.Compact&&settingsPage))
         {
-            Button(b,geometry.File,T("choose-file","选择本地图片"),PickWindowsFile,OperatingSystem.IsWindows()&&chooserTask is null);
-            Button(b,geometry.Folder,T("folder","浏览 imports 文件夹"),()=>{conversion.Cancel();RefreshFiles();pixels=null;prepared=null;preview=null;texture?.Dispose();texture=null;dirty=true;},chooserTask is null);
+            void Browse(){conversion.Cancel();RefreshFiles();pixels=null;prepared=null;preview=null;texture?.Dispose();texture=null;dirty=true;}
+            if(OperatingSystem.IsWindows())
+            {
+                Button(b,geometry.File,T("choose-file","选择本地图片"),PickWindowsFile,chooserTask is null);
+                Button(b,geometry.Folder,T("folder","浏览 imports 文件夹"),Browse,chooserTask is null);
+            }
+            else Button(b,new(area.X,geometry.File.Y,area.Width,geometry.File.Height),T("folder","浏览 imports 文件夹"),Browse,chooserTask is null);
         }
         if(pixels is null)
         {
@@ -192,6 +193,8 @@ internal sealed class ImageImportPanel : IDisposable
             {string file=files[page*rows+i];Button(b,new(area.X,rowY+i*48,area.Width,42),Path.GetFileName(file),()=>Load(file));}
             ArtResources.TextLine(b,chooserTask is not null?T("waiting","等待选择图片…"):Generating&&pixels is not null?T("generating","正在生成…"):message.Length>0?message:T("folder-hint","请将 PNG 或 JPG 图片放入 imports 文件夹"),
                 geometry.FolderHint,ArtResources.Ink);
+            if(OperatingSystem.IsAndroid()&&files.Length==0)
+                ArtResources.TextLine(b,folder,new(area.X,area.Y+56,area.Width,64),ArtResources.MutedInk);
             Button(b,geometry.Previous,"←",()=>page--,page>0);
             Button(b,geometry.Next,"→",()=>page++,(page+1)*rows<files.Length);
             return;
@@ -214,7 +217,7 @@ internal sealed class ImageImportPanel : IDisposable
             else if(preview is not null)ArtResources.DesignPreview(b,preview.Design,new(imageArea.X+8,imageArea.Y+8,imageArea.Width-16,imageArea.Height-16),framed:false);
             Button(b,new(area.Right-102,imageArea.Y+4,96,40),showOriginal?T("result","效果"):T("source","原图"),()=>showOriginal=!showOriginal);
         }
-        int targetSize=kind is "sword" or "dagger" or "hammer"?weaponSize:large?32:16;
+        int targetSize=SimpleCrafting.IsWeapon(kind)?weaponSize:large?32:16;
         string status=chooserTask is not null?T("waiting","等待选择图片…"):Generating&&pixels is not null?T("generating","正在生成…"):message.Length>0?message:$"{filename} · {texture!.Width}×{texture.Height} → {targetSize}×{targetSize} · {preview?.Beads??0} {T("beads","颗豆")}";
         if(preview?.Restored==true)status+=" · "+T("restored","已无损还原");
         else if(preview?.Reduced==true)status+=" · "+T("reduced","已缩小");
@@ -231,7 +234,7 @@ internal sealed class ImageImportPanel : IDisposable
         else
         {
             Button(b,geometry.LeftOptions[0],T("category","品类")+"："+Kind(),NextKind);
-            Button(b,geometry.RightOptions[0],T("size","尺寸")+"："+(kind is "sword" or "dagger" or "hammer"?$"{weaponSize}×{weaponSize}":large?"32×32":"16×16"),ChangeSize);
+            Button(b,geometry.RightOptions[0],T("size","尺寸")+"："+(SimpleCrafting.IsWeapon(kind)?$"{weaponSize}×{weaponSize}":large?"32×32":"16×16"),ChangeSize);
             Button(b,new(area.X,geometry.LeftOptions[1].Y,area.Width,42),T("options","还原、背景与描边设置"),()=>settingsPage=true);
             var note=new UiRect(area.X,geometry.LeftOptions[2].Y,area.Width,32);
             if(preview?.HasHalfAlpha==true)ArtResources.TextLine(b,T("alpha-note","半透明像素将转为实色豆"),note,ArtResources.MutedInk);
@@ -245,7 +248,7 @@ internal sealed class ImageImportPanel : IDisposable
         if(settingsPage)
         {
             Button(b,geometry.LeftOptions[0],T("category","品类")+"："+Kind(),NextKind);
-            Button(b,geometry.RightOptions[0],T("size","尺寸")+"："+(kind is "sword" or "dagger" or "hammer"?$"{weaponSize}×{weaponSize}":large?"32×32":"16×16"),ChangeSize);
+            Button(b,geometry.RightOptions[0],T("size","尺寸")+"："+(SimpleCrafting.IsWeapon(kind)?$"{weaponSize}×{weaponSize}":large?"32×32":"16×16"),ChangeSize);
             Button(b,geometry.LeftOptions[1],T("restore","无损还原")+(restore?" ✓":""),()=>{restore=!restore;dirty=true;},selected:restore);
             Button(b,geometry.RightOptions[1],T("background","去纯色背景")+(removeBackground?" ✓":""),ToggleBackground,selected:removeBackground);
             Button(b,geometry.LeftOptions[2],T("tolerance","容差")+$" {tolerance} −",()=>ChangeTolerance(-8));
@@ -281,11 +284,17 @@ internal sealed class ImageImportPanel : IDisposable
         int w=Math.Max(1,(int)(texture.Width*z)),h=Math.Max(1,(int)(texture.Height*z));
         b.Draw(texture,new Rectangle(r.X+(r.Width-w)/2,r.Y+(r.Height-h)/2,w,h),Color.White);
     }
-    private string Kind()=>kind switch{"ornament"=>T("ornament","摆件"),"sword"=>T("sword","剑"),"dagger"=>T("dagger","匕首"),"hammer"=>T("hammer","锤"),_=>T("picture","拼豆画")};
+    private string Kind()
+    {
+        var category=ProductCategories.For(kind)!;
+        return (category.Group==ProductGroup.Weapon?ContentText.Get("simple.weapon-group","武器"):ContentText.Get("simple.furniture-group","家具"))
+            +"／"+ContentText.Get("simple."+category.NameKey,kind.ToString());
+    }
     private void NextKind()
     {
-        autoSize=false;kind=kind switch{"picture"=>"ornament","ornament"=>"sword","sword"=>"dagger","dagger"=>"hammer",_=>"picture"};
-        if(kind is "sword" or "dagger" or "hammer")
+        autoSize=false;int index=ProductCategories.All.ToList().FindIndex(category=>category.Use==kind);
+        kind=ProductCategories.All[(index+1)%ProductCategories.All.Count].Use;
+        if(SimpleCrafting.IsWeapon(kind))
         {
             int factor=restore?Math.Max(1,prepared?.ExactScale??1):1;
             int extent=Math.Max((texture?.Width??16)/factor,(texture?.Height??16)/factor);
@@ -296,7 +305,7 @@ internal sealed class ImageImportPanel : IDisposable
     private void ChangeSize()
     {
         autoSize=false;
-        if(kind is "sword" or "dagger" or "hammer")weaponSize=weaponSize==16?24:weaponSize==24?32:16;
+        if(SimpleCrafting.IsWeapon(kind))weaponSize=weaponSize==16?24:weaponSize==24?32:16;
         else large=!large;
         dirty=true;
     }

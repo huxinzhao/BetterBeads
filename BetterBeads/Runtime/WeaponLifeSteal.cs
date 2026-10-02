@@ -18,6 +18,7 @@ internal static class WeaponLifeSteal
     private sealed class Attack
     {
         public Attack? Previous;public MeleeWeapon Weapon=null!;public Farmer Farmer=null!;public long Damage;public double Rate;public bool Creative;
+        public ProductSnapshot Snapshot=null!;public bool Ordinary;public HashSet<Monster> Wounded=new();
     }
     public static void Apply(Harmony harmony,ProductItems items)
     {
@@ -34,7 +35,8 @@ internal static class WeaponLifeSteal
         __state=current;
         // Nested attacks never inherit the outer weapon's bonus.
         current=who==Game1.player && products.Read(__instance) is {} snapshot
-            ?new Attack{Previous=__state,Weapon=__instance,Farmer=who,Rate=snapshot.EffectParameters.GetValueOrDefault("lifeStealRate"),Creative=snapshot.CreatedInCreativeMode}:null;
+            ?new Attack{Previous=__state,Weapon=__instance,Farmer=who,Rate=snapshot.EffectParameters.GetValueOrDefault("lifeStealRate"),Creative=snapshot.CreatedInCreativeMode,
+                Snapshot=snapshot,Ordinary=!__instance.isOnSpecial&&(__instance.type.Value!=1||MeleeWeapon.daggerHitsLeft<=0)}:null;
     }
     private static Exception? End(Exception? __exception,Attack? __state)
     {
@@ -47,24 +49,44 @@ internal static class WeaponLifeSteal
         }
         return __exception;
     }
-    private static IEnumerable<CodeInstruction> WrapHit(IEnumerable<CodeInstruction> instructions)
+    private static IEnumerable<CodeInstruction> WrapHit(IEnumerable<CodeInstruction> instructions,ILGenerator generator)
     {
         var original=AccessTools.Method(typeof(Monster),"takeDamage",new[]{typeof(int),typeof(int),typeof(int),typeof(bool),typeof(double),typeof(Farmer)});
         var code=instructions.ToArray();
-        if(code.Count(i=>i.Calls(original))!=1)throw new InvalidOperationException("Unsupported monster damage call layout.");
-        foreach(var instruction in code)
+        var roll=AccessTools.Method(typeof(Random),nameof(Random.Next),new[]{typeof(int),typeof(int)});
+        int rollIndex=Enumerable.Range(0,code.Length-1).FirstOrDefault(i=>code[i].Calls(roll)&&code[i+1].IsStloc()
+            &&code[i+1].operand is LocalBuilder local&&local.LocalIndex==9,-1);
+        if(code.Count(i=>i.Calls(original))!=1||rollIndex<0||!code[rollIndex+1].IsStloc()
+            ||code[rollIndex+1].operand is not LocalBuilder nativeRoll||nativeRoll.LocalIndex!=9)
+            throw new InvalidOperationException("Unsupported monster damage call layout.");
+        var baseline=generator.DeclareLocal(typeof(int));
+        for(int i=0;i<code.Length;i++)
         {
-            if(instruction.Calls(original)){instruction.opcode=OpCodes.Call;instruction.operand=AccessTools.Method(typeof(WeaponLifeSteal),nameof(TakeDamage));}
+            var instruction=code[i];
+            if(instruction.Calls(original))
+            {
+                var load=new CodeInstruction(OpCodes.Ldloc,baseline);load.labels.AddRange(instruction.labels);instruction.labels.Clear();yield return load;
+                instruction.opcode=OpCodes.Call;instruction.operand=AccessTools.Method(typeof(WeaponLifeSteal),nameof(TakeDamage));
+            }
             yield return instruction;
+            if(i==rollIndex){yield return new(OpCodes.Dup);yield return new(OpCodes.Stloc,baseline);}
         }
     }
-    private static int TakeDamage(Monster monster,int damage,int xTrajectory,int yTrajectory,bool isBomb,double precision,Farmer who)
+    private static int TakeDamage(Monster monster,int damage,int xTrajectory,int yTrajectory,bool isBomb,double precision,Farmer who,int baseRoll)
     {
         var attack=current;int before=monster.Health;
         int reported=monster.takeDamage(damage,xTrajectory,yTrajectory,isBomb,precision,who);
         if(attack is not null && ReferenceEquals(attack.Farmer,who) && !isBomb)
         {
             attack.Damage=Math.Min(int.MaxValue,attack.Damage+LifeSteal.ActualDamage(before,monster.Health,reported));
+            if(reported>0&&monster.Health<before&&attack.Ordinary&&attack.Wounded.Add(monster))
+            {
+                double baseline=Math.Max(1,baseRoll+who.Attack*3);
+                if(who.professions.Contains(24))baseline=Math.Ceiling(baseline*1.1);
+                if(who.professions.Contains(26))baseline=Math.Ceiling(baseline*1.15);
+                baseline=Math.Max(0,baseline-monster.resilience.Value);
+                ShapeCombat.HitMonster(monster,who,attack.Snapshot,baseline);
+            }
 #if !BEADS_LITE
             if(before>0 && monster.Health<=0 && reported>0)WorkshopService.Current?.RecordKill(attack.Creative);
 #endif

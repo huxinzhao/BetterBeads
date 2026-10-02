@@ -50,6 +50,13 @@ internal static class ProductPatches
         harmony.Patch(AccessTools.Method(typeof(Item), "salePrice"), prefix: Patch(nameof(Price)));
         harmony.Patch(AccessTools.Method(typeof(MeleeWeapon), "salePrice"), prefix: Patch(nameof(Price)));
 #if BEADS_LITE
+        harmony.Patch(AccessTools.Method(typeof(Wallpaper),"salePrice"),prefix:Patch(nameof(Price)));
+        harmony.Patch(AccessTools.Method(typeof(Wallpaper),"maximumStackSize"),postfix:Patch(nameof(StackSize)));
+        harmony.Patch(AccessTools.Method(typeof(Wallpaper),"loadDisplayName"),prefix:Patch(nameof(DisplayName)));
+        harmony.Patch(AccessTools.Method(typeof(Wallpaper),"getDescription"),prefix:Patch(nameof(BaseDescription)));
+        harmony.Patch(AccessTools.Method(typeof(Wallpaper),"drawInMenu",new[]{typeof(SpriteBatch),typeof(Vector2),typeof(float),typeof(float),typeof(float),typeof(StackDrawType),typeof(Color),typeof(bool)}),prefix:Patch(nameof(DrawDecorationIcon)));
+#endif
+#if BEADS_LITE
         foreach(var type in new[]{typeof(StardewValley.Object),typeof(Tool)})
             harmony.Patch(AccessTools.PropertyGetter(type,"DisplayName"),prefix:Patch(nameof(DisplayName)));
         foreach(var type in new[]{typeof(Furniture),typeof(Tool)})
@@ -256,10 +263,20 @@ internal static class ProductPatches
         string name=ProductLabels.Name(__instance);if(name.Length==0)return true;
         __result=name;return false;
     }
+    private static bool DrawDecorationIcon(Wallpaper __instance,SpriteBatch __0,Vector2 __1,float __2,float __3,float __4,StackDrawType __5,Color __6,bool __7)
+    {
+        var render=items.ReadVisual(__instance);
+        if(render?.Snapshot.Design is not {} design||!SimpleCrafting.IsDecoration(design.Use))return true;
+        var texture=textures.Get(Game1.graphics.GraphicsDevice,render,"atlas");
+        var source=new Rectangle(0,0,texture.Width,texture.Height);
+        float scale=52f/Math.Max(source.Width,source.Height)*__2;
+        __0.Draw(texture,__1+new Vector2(32,32),source,__6*__3,__4,new Vector2(source.Width/2f,source.Height/2f),scale,SpriteEffects.None,__4);
+        return false;
+    }
     private static bool BaseDescription(Item __instance,ref string __result)
     {
         if(items.Read(__instance) is not {} snapshot)return true;
-        __result=ProductLabels.Description(snapshot);return false;
+        __result=ProductLabels.Description(snapshot)+(SimpleCrafting.IsDecoration(snapshot.Design.Use)?"\n"+ProductLabels.SaleLine(snapshot):"");return false;
     }
     private static void FurnitureDescription(Furniture __instance,ref string __result)
     {

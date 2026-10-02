@@ -82,11 +82,14 @@ internal sealed partial class ManufacturingService
                     ProductUse.Sword=>ContentText.Get("simple.sword","拼豆剑"),
                     ProductUse.Dagger=>ContentText.Get("simple.dagger","拼豆匕首"),
                     ProductUse.Hammer=>ContentText.Get("simple.hammer","拼豆锤"),
+                    ProductUse.Wallpaper=>ContentText.Get("simple.wallpaper","拼豆壁纸"),
+                    ProductUse.Flooring=>ContentText.Get("simple.flooring","拼豆地板"),
                     _=>ContentText.Get("simple.picture-category","拼豆画")
                 };
-            if(marketProgress.ArtworkValuationSequence==long.MaxValue)return new(false,"manufacturing.failed");
+            bool fixedPrice=SimpleCrafting.IsDecoration(snapshot.Design.Use);
+            if(!fixedPrice&&marketProgress.ArtworkValuationSequence==long.MaxValue)return new(false,"manufacturing.failed");
             long valuationSequence=marketProgress.ArtworkValuationSequence;
-            if(!snapshot.CreatedInCreativeMode)
+            if(!snapshot.CreatedInCreativeMode&&!fixedPrice)
                 snapshot.Valuation=ArtworkMarket.Roll(unchecked((long)Game1.uniqueIDForThisGame),valuationSequence,snapshot,BaseMaterialPrice);
 #endif
             string rulesBefore=DesignStorage.Serialize(inventory.Catalog),recipeBefore=DesignStorage.Serialize(currentRecipe);
@@ -143,12 +146,13 @@ internal sealed partial class ManufacturingService
 #if BEADS_LITE
             ,()=>
             {
-                if(snapshot.CreatedInCreativeMode)return;
+                if(snapshot.CreatedInCreativeMode||fixedPrice)return;
                 if(marketProgress.ArtworkValuationSequence!=valuationSequence)throw new InvalidOperationException("Artwork valuation sequence changed");
                 marketProgress.ArtworkValuationSequence=valuationSequence+1;
                 CollectorLedger.Record(progress,Game1.Date.TotalDays,snapshot);
             },()=>
             {
+                if(fixedPrice)return;
                 marketProgress.ArtworkValuationSequence=valuationSequence;
                 CollectorLedger.Remove(progress,Game1.Date.TotalDays,snapshot.InstanceId);
             }

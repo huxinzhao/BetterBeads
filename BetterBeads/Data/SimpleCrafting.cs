@@ -2,19 +2,22 @@ namespace BetterBeads.Data;
 
 public static class SimpleCrafting
 {
-    public const string Version="simple-2";
+    public const string Version=WeaponGeometry.Version;
     public const string Picture16="xinzh.BetterBeads.WallPicture16",Picture32="xinzh.BetterBeads.WallPicture32",Sword="xinzh.BetterBeads.Sword16";
     public const string Dagger="xinzh.BetterBeads.Dagger16",Hammer="xinzh.BetterBeads.Hammer16",Ornament=DefaultManufacturing.WoodOrnament;
     public const string Sword24="xinzh.BetterBeads.Sword24",Sword32="xinzh.BetterBeads.Sword32";
     public const string Dagger24="xinzh.BetterBeads.Dagger24",Dagger32="xinzh.BetterBeads.Dagger32";
     public const string Hammer24="xinzh.BetterBeads.Hammer24",Hammer32="xinzh.BetterBeads.Hammer32";
+    public const string Wallpaper16="xinzh.BetterBeads.Wallpaper16",Wallpaper32="xinzh.BetterBeads.Wallpaper32";
+    public const string Flooring16="xinzh.BetterBeads.Flooring16",Flooring32="xinzh.BetterBeads.Flooring32";
     public const string LargeOrnament="xinzh.BetterBeads.FloorOrnament32";
     public const string OrnamentFromLarge11="xinzh.BetterBeads.FloorOrnament32_1x1";
     public const string OrnamentFromLarge21="xinzh.BetterBeads.FloorOrnament32_2x1";
     public const string OrnamentFromLarge12="xinzh.BetterBeads.FloorOrnament32_1x2";
     public static readonly string[] Metals={"copper","iron","iridium"};
     public static bool IsWeapon(ProductUse use)=>use is ProductUse.Sword or ProductUse.Dagger or ProductUse.Hammer;
-    public static bool IsWoodwork(ProductUse use)=>use is ProductUse.Picture or ProductUse.WoodFurniture;
+    public static bool IsDecoration(ProductUse use)=>use is ProductUse.Wallpaper or ProductUse.Flooring;
+    public static bool IsWoodwork(ProductUse use)=>use is ProductUse.Picture or ProductUse.WoodFurniture or ProductUse.Wallpaper or ProductUse.Flooring;
     public static bool IsWeaponId(string id)=>id is Sword or Sword24 or Sword32 or Dagger or Dagger24 or Dagger32 or Hammer or Hammer24 or Hammer32;
     public static int WeaponSize(string id)=>id is Sword24 or Dagger24 or Hammer24?24:id is Sword32 or Dagger32 or Hammer32?32:16;
     public static string WeaponId(ProductUse use,int size)=>(use,size) switch
@@ -52,15 +55,18 @@ public static class SimpleCrafting
         if(!DesignStorage.IsStructurallyValid(d)||d.Use!=ProductUse.Sword&&d.SwordOrientation!=SwordOrientation.Diagonal
             ||!(d.Use==ProductUse.Picture&&(Wall(d.TemplateId)||ProductTemplates.IsPicture(d.TemplateId))
             ||d.Use==ProductUse.WoodFurniture&&d.TemplateId is Ornament or LargeOrnament
+            ||d.Use==ProductUse.Wallpaper&&d.TemplateId is Wallpaper16 or Wallpaper32
+            ||d.Use==ProductUse.Flooring&&d.TemplateId is Flooring16 or Flooring32
             ||d.Use==ProductUse.Sword&&d.TemplateId is Sword or Sword24 or Sword32
             ||d.Use==ProductUse.Dagger&&d.TemplateId is Dagger or Dagger24 or Dagger32
             ||d.Use==ProductUse.Hammer&&d.TemplateId is Hammer or Hammer24 or Hammer32))return false;
-        int size=d.TemplateId is Picture32 or ProductTemplates.DetailedPicture or LargeOrnament?32:IsWeaponId(d.TemplateId)?WeaponSize(d.TemplateId):16;
+        int size=d.TemplateId is Picture32 or ProductTemplates.DetailedPicture or LargeOrnament or Wallpaper32 or Flooring32?32:IsWeaponId(d.TemplateId)?WeaponSize(d.TemplateId):16;
+        if(IsDecoration(d.Use)&&(d.BackgroundRgba&255)!=255)return false;
         return d.Views.Count==1&&d.Views.TryGetValue("front",out var grid)&&grid.Width==size&&grid.Height==size;
     }
-    public static Blueprint Blank(string id)=>new(){TemplateId=id,Use=id switch{Sword or Sword24 or Sword32=>ProductUse.Sword,Dagger or Dagger24 or Dagger32=>ProductUse.Dagger,Hammer or Hammer24 or Hammer32=>ProductUse.Hammer,Ornament or LargeOrnament=>ProductUse.WoodFurniture,_=>ProductUse.Picture},
+    public static Blueprint Blank(string id)=>new(){TemplateId=id,Use=id switch{Sword or Sword24 or Sword32=>ProductUse.Sword,Dagger or Dagger24 or Dagger32=>ProductUse.Dagger,Hammer or Hammer24 or Hammer32=>ProductUse.Hammer,Ornament or LargeOrnament=>ProductUse.WoodFurniture,Wallpaper16 or Wallpaper32=>ProductUse.Wallpaper,Flooring16 or Flooring32=>ProductUse.Flooring,_=>ProductUse.Picture},
         SupplementaryMaterials=IsWeaponId(id)?new(){{"copper",0}}:new(),Views=new(){["front"]=new(){Width=CanvasSize(id),Height=CanvasSize(id),Cells=Enumerable.Repeat<BeadCell?>(null,CanvasSize(id)*CanvasSize(id)).ToList()}}};
-    private static int CanvasSize(string id)=>id is Picture32 or LargeOrnament?32:IsWeaponId(id)?WeaponSize(id):16;
+    private static int CanvasSize(string id)=>id is Picture32 or LargeOrnament or Wallpaper32 or Flooring32?32:IsWeaponId(id)?WeaponSize(id):16;
     public static string Metal(Blueprint d)
     {
         var ids=d.Views.Values.SelectMany(g=>g.Cells).Where(c=>c is not null).Select(c=>c!.MaterialId).Distinct().ToArray();
@@ -80,19 +86,14 @@ public static class SimpleCrafting
         foreach(var c in d.Views.Values.SelectMany(g=>g.Cells).Where(c=>c is not null))c!.MaterialId=IsWoodwork(d.Use)?"decoration":metal.Length>0?metal:null;
         return d;
     }
-    public static (string Item,int Count) Cost(Blueprint d)=>IsWoodwork(d.Use)
+    public static (string Item,int Count) Cost(Blueprint d)=>IsDecoration(d.Use)
+        ?("(O)388",d.Views["front"].Width==32?40:20)
+        :IsWoodwork(d.Use)
         ?("(O)388",(d.Views.Values.Sum(g=>g.Cells.Count(c=>c is not null))+3)/4)
         :(Metal(d) switch{"copper"=>"(O)334","iron"=>"(O)335","iridium"=>"(O)337",_=>""},
             (int)Math.Ceiling((d.Use switch{ProductUse.Dagger=>3,ProductUse.Hammer=>6,_=>4})*WeaponSize(d.TemplateId)/16d));
-    public static double ReachScale(Blueprint d)=>IsWeapon(d.Use)?WeaponShape.ReachScale(d.Views["front"]):1;
-    public static WeaponStatValues Stats(Blueprint d)
-    {
-        var baseStats=Stats(d.Use,Metal(d));int size=WeaponSize(d.TemplateId);
-        double damage=size switch{24=>1.1,32=>1.2,_=>1};
-        int Round(int value)=>(int)Math.Round(value*damage,MidpointRounding.AwayFromZero);
-        return baseStats with{MinDamage=Round(baseStats.MinDamage),MaxDamage=Round(baseStats.MaxDamage),
-            Speed=baseStats.Speed-WeaponShape.SpeedPenalty(d.Views["front"])};
-    }
+    public static double ReachScale(Blueprint d)=>IsWeapon(d.Use)?WeaponGeometry.Evaluate(d).Reach:1;
+    public static WeaponStatValues Stats(Blueprint d)=>WeaponGeometry.Evaluate(d).Stats;
     // Use the frozen manufacturing bill, but reject malformed bills rather than trusting editable item metadata.
     public static bool CanSell(ProductSnapshot snapshot)
     {
@@ -121,15 +122,15 @@ public static class SimpleCrafting
     public static WeaponStatValues Stats(string metal)=>Stats(ProductUse.Sword,metal);
     public static WeaponStatValues Stats(ProductUse use,string metal)=>(use,metal) switch
     {
-        (ProductUse.Sword,"copper")=>new(20,28,0,0.8f,0.02f,3),
-        (ProductUse.Sword,"iron")=>new(34,47,0,0.84f,0.02f,3),
-        (ProductUse.Sword,"iridium")=>new(61,85,-1,0.92f,0.02f,3),
-        (ProductUse.Dagger,"copper")=>new(14,20,2,0.65f,0.04f,4),
-        (ProductUse.Dagger,"iron")=>new(24,34,2,0.68f,0.04f,4),
-        (ProductUse.Dagger,"iridium")=>new(42,58,1,0.72f,0.05f,4),
-        (ProductUse.Hammer,"copper")=>new(26,36,-2,1.3f,0.02f,3),
-        (ProductUse.Hammer,"iron")=>new(43,60,-2,1.4f,0.02f,3),
-        (ProductUse.Hammer,"iridium")=>new(75,105,-3,1.5f,0.02f,3),
+        (ProductUse.Sword,"copper")=>new(14,20,0,0.8f,0.02f,3),
+        (ProductUse.Sword,"iron")=>new(31,42,0,0.84f,0.02f,3),
+        (ProductUse.Sword,"iridium")=>new(59,77,8,0.92f,0.02f,3),
+        (ProductUse.Dagger,"copper")=>new(6,10,0,0.65f,0.03f,3),
+        (ProductUse.Dagger,"iron")=>new(13,20,0,0.68f,0.03f,3),
+        (ProductUse.Dagger,"iridium")=>new(28,39,3,0.72f,0.03f,3),
+        (ProductUse.Hammer,"copper")=>new(17,25,-4,0.70f,0.02f,3),
+        (ProductUse.Hammer,"iron")=>new(36,50,-4,0.74f,0.02f,3),
+        (ProductUse.Hammer,"iridium")=>new(67,90,-4,0.78f,0.02f,3),
         _=>throw new ArgumentException("Choose a supported weapon and metal")
     };
     public static ProcessingCatalog Catalog()
@@ -152,17 +153,23 @@ public static class SimpleCrafting
         foreach(int n in new[]{16,32}){string id=n==16?Picture16:Picture32;yield return new(new(id,ProductUse.Picture,n,n,new[]{"front"},"front",ManufacturingAvailable:true),"(F)"+id,0,DirectItems:true);}
         yield return new(new(Ornament,ProductUse.WoodFurniture,16,16,new[]{"front"},"front",ManufacturingAvailable:true),"(F)"+Ornament,0,DirectItems:true);
         yield return new(new(LargeOrnament,ProductUse.WoodFurniture,32,32,new[]{"front"},"front",ManufacturingAvailable:true),"(F)"+LargeOrnament,0,DirectItems:true);
+        foreach(var use in new[]{ProductUse.Wallpaper,ProductUse.Flooring})foreach(int size in new[]{16,32})
+        {
+            string id=ProductCategories.For(use)!.TemplateFor(size);
+            yield return new(new(id,use,size,size,new[]{"front"},"front",ManufacturingAvailable:true),(use==ProductUse.Wallpaper?"(WP)":"(FL)")+id,0,DirectItems:true);
+        }
         foreach(var weapon in DefaultWeapons.Recipes().Where(r=>IsWeaponId(r.Template.Id)))
             yield return weapon with{Template=weapon.Template with{MinimumMaterials=0},SpecialEffectsEnabled=false,DirectItems=true};
     }
     public static ManufacturingPreview Evaluate(Blueprint d,ManufacturingRecipe recipe,ProcessingCatalog catalog,IReadOnlyList<InventorySlot?> inventory,int money,string request,bool creative,bool create,int bag,string scope)
     {
-        if(!ManufacturingCatalog.ValidRecipe(recipe)||!recipe.Template.ManufacturingAvailable||recipe.OutputItemId!=(IsWeapon(d.Use)?"(W)":"(F)")+d.TemplateId)return new(ManufacturingFailure.InvalidRecipe,null,null);
+        string prefix=IsWeapon(d.Use)?"(W)":d.Use==ProductUse.Wallpaper?"(WP)":d.Use==ProductUse.Flooring?"(FL)":"(F)";
+        if(!ManufacturingCatalog.ValidRecipe(recipe)||!recipe.Template.ManufacturingAvailable||recipe.OutputItemId!=prefix+d.TemplateId)return new(ManufacturingFailure.InvalidRecipe,null,null);
         if(bag<0)bag=inventory.Count;
         if(bag>inventory.Count || money<0 || inventory.Any(s=>s is not null && (s.Count<=0||s.MaxStack<=0||string.IsNullOrWhiteSpace(s.Identity)||string.IsNullOrWhiteSpace(s.ItemId)||s.RawMaterial is not null && (s.Yield<=0||s.CanReceiveBeads))))return new(ManufacturingFailure.InvalidInventory,null,null);
         if(inventory.Where(s=>s is not null).Select(s=>s!.Identity).Distinct().Count()!=inventory.Count(s=>s is not null))return new(ManufacturingFailure.InvalidInventory,null,null);
         int n=CanvasSize(d.TemplateId);
-        if(!Supported(d)||!(Wall(d.TemplateId)||d.TemplateId is Ornament or LargeOrnament||IsWeaponId(d.TemplateId)) || !DesignStorage.IsStructurallyValid(d) || d.Views.Count!=1 || !d.Views.TryGetValue("front",out var grid)
+        if(!Supported(d)||!(Wall(d.TemplateId)||d.TemplateId is Ornament or LargeOrnament or Wallpaper16 or Wallpaper32 or Flooring16 or Flooring32||IsWeaponId(d.TemplateId)) || !DesignStorage.IsStructurallyValid(d) || d.Views.Count!=1 || !d.Views.TryGetValue("front",out var grid)
             ||grid.Width!=n||grid.Height!=n||grid.Cells.All(c=>c is null)||grid.Cells.Any(c=>c is not null && (c.Rgba&255)!=255)
             ||d.SupplementaryMaterials.Count>1||IsWoodwork(d.Use)&&d.SupplementaryMaterials.Count>0
             ||d.SelectedEffects.Count>0||d.WoolMaterials.Count>0||d.SupplementaryMaterials.Any(p=>p.Value!=0 || !Metals.Contains(p.Key))
@@ -180,8 +187,9 @@ public static class SimpleCrafting
         string variant=FurnitureFinish.Variant(d);
         string outputId=variant.Length>0?"(F)"+variant:recipe.OutputItemId;
         after[output]=new("manufactured:"+request,outputId,1,1);
-        var stats=IsWeapon(d.Use)?Stats(d).ToSnapshot():new Dictionary<string,double>();
-        if(IsWeapon(d.Use))stats["reachScale"]=ReachScale(d);
+        var shaped=IsWeapon(d.Use)?WeaponGeometry.Evaluate(d):null;
+        var stats=shaped is not null?shaped.Stats.ToSnapshot():new Dictionary<string,double>();
+        if(shaped is not null){stats["reachScale"]=shaped.Reach;stats["shapeSerration"]=shaped.Serration;stats["shapeWave"]=shaped.Geometry.Wave;stats["shapeBleeding"]=shaped.Bleeding;stats["shapeSwingTimeScale"]=shaped.SwingTimeScale;}
         var product=new ProductSnapshot{Design=d.Copy(),RulesVersion=Version,FurnitureVariantId=variant.Length>0?variant:null,CreatedInCreativeMode=creative,ActualMaterials=new(){{cost.Item,cost.Count}},
             WeaponRulesVersion=IsWeapon(d.Use)?Version:null,FinalStats=stats};
         return new(ManufacturingFailure.None,report,new(request,outputId,output,money,0,inventory,Enumerable.Range(0,after.Length).Where(i=>after[i]!=inventory[i]).Select(i=>new InventoryChange(i,inventory[i],after[i])),product,recipe,catalog,bag,scope));

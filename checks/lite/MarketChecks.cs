@@ -33,8 +33,19 @@ internal static class MarketChecks
         check(!DesignStorage.TryReadSnapshot(DesignStorage.Serialize(valued),out _),"invalid valuation is rejected");
         var legacy=Sample();
         check(SimpleCrafting.SaleValue(legacy,_=>2)==4,"legacy item keeps double-material value");
+        var previous=Sample();previous.Valuation=new(){Version=2,MaterialValue=2,Percent=80,FinalPrice=1};
+        check(DesignStorage.TryReadSnapshot(DesignStorage.Serialize(previous),out _),"RC3 valuations remain readable");
+        var renamed=Sample();renamed.Design.Name="Different name";renamed.Design.Views["front"].Cells[0]!.Rgba=0x112233FF;
+        var sameRoll=ArtworkMarket.Roll(91387,32,renamed,_=>2);
+        check(DesignStorage.Serialize(sameRoll)==DesignStorage.Serialize(ArtworkMarket.Roll(91387,32,Sample(),_=>2)),
+            "names and colors do not reroll a bill");
+        var costly=Sample();
+        for(int i=1;i<5;i++)costly.Design.Views["front"].Cells[i]=new(){ColorId="wood",Rgba=0xFFFFFFFF};
+        costly.ActualMaterials["(O)388"]=2;
+        check(Enumerable.Range(0,64).Any(i=>ArtworkMarket.Roll(91387,i,costly,_=>2).Percent
+            !=ArtworkMarket.Roll(91387,i,Sample(),_=>2).Percent),"different material costs do not share a prize sequence");
         legacy.CreatedInCreativeMode=true;
-        check(SimpleCrafting.SaleValue(legacy,_=>2)==0,"creative product has no sale price");
+        check(SimpleCrafting.SaleValue(legacy,_=>2)==1,"creative product keeps the RC7 one-gold sale price");
         var progress=new SaveProgress();int inventory=1;
         try{AtomicCraftCommit.Apply(()=>inventory=2,()=>inventory=1,null,progress,
             ()=>{progress.ArtworkValuationSequence++;throw new Exception("simulated progress failure");},

@@ -15,5 +15,5 @@ internal sealed class ProductRenderData
     }
 
     public string CacheKey(string view,int frameRevision)
-        =>VisualKey+":"+view+(SimpleCrafting.Wall(Snapshot.Design.TemplateId)||FurnitureFinish.IsNew(Snapshot.FurnitureVariantId)?":"+frameRevision:"");
+        =>VisualKey+":"+view+(SimpleCrafting.Wall(Snapshot.Design.TemplateId)||SimpleCrafting.IsDecoration(Snapshot.Design.Use)||FurnitureFinish.IsNew(Snapshot.FurnitureVariantId)?":"+frameRevision:"");
 }

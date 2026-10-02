@@ -2,6 +2,7 @@ namespace BetterBeads.Data;
 
 public sealed class WorkbenchSettings
 {
+    public string InputMode { get; set; } = "auto";
     public bool AllowValuableOrdinarySources { get; set; }
     public bool CreativeMode { get; set; }
     public bool ReducedMotion { get; set; }

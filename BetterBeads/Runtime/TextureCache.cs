@@ -22,7 +22,8 @@ internal sealed class TextureCache : IDisposable
         var snapshot=render.Snapshot;
         var key = render.CacheKey(view,ArtResources.FrameRevision);
         if (textures.TryGetValue(key, out var cached)) return cached;
-        bool fused=FurnitureFinish.IsNew(snapshot.FurnitureVariantId);
+        bool decoration=SimpleCrafting.IsDecoration(snapshot.Design.Use);
+        bool fused=FurnitureFinish.IsNew(snapshot.FurnitureVariantId)||decoration;
         bool atlas=view is "atlas" or "chair-front" or "furniture-menu";
         var grid = atlas ? ProductTemplates.CreateAtlas(snapshot)
             : snapshot.Design.Views[view is "weapon-icon" or "furniture-icon"?"front":view];
@@ -34,7 +35,12 @@ internal sealed class TextureCache : IDisposable
         {
             var finished=BeadFinish.Bake(grid,ArtResources.Definition,view is "furniture-menu" or "furniture-icon");
             width=finished.Width;height=finished.Height;
-            pixels=finished.Pixels.Select(c=>new Color((byte)(c>>24),(byte)(c>>16),(byte)(c>>8),(byte)c)).ToArray();
+            uint background=snapshot.Design.BackgroundRgba;
+            pixels=finished.Pixels.Select(c=>
+            {
+                if(decoration&&(c&255)==0)c=background;
+                return new Color((byte)(c>>24),(byte)(c>>16),(byte)(c>>8),(byte)c);
+            }).ToArray();
         }
         if(view=="weapon-icon" && width>16)
         {

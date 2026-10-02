@@ -114,6 +114,54 @@ internal static class ForgeRuntimeChecks
             Check(!left.modData.ContainsKey(key)&&left.GetDrawnItemId()==left.QualifiedItemId&&State(left)==stats,"unforge restores original native appearance "+id);
         }
         var sword=Bead(SimpleCrafting.Sword,0xABCDEFff);
+        var shapeSnapshot=Snapshot(SimpleCrafting.Sword,0xABCDEFff);
+        shapeSnapshot.WeaponRulesVersion=WeaponGeometry.Version;shapeSnapshot.FinalStats["reachScale"]=1.6;
+        shapeSnapshot.FinalStats["shapeSerration"]=.75;shapeSnapshot.FinalStats["speed"]=-10;
+        shapeSnapshot.FinalStats["shapeSwingTimeScale"]=.95;
+        shapeSnapshot.FinalStats["shapeWave"]=.8;shapeSnapshot.FinalStats["shapeBleeding"]=.75;
+        var shaped=(MeleeWeapon)products.GetType().GetMethod("Create",flags)!.Invoke(products,new object[]{shapeSnapshot})!;
+        string shapedState=State(shaped);
+        Check(shaped.Forge(new MeleeWeapon("4"))&&State(shaped)==shapedState,"appearance cannot replace left-hand frozen shape effects, speed or reach");
+        var timing=assembly.GetType("BetterBeads.Runtime.WeaponPatches",true)!.GetMethod("ApplySwingTime",flags)!;
+        var timingIl=assembly.GetType("BetterBeads.Runtime.WeaponPatches",true)!.GetMethod("SwingTiming",flags)!;
+        var instructions=(IEnumerable<CodeInstruction>)timingIl.Invoke(null,new object[]{PatchProcessor.GetOriginalInstructions(AccessTools.Method(typeof(MeleeWeapon),"setFarmerAnimating"))})!;
+        Check(instructions.Count(c=>c.operand is MethodInfo m&&m.Name=="ApplySwingTime")==1,"native swing timing is adapted exactly once");
+        var swipeDuration=AccessTools.FieldRefAccess<MeleeWeapon,float>("swipeSpeed");
+        swipeDuration(shaped)=100;timing.Invoke(null,new object[]{shaped});
+        Check(Math.Abs(swipeDuration(shaped)-95)<.001,"frozen five-percent swing timing survives transmog");
+        swipeDuration(shaped)=-20;timing.Invoke(null,new object[]{shaped});
+        Check(swipeDuration(shaped)==40,"movement and speed buffs cannot produce non-positive custom timing");
+        var plain=new MeleeWeapon("4");swipeDuration(plain)=100;timing.Invoke(null,new object[]{plain});
+        Check(swipeDuration(plain)==100,"vanilla weapon timing remains unchanged");
+        var legacy=Snapshot(SimpleCrafting.Sword,0xABCDEFff);legacy.WeaponRulesVersion="simple-4";legacy.FinalStats["reachScale"]=1.75;
+        legacy.FinalStats["speed"]=-16;legacy.FinalStats["minDamage"]=191;legacy.FinalStats["maxDamage"]=250;
+        var legacyItem=(MeleeWeapon)products.GetType().GetMethod("Create",flags)!.Invoke(products,new object[]{legacy})!;
+        Check(legacyItem.minDamage.Value==191&&legacyItem.maxDamage.Value==250&&legacyItem.speed.Value==-16,"old heavy weapon stats are not recalculated");
+        var range=assembly.GetType("BetterBeads.Runtime.WeaponPatches",true)!.GetMethod("ScaleArea",flags)!;
+        object[] rangeArgs={legacyItem,1,new Microsoft.Xna.Framework.Rectangle(90,90,20,20),new Microsoft.Xna.Framework.Rectangle(80,80,40,40)};
+        range.Invoke(null,rangeArgs);
+        var oldArea=(Microsoft.Xna.Framework.Rectangle)rangeArgs[3];
+        Check(oldArea.Width>40&&oldArea.Height==40,"simple-4 frozen forward reach still works after version bump");
+        var previous=legacy.Copy();previous.WeaponRulesVersion="simple-5";
+        previous.FinalStats["speed"]=0;previous.FinalStats["minDamage"]=59;previous.FinalStats["maxDamage"]=77;
+        previous.FinalStats["shapeSerration"]=.5;
+        var previousItem=(MeleeWeapon)products.GetType().GetMethod("Create",flags)!.Invoke(products,new object[]{previous})!;
+        Check(previousItem.speed.Value==0&&previousItem.minDamage.Value==59&&previousItem.maxDamage.Value==77,
+            "simple-5 frozen damage and speed do not adopt new calibration");
+        swipeDuration(previousItem)=100;timing.Invoke(null,new object[]{previousItem});
+        Check(swipeDuration(previousItem)==100,"simple-5 swing timing remains unchanged");
+        object[] previousArea={previousItem,1,new Microsoft.Xna.Framework.Rectangle(90,90,20,20),new Microsoft.Xna.Framework.Rectangle(80,80,40,40)};
+        range.Invoke(null,previousArea);
+        Check(((Microsoft.Xna.Framework.Rectangle)previousArea[3]).Width>40&&WeaponGeometry.HasShapeEffects(previous.WeaponRulesVersion),
+            "simple-5 frozen reach and serration remain enabled");
+        var calibrated=previous.Copy();calibrated.WeaponRulesVersion="simple-6";calibrated.FinalStats["shapeSwingTimeScale"]=.95;
+        var calibratedItem=(MeleeWeapon)products.GetType().GetMethod("Create",flags)!.Invoke(products,new object[]{calibrated})!;
+        swipeDuration(calibratedItem)=100;timing.Invoke(null,new object[]{calibratedItem});
+        Check(Math.Abs(swipeDuration(calibratedItem)-95)<.001,"simple-6 frozen faster timing remains after wave rule upgrade");
+        object[] calibratedArea={calibratedItem,1,new Microsoft.Xna.Framework.Rectangle(90,90,20,20),new Microsoft.Xna.Framework.Rectangle(80,80,40,40)};
+        range.Invoke(null,calibratedArea);
+        Check(((Microsoft.Xna.Framework.Rectangle)calibratedArea[3]).Width>40&&WeaponGeometry.BleedingStrength(calibrated)==.5,
+            "simple-6 frozen range and serration survive wave rule upgrade");
         var dagger=new MeleeWeapon("21");var scythe=new MeleeWeapon("47");
         Check(!sword.CanForge(dagger)&&!sword.Forge(dagger)&&sword.appearance.Value is null,"wrong type rejected without mutation");
         Check(!sword.CanForge(sword),"same object rejected");

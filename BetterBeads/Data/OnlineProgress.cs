@@ -7,6 +7,7 @@ public sealed class OnlineProgress
     public Dictionary<long,SaveProgress> Players {get;set;}=new();
     public Dictionary<string,OnlineGallerySlot> Gallery {get;set;}=new();
     public long GiftSequence {get;set;}
+    public HashSet<string> GalleryReceipts {get;set;}=new(StringComparer.Ordinal);
 }
 public sealed class OnlineGift
 {
@@ -23,14 +24,15 @@ public sealed class OnlineGallerySlot
 }
 public static class OnlineRules
 {
-    public const string Protocol="1.0.0-RC7.1";
+    public const string Protocol="1.1.0-RC4-reliability1";
     public static bool ValidPersonal(SaveProgress? p)=>p is not null&&p.SchemaVersion==1
         &&p.BlueprintRecords is not null&&p.BlueprintRecords.Count<=10000
         &&p.BlueprintRecords.All(pair=>!string.IsNullOrWhiteSpace(pair.Key)&&pair.Key.Length<=128&&pair.Value is not null&&pair.Value.Length<=2_000_000)
         &&p.FavoriteColors is {Count:20}&&p.HiddenLiteTemplates is not null
         &&p.FavoriteBlueprintIds is not null&&p.RecentBlueprintIds is not null;
     public static bool ValidWorld(OnlineProgress? world)=>world is not null&&world.GiftSequence>=0
-        &&world.Players is not null&&world.Gallery is not null
+        &&world.Players is not null&&world.Gallery is not null&&world.GalleryReceipts is not null
+        &&world.GalleryReceipts.All(id=>id is {Length:>=34 and <=64})
         &&world.Gallery.All(p=>!string.IsNullOrWhiteSpace(p.Key)&&p.Value is not null&&p.Value.Candidates is not null
             &&p.Value.Candidates.All(c=>c.Value is not null&&c.Key==c.Value.FarmerId&&ValidGift(c.Value,world.GiftSequence))
             &&(p.Value.Displayed is null||ValidGift(p.Value.Displayed,world.GiftSequence)));

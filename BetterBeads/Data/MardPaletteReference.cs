@@ -20,6 +20,7 @@ public sealed class MardPaletteDefinition
 }
 
 public readonly record struct MardColorMatch(string Code,bool Exact);
+internal readonly record struct MardColorSearchResult(string Code,uint Rgba);
 
 public sealed class MardPaletteReference
 {
@@ -123,5 +124,29 @@ public sealed class MardPaletteReference
     {
         var match=Match(rgba);
         return (match.Exact?"":"≈ ")+match.Code;
+    }
+
+    private static string NormalizeSearch(string? query)
+    {
+        string value=(query??"").Trim().ToUpperInvariant();
+        if(value.Length>1 && "ABCDEFGHM".Contains(value[0])
+            && value.Length>1 && int.TryParse(value.AsSpan(1),NumberStyles.None,CultureInfo.InvariantCulture,out int number))
+            value=value[0]+number.ToString(CultureInfo.InvariantCulture);
+        return value;
+    }
+
+    internal MardColorSearchResult? FindExact(string? query)
+    {
+        string code=NormalizeSearch(query);
+        var color=colors.FirstOrDefault(c=>c.Code==code);
+        return color is null?null:new MardColorSearchResult(color.Code,color.Rgba);
+    }
+
+    internal MardColorSearchResult[] Search(string? query)
+    {
+        string value=NormalizeSearch(query);
+        return colors.Where(c=>c.Code.StartsWith(value,StringComparison.Ordinal))
+            .OrderByDescending(c=>c.Code==value)
+            .Select(c=>new MardColorSearchResult(c.Code,c.Rgba)).ToArray();
     }
 }

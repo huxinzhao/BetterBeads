@@ -17,6 +17,8 @@ public static class ProductTemplates
             &&FurnitureTemplates.TryGet(snapshot.FurnitureVariantId!,out _);
         if(snapshot.FurnitureVariantId is not null && design.TemplateId!=SimpleCrafting.LargeOrnament)return false;
         if(!SoulUpgrades.ValidSnapshot(snapshot))return false;
+        if(SimpleCrafting.IsDecoration(design.Use))return SimpleCrafting.Supported(design)
+            &&snapshot.FurnitureVariantId is null;
         if(WeaponMaterials.IsWeapon(design.Use))return WeaponTemplates.TryGet(design.TemplateId,out var weapon)
             && weapon.Matches(design) && !string.IsNullOrWhiteSpace(snapshot.WeaponRulesVersion)
             && WeaponStatValues.TryRead(snapshot.FinalStats,out _) && SpecialEffects.ValidSnapshot(snapshot);
@@ -39,7 +41,7 @@ public static class ProductTemplates
     public static string QualifiedId(ProductSnapshot snapshot)
     {
         if(!Matches(snapshot))throw new ArgumentException("Snapshot does not match its template.");
-        return (WeaponMaterials.IsWeapon(snapshot.Design.Use)?"(W)":snapshot.Design.Use==ProductUse.Hat?"(H)":snapshot.Design.Use==ProductUse.Shirt?"(S)":snapshot.Design.Use==ProductUse.Pants?"(P)":"(F)")
+        return (WeaponMaterials.IsWeapon(snapshot.Design.Use)?"(W)":snapshot.Design.Use==ProductUse.Hat?"(H)":snapshot.Design.Use==ProductUse.Shirt?"(S)":snapshot.Design.Use==ProductUse.Pants?"(P)":snapshot.Design.Use==ProductUse.Wallpaper?"(WP)":snapshot.Design.Use==ProductUse.Flooring?"(FL)":"(F)")
             +(snapshot.FurnitureVariantId??snapshot.Design.TemplateId);
     }
 

@@ -7,7 +7,7 @@
     <AssemblyName>BetterBeads</AssemblyName>
     <RootNamespace>BetterBeads</RootNamespace>
     <LiteBuild Condition="'$(LiteBuild)' == ''">true</LiteBuild>
-    <Version Condition="'$(LiteBuild)' == 'true'">1.0.0</Version>
+    <Version Condition="'$(LiteBuild)' == 'true'">1.1.0</Version>
     <Version Condition="'$(LiteBuild)' != 'true'">0.16.4</Version>
     <GamePath Condition="'$(GamePath)' == ''">D:\steam\steamapps\common\Stardew Valley</GamePath>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>

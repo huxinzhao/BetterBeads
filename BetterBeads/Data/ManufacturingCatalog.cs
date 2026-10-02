@@ -42,6 +42,12 @@ public static class ManufacturingCatalog
                 var c=ClothingTemplates.Find(t.Id);
                 registered=c is not null && c.Use==t.Use && t.Width==c.Width && t.Height==c.Height && t.Views.SequenceEqual(c.Views) && t.WoolBudget is >0;
             }
+            else if(SimpleCrafting.IsDecoration(t.Use))
+            {
+                prefix=t.Use==ProductUse.Wallpaper?"(WP)":"(FL)";
+                registered=ProductCategories.ForTemplate(t.Id) is {} category && category.Use==t.Use
+                    &&t.Width==t.Height&&category.Sizes.Contains(t.Width)&&t.Views.SequenceEqual(new[]{"front"})&&t.BillingView=="front";
+            }
             else
             {
                 prefix="(F)";

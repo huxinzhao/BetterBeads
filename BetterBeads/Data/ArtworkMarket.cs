@@ -7,7 +7,7 @@ namespace BetterBeads.Data;
 
 public sealed class ArtworkValuation
 {
-    public int Version { get; set; } = 2;
+    public int Version { get; set; } = 3;
     public long MaterialValue { get; set; }
     public int Percent { get; set; }
     public bool Collector { get; set; }
@@ -48,7 +48,7 @@ public static class ArtworkMarket
         int multiplier=value.Version switch
         {
             1 when value.CollectorMultiplier==0 => value.Collector?100:1,
-            2 when (value.Collector
+            2 or 3 when (value.Collector
                 ? value.CollectorMultiplier is >=10 and <=100
                 : value.CollectorMultiplier==0)
                 => value.Collector?value.CollectorMultiplier:1,
@@ -71,9 +71,11 @@ public static class ArtworkMarket
     public static ArtworkValuation Roll(long saveId,long sequence,ProductSnapshot snapshot,Func<string,int?> basePrice)
     {
         long value=MaterialValue(snapshot,basePrice);
-        int percent=DrawPercent(Draw(saveId,sequence,"tier"),Draw(saveId,sequence,"weight"));
-        bool collector=value>0&&percent>=500&&Draw(saveId,sequence,"collector")%100==0;
-        int multiplier=collector?10+(int)(Draw(saveId,sequence,"collector-multiplier")%91):0;
+        var cost=SimpleCrafting.Cost(snapshot.Design);
+        string bill=$"{(int)snapshot.Design.Use}|{cost.Item}|{cost.Count}";
+        int percent=DrawPercent(Draw(saveId,sequence,bill,"tier"),Draw(saveId,sequence,bill,"weight"));
+        bool collector=value>0&&percent>=500&&Draw(saveId,sequence,bill,"collector")%100==0;
+        int multiplier=collector?10+(int)(Draw(saveId,sequence,bill,"collector-multiplier")%91):0;
         return new(){MaterialValue=value,Percent=percent,Collector=collector,CollectorMultiplier=multiplier,
             FinalPrice=Price(value,percent,collector?multiplier:1)};
     }
@@ -96,9 +98,9 @@ public static class ArtworkMarket
     private static long Weight(int p,int start,int end)
         =>start==0?p<=80?p+1:161-p:2L*(end-start)+1-(p-start);
 
-    private static ulong Draw(long saveId,long sequence,string label)
+    private static ulong Draw(long saveId,long sequence,string bill,string label)
     {
-        byte[] input=Encoding.UTF8.GetBytes($"BetterBeads.ArtworkMarket.1|{saveId}|{sequence}|{label}");
+        byte[] input=Encoding.UTF8.GetBytes($"BetterBeads.ArtworkMarket.3|{saveId}|{sequence}|{bill}|{label}");
         return BinaryPrimitives.ReadUInt64LittleEndian(SHA256.HashData(input));
     }
 }

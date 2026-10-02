@@ -8,7 +8,8 @@ public static class WeaponShape
     public static int SpeedPenalty(BeadGrid grid)
     {
         int count=grid.Cells.Count(cell=>cell is not null);
-        return count<=64?0:count<=256?1:count<=576?2:3;
+        // 30-bead native-sized sprites stay nimble; a filled 32px canvas reaches -16.
+        return (int)Math.Round(Math.Clamp(count,0,1024)/64d,MidpointRounding.AwayFromZero);
     }
 
     public static double ReachScale(BeadGrid grid)

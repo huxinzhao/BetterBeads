@@ -23,6 +23,8 @@ internal sealed class ReceivedPresentation
             message+="\n"+ContentText.Format("market.final-price",$"收藏估价：{valuation.FinalPrice}金");
             if(valuation.Collector)message+="\n"+ContentText.Get("market.collector-note","神秘艺术收藏家赏识了这件作品！");
         }
+        if(!product.CreatedInCreativeMode&&!SimpleCrafting.IsDecoration(product.Design.Use)&&product.Valuation is not null)
+            message+="\n"+ContentText.Get("market.random-note","市场估价随机，不代表图案好坏。");
 #endif
         return message+"\n"+ContentText.Get("simple.received-saved","已放入背包。");
     }

@@ -30,9 +30,12 @@ public static class SimpleEditorLayout
             Drawer=new(frame.Right-288,frame.Y+8,280,frame.Height-16)};
     }
     private static int LeftLift(EditorLayout l)=>l.UsesDrawers?0:16;
-    public static UiRect Category(EditorLayout l)=>new(l.Board.X,l.Body.Y-LeftLift(l),184,l.UsesDrawers?40:44);
+    public static UiRect Category(EditorLayout l)=>new(l.Board.X,l.Body.Y-LeftLift(l),Math.Min(226,Math.Max(184,l.Board.Width-208)),l.UsesDrawers?40:44);
     public static UiRect Size(EditorLayout l)=>new(Category(l).Right+8,l.Body.Y-LeftLift(l),l.Board.Right-Category(l).Right-8,l.UsesDrawers?40:44);
     public static UiRect CostBox(EditorLayout l)=>new(l.Board.X,l.Footer.Y,l.UsesDrawers?l.Footer.Width:l.Board.Width,l.UsesDrawers?48:72);
+    public static UiRect ControllerHint(EditorLayout l)=>l.UsesDrawers
+        ?new(l.Footer.X,l.SaveButton.Y,Math.Max(0,l.SaveButton.X-l.Footer.X-8),l.SaveButton.Height)
+        :new(l.Board.X,l.Board.Bottom,l.Board.Width,Math.Max(0,l.Footer.Y-l.Board.Bottom));
     public static UiRect SupplyButton(EditorLayout l)=>new(l.Header.X,l.Header.Y+4,144,40);
     public static UiRect[] ToolButtons(EditorLayout l)
     {
@@ -42,17 +45,23 @@ public static class SimpleEditorLayout
     }
     // Reserve the lower part of a permanent sidebar for one native inventory slot.
     // Compact drawers retain the existing minimum color size and may hide the slot.
-    public static int PaletteCell(UiRect area,bool sword=false)=>Math.Clamp((area.Height-(sword?268:220))/5,24,50);
-    public static (UiRect Picker,UiRect Dye) ColorActions(UiRect area,bool sword)
+    public static int PaletteCell(UiRect area,bool sword=false,bool extra=false)=>Math.Clamp((area.Height-(sword||extra?268:220))/5,24,50);
+    public static UiRect TouchPaletteHit(UiRect cell)=>new(cell.X-4,cell.Y-4,cell.Width+8,cell.Height+8);
+    public static (UiRect Picker,UiRect Dye) ColorActions(UiRect area,bool sword,bool extra=false)
     {
-        int y=area.Y+8+5*(PaletteCell(area,sword)+8);
+        int y=area.Y+8+5*(PaletteCell(area,sword,extra)+8);
         int width=Math.Min(232,area.Width-24),left=area.X+(area.Width-width)/2;
         return (new(left,y,44,44),new(left+52,y,width-52,44));
     }
-    public static UiRect ProductPreview(UiRect area,bool sword)
+    public static (UiRect Picker,UiRect Dye,UiRect View) TouchColorActions(UiRect area,bool sword,bool extra=false)
     {
-        int cell=PaletteCell(area,sword);
-        int top=area.Y+8+5*(cell+8)+52+(sword?48:0)+8;
+        var (picker,dye)=ColorActions(area,sword,extra);
+        return (picker,dye with{Width=dye.Width-70},new UiRect(dye.Right-62,dye.Y,62,dye.Height));
+    }
+    public static UiRect ProductPreview(UiRect area,bool sword,bool extra=false)
+    {
+        int cell=PaletteCell(area,sword,extra);
+        int top=area.Y+8+5*(cell+8)+52+(sword||extra?48:0)+8;
         int side=Math.Min(Math.Min(160,area.Width-32),area.Bottom-top-12);
         if(side<56)return default;
         return new UiRect(area.X+(area.Width-side)/2,top,side,side);

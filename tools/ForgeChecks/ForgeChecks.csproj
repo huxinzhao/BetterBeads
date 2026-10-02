@@ -5,6 +5,7 @@
     <GamePath Condition="'$(GamePath)' == ''">D:\steam\steamapps\common\Stardew Valley</GamePath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="xTile"><HintPath>$(GamePath)/xTile.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="BetterBeads"><HintPath>../../BetterBeads/bin/Current/net6.0/BetterBeads.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="Stardew Valley"><HintPath>$(GamePath)/Stardew Valley.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="StardewValley.GameData"><HintPath>$(GamePath)/StardewValley.GameData.dll</HintPath><Private>false</Private></Reference>

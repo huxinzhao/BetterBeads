@@ -1,43 +1,53 @@
+# Better Beads / 更好的拼豆
+
 [Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/53029) · [Downloads](https://github.com/huxinzhao/BetterBeads/releases)
 
 ![Better Beads](release/publish-1.0.0-RC7/images/01-cover.png)
 
-把能想到的任意图案做成挂画、摆件和武器。
+把任意图案做成挂画、摆件、壁纸、地板和武器。自由摆豆、调色、导入图片或分享图纸；作品可出售，挂画可赠送给村民。
 
-- 自由摆豆、调色、统一换色，导入图片或分享图纸。
-- 挂画与摆件带轻微拼豆质感；剑、匕首、锤支持16／24／32格。
-- 作品独立估价，可出售；挂画可送给村民，达到6心后次日在适配住宅展示。
-- 在线多人候选支持：各自保留图纸与豆色，共用箱子和村民展示位。
+Turn your own designs into bead wall art, ornaments, wallpaper, flooring and weapons. Draw, recolor, import images and share designs; sell your work or gift paintings to villagers.
+Better Beads / 更好的拼豆 · 1.1.0 RC4 更新内容
 
-需要星露谷1.6、SMAPI 4.5.1或更新兼容版本。将包内 BetterBeads 文件夹放入 Mods，觅食2级后配方在罗宾处购买。
+- 新增拼豆壁纸与地板，用一小块图案重复装修房间；
+- 拼豆染色可搜索 MARD 221 色号；新增整幅或框选图案的移动、复制。
+- 未保存草稿可在下次打开时恢复，制作仍不强制保存图纸。
+- 新制武器按形状、长度与重量决定伤害和手感。旧武器属性不变。
+- 增加手柄逐格操作，统一新增窗口风格，修复吸管、焦点和弹窗误触等问题。
+- 改善联机交易、装修失败回滚与资源缓存，并加入 Nexus 更新提示。
 
-**操作**：左键摆豆，右键擦除，滚轮缩放，中键或空格＋左键平移。Ctrl+S保存，Ctrl+Z／Y撤销重做，Home适应画布。未保存草稿只保留在本次游戏。
+需要星露谷1.6、SMAPI 4.5.1或更新兼容版本；支持中文、英文。
+更新前退出游戏，备份自定义配置、素材及 imports、exports、draft-recovery 文件夹，替换 BetterBeads 文件夹，不同时安装旧版。
+联机玩家须使用同一候选包。
 
-从背包和同地图周围5格普通箱子取料。支持中文、英文；Generic Mod Config Menu可选。
-
-欢迎反馈 Bug；如果喜欢这个模组，也请点个 Endorse 支持一下！
-
+欢迎反馈 Bug；喜欢的话，也请点个 Endorse 支持一下！
+https://www.nexusmods.com/stardewvalley/mods/53029
 
 ---
 
-# Better Beads · 1.0.0 RC7
+Better Beads · 1.1.0 RC4 Update
 
-Turn your own pixel designs into wall art, ornaments and weapons.
+- Make repeating bead wallpaper and flooring from a small pattern.
+- Search MARD 221 color codes. Move or copy a whole pattern or a selected area.
+- Recover unsaved drafts when you reopen the workbench. Crafting still does not force a design save.
+- New weapons use shape, length and weight for damage and handling. Existing weapons keep their stats.
+- Added bead-by-bead controller input, consistent new windows, and fixes for eyedropper, focus and accidental input.
+- Improved co-op transactions, decorating rollback and resource caching; added Nexus update notifications.
 
-- Draw, recolor, import images and share designs.
-- Subtle fused-bead texture on paintings and ornaments; swords, daggers and hammers in 16, 24 or 32 pixels.
-- Individual artwork appraisals and selling. Gift paintings to villagers; at six hearts, supported homes display them from the next day.
-- Online co-op candidate: personal libraries and palettes, shared nearby chests and NPC displays. One user per workbench; separate benches work together. No manual host approval.
+Requires Stardew Valley 1.6 and SMAPI 4.5.1 or a newer compatible version. English and Chinese included.
+Exit the game before updating. Back up custom config, assets, imports, exports and draft-recovery, then replace the BetterBeads folder. Install only one copy.
+Every co-op player needs the same candidate package.
 
-**Install:** Stardew Valley 1.6 and SMAPI 4.5.1 or a newer compatible version. Place the BetterBeads folder in Mods; install only one copy. Reach Foraging 2 for Robin's letter, then buy the recipe from Robin. Every online player needs this same RC7 package. No split-screen support.
+Bug reports are welcome! If you enjoy the mod, please leave an endorsement.
+https://www.nexusmods.com/stardewvalley/mods/53029
 
-**Controls:** Left-click to place, right-click to erase, wheel to zoom, middle-drag or Space + left-drag to pan. Ctrl+S saves, Ctrl+Z/Y undo/redo, Home fits the canvas. Fusing never forces a design save; unsaved drafts last only for this session.
+## Install and controls / 安装与操作
 
-Uses your backpack and ordinary chests within five tiles on the same map. Creative Mode follows the host. English and Chinese included; Generic Mod Config Menu is optional.
+Place the BetterBeads folder in Mods. Reach Foraging 2, read Robin's letter, then buy the workbench recipe from her. Left-click draws, right-click erases; wheel zooms, middle drag or Space + left drag pans. Ctrl+S saves, Ctrl+Z/Y undo/redo, Home fits the board. Generic Mod Config Menu is optional.
 
-**Release candidate:** Builds and offline checks passed. Real two-player sessions, disconnect recovery, weapon swings and furniture layering still need in-game acceptance. Exit the game and back up saves and customized assets before upgrading. This is not the final stable release.
+将 BetterBeads 文件夹放入 Mods。觅食2级后阅读罗宾来信，向她购买拼豆台配方。左键摆豆、右键擦除、滚轮缩放、中键或空格＋左键平移；Ctrl+S保存，Ctrl+Z/Y撤销重做，Home适应画布。GMCM可选。
 
-## Development
-See BUILD.md. Project code is all rights reserved; third-party notices remain applicable.
+See [build instructions](BUILD.md), [candidate checks](docs/RC4_SOURCE_REVIEW.md), and [offline UI previews](art/player-experience-1.1.0-RC4/index.html).
+Edit text in BetterBeads/i18n, or use the text/pixel editors in art. Android loading has not been verified; this desktop candidate is not labeled Android compatible.
 
-Bug reports are welcome! If you enjoy the mod, please leave an endorsement on Nexus Mods.
+Project code: © 2026 xinzh, all rights reserved. Public source availability is not permission to redistribute modified versions. See [LICENSE.txt](LICENSE.txt) and [third-party notices](THIRD_PARTY_NOTICES.md).

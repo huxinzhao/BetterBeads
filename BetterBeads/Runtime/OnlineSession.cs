@@ -26,6 +26,7 @@ internal sealed class OnlinePacket
     public string[]? Backpack {get;set;}
     public Dictionary<int,string>? ChangedSlots {get;set;}
     public bool Creative {get;set;}
+    public int GiftDay {get;set;}
 }
 
 /// <summary>Main-thread host authority. Messages never request human approval.</summary>
@@ -59,11 +60,16 @@ internal sealed class OnlineSession
     private readonly Dictionary<Chest,CraftWork> reservations=new();
     private readonly Dictionary<long,byte[]?> inventoryBroadcasts=new();
     private readonly List<(long Player,OnlinePacket Packet,double Started)> incomingGifts=new();
+    private const string GiftOutboxKey="xinzh.BetterBeads/gallery-outbox-v1";
+    private readonly List<PendingGalleryGift> giftOutbox=new();
+    private bool giftOutboxLoaded,giftOutboxReadable=true;
+    private double nextGiftAttempt;
     private bool? lastCreative;
     private OnlinePacket? delivered;
     private OnlinePacket? pending;
     private Action<OnlinePacket>? completion;
-    private double sent,hello;
+    private double sent,hello,pendingStarted,lastReconcile;
+    private string? uncertainRequest;
     private string token="";
     private bool connected;
     private long personalVersion,syncedVersion;
@@ -79,7 +85,14 @@ internal sealed class OnlineSession
         this.helper=helper;this.monitor=monitor;this.session=session;this.catalog=catalog;this.products=products;this.open=open;this.ready=ready;
         Current=this;
         helper.Events.Multiplayer.ModMessageReceived+=Message;
-        helper.Events.Multiplayer.PeerDisconnected+=(_,e)=>{leases.Remove(e.Peer.PlayerID);peers.Remove(e.Peer.PlayerID);};
+        helper.Events.Multiplayer.PeerDisconnected+=(_,e)=>
+        {
+            leases.Remove(e.Peer.PlayerID);peers.Remove(e.Peer.PlayerID);
+            if(Context.IsMainPlayer||e.Peer.PlayerID!=Game1.MasterPlayer.UniqueMultiplayerID)return;
+            connected=false;
+            SuspendPending("disconnected");
+            Game1.showRedMessage(Text("disconnected"));
+        };
         helper.Events.GameLoop.UpdateTicked+=Tick;
         helper.Events.Display.MenuChanged+=(_,e)=>{if(e.OldMenu is WorkbenchMenu&&e.NewMenu is not WorkbenchMenu)Release();};
         helper.Events.Player.Warped+=(_,e)=>{if(e.IsLocalPlayer){Release();if(Game1.activeClickableMenu is WorkbenchMenu)Game1.exitActiveMenu();}};
@@ -102,7 +115,7 @@ internal sealed class OnlineSession
     {
         if(Context.IsSplitScreen){Game1.showRedMessage(Text("split"));return;}
         if(!session.OnlineReadable||!Context.IsMainPlayer&&!connected){Game1.showRedMessage(Text("version"));return;}
-        if(pending is not null)return;
+        if(pending is not null||uncertainRequest is not null){Game1.showRedMessage(Text("reconciling"));return;}
         openingBench=bench;
         Begin(new(){Kind="open",Location=Game1.currentLocation.NameOrUniqueName,X=(int)bench.TileLocation.X,Y=(int)bench.TileLocation.Y},p=>
         {
@@ -116,23 +129,38 @@ internal sealed class OnlineSession
     }
     public void Craft(Blueprint design,Action<ManufacturingResult> done)
     {
-        if(pending is not null)return;
+        if(pending is not null||uncertainRequest is not null)return;
         Begin(new(){Kind="craft",Token=token,Design=design.Copy(),Backpack=Bag(Game1.player),Creative=PlayMode.Creative},p=>
         {
             if(p.Progress is not null&&session.Progress is {} local)local.CollectorLetters=p.Progress.CollectorLetters;
             done(new(p.Error.Length==0,p.Error.Length==0?"manufacturing.success":p.Error,p.Product));
         });
     }
+    public void Decorate(ProductSnapshot artwork,GameLocation location,int x,int y)
+    {
+        if(pending is not null||uncertainRequest is not null||!connected)return;
+        Begin(new(){Kind="decor",Location=location.NameOrUniqueName,X=x,Y=y,Product=artwork.Copy(),Backpack=Bag(Game1.player)},reply=>
+        {
+            if(reply.Error.Length>0)Game1.showRedMessage(Text(reply.Error));
+        });
+    }
     public void Sync(Action<bool>? done=null)
     {
         if(!Context.IsMultiplayer||Context.IsMainPlayer){done?.Invoke(true);return;}
-        if(!connected||pending is not null||session.Progress is not {} p){done?.Invoke(false);return;}
+        if(!connected||pending is not null||uncertainRequest is not null||session.Progress is not {} p){done?.Invoke(false);return;}
         long version=personalVersion;
         Begin(new(){Kind="personal",Progress=Copy(p)},reply=>
         {if(reply.Error.Length==0){syncedVersion=version;}done?.Invoke(reply.Error.Length==0);});
     }
     private void Begin(OnlinePacket p,Action<OnlinePacket> done)
-    {p.Request=Guid.NewGuid().ToString("N");pending=p;completion=done;sent=Now;ToHost(p);}
+    {if(p.Request.Length==0)p.Request=Guid.NewGuid().ToString("N");pending=p;completion=done;sent=pendingStarted=Now;ToHost(p);}
+    private void SuspendPending(string reason)
+    {
+        if(pending is not {} request)return;
+        if(request.Kind is "craft" or "decor")uncertainRequest=request.Request;
+        var action=completion;pending=null;completion=null;delivered=null;
+        action?.Invoke(new(){Kind="reply",Request=request.Request,Error=reason});
+    }
     private static SaveProgress Copy(SaveProgress p)=>System.Text.Json.JsonSerializer.Deserialize<SaveProgress>(DesignStorage.Serialize(p))!;
     private void Release()
     {
@@ -149,7 +177,7 @@ internal sealed class OnlineSession
         // Remember the outcome before preparing presentation/sync metadata or invoking transport.
         receipts[(player,request.Request)]=response;
         if(product is not null)response.Progress=new(){CollectorLetters=session.ForPlayer(player).CollectorLetters};
-        if(product is not null&&request.Backpack is {} before&&Game1.GetPlayer(player) is {} farmer)
+        if((product is not null||request.Kind=="decor")&&request.Backpack is {} before&&Game1.GetPlayer(player) is {} farmer)
             response.ChangedSlots=Bag(farmer).Select((value,index)=>(value,index)).Where(v=>v.index>=before.Length||before[v.index]!=v.value)
                 .ToDictionary(v=>v.index,v=>v.value);
         Send(response,player);
@@ -158,7 +186,8 @@ internal sealed class OnlineSession
     {
         if(p.Protocol!=OnlineRules.Protocol)
         {
-            if(!Context.IsMainPlayer&&sender==Game1.MasterPlayer.UniqueMultiplayerID){connected=false;Game1.showRedMessage(Text("version"));}
+            if(!Context.IsMainPlayer&&sender==Game1.MasterPlayer.UniqueMultiplayerID)
+            {connected=false;SuspendPending("version");Game1.showRedMessage(Text("version"));}
             return;
         }
         if(p.Kind is "welcome" or "reply" or "gallery" or "settings")
@@ -169,12 +198,19 @@ internal sealed class OnlineSession
             {
                 if(connected)return;
                 session.Accept(p.Progress);connected=true;ready();
+                if(uncertainRequest is {} request){lastReconcile=Now;ToHost(new(){Kind="reconcile",Request=request});}
             }
             if(p.Gallery is not null){Gallery.GiftGalleryRecords=p.Gallery;GalleryChanged?.Invoke();}
             if(p.Kind=="reply"&&pending?.Request==p.Request)
             {
                 // SMAPI's reply can arrive before the game's inventory delta. Keep input locked until both arrive.
                 delivered=p;CompleteReply();
+            }
+            else if(p.Kind=="reply"&&uncertainRequest==p.Request)
+            {
+                uncertainRequest=null;
+                if(p.Error.Length==0)Game1.addHUDMessage(new HUDMessage(Text("reconciled")));
+                else Game1.showRedMessage(Text("uncertain"));
             }
             return;
         }
@@ -187,6 +223,21 @@ internal sealed class OnlineSession
         if(p.Kind=="heartbeat"){if(leases.TryGetValue(sender,out var l)&&l.Token==p.Token)l.Seen=Now;return;}
         if(p.Kind=="release"){if(leases.TryGetValue(sender,out var l)&&l.Token==p.Token)leases.Remove(sender);return;}
         if(p.Request.Length is <1 or >64)return;
+        if(p.Kind=="reconcile")
+        {
+            if(receipts.TryGetValue((sender,p.Request),out var committed))
+            {
+                // Send the host's current inventory as an authoritative NetRef update, even if
+                // the original dirty delta was already cleared by its first transmission.
+                farmer.netItems.MarkReassigned();
+                inventoryBroadcasts.TryAdd(sender,null);
+                Send(committed,sender);FlushInventories();
+            }
+            else if(!work.Any(w=>w.Player==sender&&w.Request.Request==p.Request)
+                &&!incomingGifts.Any(g=>g.Player==sender&&g.Packet.Request==p.Request))
+                Send(new(){Kind="reply",Request=p.Request,Error="uncertain"},sender);
+            return;
+        }
         if(receipts.TryGetValue((sender,p.Request),out var receipt)){Send(receipt,sender);return;}
         if(p.Kind=="open")
         {
@@ -206,14 +257,35 @@ internal sealed class OnlineSession
         }
         if(p.Kind=="gift")
         {
-            if(p.Product is null||!GiftGallery.Eligible(p.Product)||Game1.getCharacterFromName(p.Npc) is null
-                ||!farmer.friendshipData.TryGetValue(p.Npc,out var friendship)||friendship.GiftsToday<1)
+            var gift=new PendingGalleryGift{Request=p.Request,Npc=p.Npc,Painting=p.Product!,Day=p.GiftDay};
+            if(!GalleryDelivery.Valid(gift)||p.GiftDay>Game1.Date.TotalDays||Game1.getCharacterFromName(p.Npc) is null)
+            {Reply(sender,p,"data");return;}
+            if(session.Online.GalleryReceipts.Contains(sender+":"+p.Request)){Reply(sender,p);return;}
+            if(!farmer.friendshipData.TryGetValue(p.Npc,out var friendship)||friendship.LastGiftDate?.TotalDays<p.GiftDay
+                ||friendship.LastGiftDate is null)
             {
                 if(!incomingGifts.Any(g=>g.Player==sender&&g.Packet.Request==p.Request))incomingGifts.Add((sender,p,Now));
                 return;
             }
-            OnlineRules.Receive(session.Online,p.Npc,sender,farmer.Name,p.Product,Game1.Date.TotalDays);
+            AcceptGift(sender,farmer.Name,gift);
             Reply(sender,p);return;
+        }
+        if(p.Kind=="decor")
+        {
+            if(!CompatiblePeers()){Reply(sender,p,"online.version");return;}
+            var current=farmer.CurrentItem as Wallpaper;
+            var held=products.Read(current);
+            if(p.Product is null||held is null||current is null||held.InstanceId!=p.Product.InstanceId
+                ||DesignStorage.Serialize(held)!=DesignStorage.Serialize(p.Product)
+                ||p.Backpack is null||!Bag(farmer).SequenceEqual(p.Backpack)
+                ||farmer.currentLocation?.NameOrUniqueName!=p.Location
+                ||Vector2.Distance(farmer.Tile,new Vector2(p.X/64f,p.Y/64f))>4)
+            {Reply(sender,p,"manufacturing.changed");return;}
+            if(!DecorationPlacement.PlaceApproved(current,farmer.currentLocation,p.X,p.Y,farmer))
+            {Reply(sender,p,"manufacturing.changed");return;}
+            farmer.reduceActiveItemByOne();
+            if(sender!=Game1.player.UniqueMultiplayerID)inventoryBroadcasts.TryAdd(sender,null);
+            Reply(sender,p);FlushInventories();return;
         }
         if(p.Kind!="craft"||work.Any(w=>w.Player==sender&&!w.Done))return;
         if(!CompatiblePeers()){Reply(sender,p,"online.version");return;}
@@ -225,7 +297,7 @@ internal sealed class OnlineSession
         {Reply(sender,p,"manufacturing.changed");return;}
         var inventory=new InventoryService(catalog);inventory.Bind(active.Bench,5,farmer);
         var job=new CraftWork{Player=sender,Request=p,Lease=active,Inventory=inventory,Started=Now,
-            Remaining=new(inventory.AvailableChests())};
+            Remaining=new(inventory.RequiredChests(p.Design,PlayMode.Creative))};
         inventory.LockedChests=job.Held;work.Add(job);NextLock(job);
     }
     private bool Valid(Lease l)=>leases.TryGetValue(l.Player,out var active)&&ReferenceEquals(active,l)
@@ -278,10 +350,45 @@ internal sealed class OnlineSession
     {
         // Native receiving has already consumed the local item and applied native friendship exactly once.
         if(Context.IsMainPlayer){OnlineRules.Receive(session.Online,npc,Game1.player.UniqueMultiplayerID,Game1.player.Name,painting,Game1.Date.TotalDays);return;}
-        if(pending is not null){monitor.Log("Gallery recording deferred while an online request is pending.",LogLevel.Warn);queuedGifts.Enqueue((npc,painting.Copy()));return;}
-        Begin(new(){Kind="gift",Npc=npc,Product=painting.Copy()},p=>{if(p.Error.Length>0)monitor.Log("Gallery gift rejected: "+p.Error,LogLevel.Warn);});
+        if(!LoadGiftOutbox())return;
+        giftOutbox.Add(new(){Request=Guid.NewGuid().ToString("N"),Npc=npc,Painting=painting.Copy(),Day=Game1.Date.TotalDays});
+        SaveGiftOutbox();TryGiftDelivery();
     }
-    private readonly Queue<(string Npc,ProductSnapshot Painting)> queuedGifts=new();
+    public bool CanRecordGift=>Context.IsMainPlayer||LoadGiftOutbox();
+    private bool LoadGiftOutbox()
+    {
+        if(giftOutboxLoaded)return giftOutboxReadable;
+        giftOutboxLoaded=true;
+        try{if(Game1.player.modData.TryGetValue(GiftOutboxKey,out var stored))giftOutbox.AddRange(GalleryDelivery.Read(stored));}
+        catch(Exception ex){giftOutboxReadable=false;monitor.Log("Gallery outbox could not be read; it was kept unchanged: "+ex.Message,LogLevel.Error);}
+        return giftOutboxReadable;
+    }
+    private void SaveGiftOutbox()
+    {
+        if(giftOutbox.Count==0)Game1.player.modData.Remove(GiftOutboxKey);
+        else Game1.player.modData[GiftOutboxKey]=DesignStorage.Serialize(giftOutbox);
+    }
+    private void TryGiftDelivery()
+    {
+        if(!connected||pending is not null||uncertainRequest is not null||Now<nextGiftAttempt||!LoadGiftOutbox()
+            ||giftOutbox.FirstOrDefault() is not {} gift)return;
+        nextGiftAttempt=Now+3;
+        Begin(new(){Kind="gift",Request=gift.Request,Npc=gift.Npc,Product=gift.Painting.Copy(),GiftDay=gift.Day},p=>
+        {
+            if(p.Error.Length==0){giftOutbox.RemoveAll(g=>g.Request==gift.Request);SaveGiftOutbox();}
+            else monitor.Log("Gallery delivery remains queued without repeating the native gift: "+p.Error,LogLevel.Warn);
+        });
+    }
+    private void AcceptGift(long farmer,string giver,PendingGalleryGift gift)
+    {
+        if(!GalleryDelivery.Receive(session.Online,farmer,giver,gift))return;
+        var slot=session.Online.Gallery[gift.Npc];
+        if(OnlineRules.Advance(slot,Game1.Date.TotalDays,id=>Game1.GetPlayer(id)?.getFriendshipHeartLevelForNPC(gift.Npc)??0))
+        {
+            Gallery.GiftGalleryRecords=GalleryRecords();GalleryChanged?.Invoke();
+            foreach(long peer in peers)Send(new(){Kind="gallery",Gallery=GalleryRecords()},peer);
+        }
+    }
     public void DayStarted()
     {
         if(!Context.IsMainPlayer||session.Progress is null||!session.OnlineReadable)return;
@@ -308,6 +415,12 @@ internal sealed class OnlineSession
         CompleteReply();
         if(!Context.IsMainPlayer&&!connected&&Now-hello>3){hello=Now;ToHost(new(){Kind="hello"});}
         if(pending is not null&&Now-sent>3){sent=Now;ToHost(pending);}
+        if(!Context.IsMainPlayer&&pending is not null&&delivered is null&&Now-pendingStarted>20)
+        {SuspendPending("uncertain");Game1.showRedMessage(Text("uncertain"));}
+        if(!Context.IsMainPlayer&&connected&&pending is {} waiting&&Now-pendingStarted>8&&Now-lastReconcile>3)
+        {lastReconcile=Now;ToHost(new(){Kind="reconcile",Request=waiting.Request});}
+        if(!Context.IsMainPlayer&&connected&&uncertainRequest is {} uncertain&&Now-lastReconcile>3)
+        {lastReconcile=Now;ToHost(new(){Kind="reconcile",Request=uncertain});}
         if(e.IsMultipleOf(60))
         {
             if(token.Length>0)ToHost(new(){Kind="heartbeat",Token=token});
@@ -320,12 +433,14 @@ internal sealed class OnlineSession
                 {
                     if(Game1.GetPlayer(gift.Player,onlyOnline:true) is {} giver&&gift.Packet.Product is {} painting
                         &&GiftGallery.Eligible(painting)&&Game1.getCharacterFromName(gift.Packet.Npc) is not null
-                        &&giver.friendshipData.TryGetValue(gift.Packet.Npc,out var friendship)&&friendship.GiftsToday>0)
+                        &&giver.friendshipData.TryGetValue(gift.Packet.Npc,out var friendship)&&friendship.LastGiftDate is {} lastGift
+                        &&lastGift.TotalDays>=gift.Packet.GiftDay)
                     {
-                        OnlineRules.Receive(session.Online,gift.Packet.Npc,gift.Player,giver.Name,painting,Game1.Date.TotalDays);
+                        AcceptGift(gift.Player,giver.Name,new(){Request=gift.Packet.Request,Npc=gift.Packet.Npc,
+                            Painting=painting,Day=gift.Packet.GiftDay});
                         Reply(gift.Player,gift.Packet);incomingGifts.Remove(gift);
                     }
-                    else if(Now-gift.Started>5){Reply(gift.Player,gift.Packet,"data");incomingGifts.Remove(gift);}
+                    // Native friendship may synchronize late. Keep the original request pending.
                 }
                 foreach(var id in leases.Where(p=>!Valid(p.Value)).Select(p=>p.Key).ToArray())leases.Remove(id);
                 foreach(var job in work.Where(j=>!j.Done&&(!Valid(j.Lease)||Now-j.Started>10)).ToArray())Finish(job,new(false,"manufacturing.changed"));
@@ -333,22 +448,29 @@ internal sealed class OnlineSession
             }
             else if(pending is null&&connected&&session.Progress is not null&&personalVersion!=syncedVersion)Sync();
         }
-        if(pending is null&&queuedGifts.TryDequeue(out var queuedGift))Gift(queuedGift.Npc,queuedGift.Painting);
+        if(!Context.IsMainPlayer)TryGiftDelivery();
     }
     public void Clear()
     {
         foreach(var job in work)foreach(var chest in job.Held)if(chest.GetMutex().IsLockHeld())chest.GetMutex().ReleaseLock();
         work.Clear();reservations.Clear();inventoryBroadcasts.Clear();incomingGifts.Clear();lastCreative=null;PlayMode.RemoteCreative=null;
-        leases.Clear();peers.Clear();receipts.Clear();queuedGifts.Clear();pending=null;completion=null;delivered=null;
-        token="";connected=false;personalVersion=syncedVersion=0;hello=0;Gallery.GiftGalleryRecords.Clear();GalleryChanged?.Invoke();
+        leases.Clear();peers.Clear();receipts.Clear();giftOutbox.Clear();giftOutboxLoaded=false;giftOutboxReadable=true;nextGiftAttempt=0;
+        pending=null;completion=null;delivered=null;
+        token="";connected=false;personalVersion=syncedVersion=0;hello=0;uncertainRequest=null;pendingStarted=lastReconcile=0;Gallery.GiftGalleryRecords.Clear();GalleryChanged?.Invoke();
     }
     public static string Text(string key)=>ContentText.Get("online."+key,key);
     private void CompleteReply()
     {
         if(delivered is not {} p)return;
-        if(p.Product is {} product&&!Game1.player.Items.Any(item=>products.Read(item)?.InstanceId==product.InstanceId))return;
-        if(p.ChangedSlots is {} changes&&changes.Any(pair=>pair.Key>=Game1.player.MaxItems
-            ||ItemKey(pair.Key<Game1.player.Items.Count?Game1.player.Items[pair.Key]:null)!=pair.Value))return;
+        bool productReady=p.Product is not {} product||Game1.player.Items.Any(item=>products.Read(item)?.InstanceId==product.InstanceId);
+        bool slotsReady=p.ChangedSlots is not {} changes||!changes.Any(pair=>pair.Key>=Game1.player.MaxItems
+            ||ItemKey(pair.Key<Game1.player.Items.Count?Game1.player.Items[pair.Key]:null)!=pair.Value);
+        if(!productReady||!slotsReady)
+        {
+            if(Now-pendingStarted<15)return;
+            monitor.Log("Host committed a transaction, but its inventory delta has not matched locally after reconciliation.",LogLevel.Warn);
+            Game1.showRedMessage(Text("inventory-late"));
+        }
         var action=completion;pending=null;completion=null;delivered=null;action?.Invoke(p);
     }
     private void FlushInventories()

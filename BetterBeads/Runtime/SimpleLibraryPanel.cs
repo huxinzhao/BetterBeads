@@ -21,31 +21,39 @@ internal sealed class LibraryPanel
     private readonly ScenePreviewPanel scene=new();
     private LiteLibraryLayout geometry=null!;
     private ProductUse? filterUse;
+    private ProductGroup? filterGroup;
+    private int filterCategoryPage;
     private bool favoritesOnly,recentFirst=true;
     private ListedBlueprint[]? filteredSource;
     private ListedBlueprint[] filtered=Array.Empty<ListedBlueprint>();
     private string? pendingRecentId;
     private readonly ImageImportPanel importer;
     private readonly string exportDirectory;
+    private readonly string importDirectory;
     private readonly FrameControls controls=new();
     private readonly TextBox search,name;
     private UiRect area,frame;
     private string? selected;
     private int page;
+    private int shareFilePage;
+    private string[]? shareFiles;
     private string mode="",feedback="";
     private ListedBlueprint? target;
     private sealed record ListedBlueprint(string Id,string? Raw,Blueprint Design,bool Builtin);
     private readonly SearchIndex<ListedBlueprint> index;
     private string cachedSearch="";
     public void Enter()=>index.Invalidate();
-    public string FeedbackScope=>scene.Active?"scene":importer.Active?importer.FeedbackScope:"library/"+mode;
+    public string FeedbackScope=>scene.Active?scene.FeedbackScope:importer.Active?importer.FeedbackScope:"library/"+mode;
     public bool HasModal=>scene.Active||mode.Length>0||importer.Active;
     public UiRect? HoverControl(int x,int y)=>scene.Active?scene.Hover(x,y):importer.Active?importer.HoverControl(x,y):controls.HitTest(x,y);
+    public IReadOnlyList<UiRect> ControllerTargets=>scene.Active?scene.ControllerTargets:importer.Active?importer.ControllerTargets:
+        !HasModal?new[]{geometry.Search}.Concat(controls.Targets).ToArray():mode=="rename"
+            ?new[]{new UiRect(name.X,name.Y,name.Width,48)}.Concat(controls.Targets).ToArray():controls.Targets;
     private static string T(string key,string value)=>ContentText.Get("simple."+key,value);
     public LibraryPanel(SaveProgress p,EditorDocument d,ProcessingCatalog c,ITranslationHelper t,Action<Blueprint,DraftIssue?> open,Action import,Action save,ManufacturingService? m,Action backToEditor,string modDirectory,Action<Blueprint> openImported)
     {
         progress=p;LibraryPreferences.Normalize(p);repository=new(p);templates=GameSpriteTemplates.Load(out var missing);document=d;this.open=open;this.backToEditor=backToEditor;openDraft=openImported;
-        importer=new ImageImportPanel(modDirectory,openImported);exportDirectory=Path.Combine(modDirectory,"exports");
+        importer=new ImageImportPanel(modDirectory,openImported);exportDirectory=Path.Combine(modDirectory,"exports");importDirectory=Path.Combine(modDirectory,"imports");
         index=new(()=>templates.Where(e=>!progress.HiddenLiteTemplates.Contains(e.Id))
             .Select(e=>new ListedBlueprint(e.Id,null,e.Design,true))
             .Concat(repository.List("").Where(e=>e.Design is {} d&&SimpleCrafting.Supported(d))
@@ -93,7 +101,7 @@ internal sealed class LibraryPanel
             ArtResources.DesignPreview(b,e.Design,new(slot.X+4,slot.Y+4,slot.Width-8,slot.Height-8),trimTransparent:SimpleCrafting.IsWoodwork(e.Design.Use));
             ArtResources.TextLine(b,e.Design.Name+(e.Builtin?" · "+T("template-badge","模板"):""),new(face.X+64,face.Y+2,face.Width-120,24),ArtResources.ButtonInk(r));
             var grid=e.Design.Views["front"];
-            ArtResources.TextLine(b,ContentText.Get("use."+e.Design.Use,e.Design.Use switch{ProductUse.Dagger=>"匕首",ProductUse.Hammer=>"锤",ProductUse.Sword=>"剑",ProductUse.WoodFurniture=>"摆件",_=>"拼豆画"})+$" · {grid.Width}*{grid.Height}px",
+            ArtResources.TextLine(b,ContentText.Get("use."+e.Design.Use,e.Design.Use switch{ProductUse.Dagger=>"匕首",ProductUse.Hammer=>"锤",ProductUse.Sword=>"剑",ProductUse.WoodFurniture=>"摆件",ProductUse.Wallpaper=>"壁纸",ProductUse.Flooring=>"地板",_=>"挂画"})+$" · {grid.Width}*{grid.Height}px",
                 new UiRect(face.X+64,face.Bottom-24,face.Width-120,22),ArtResources.MutedInk);
             controls.Add((r,()=>selected=e.Id));
             var star=geometry.Star(i);bool favorite=progress.FavoriteBlueprintIds.Contains(e.Id);
@@ -113,7 +121,7 @@ internal sealed class LibraryPanel
         },current is not null);
         Button(b,geometry.Actions[1],T("rename","改名"),()=>{target=current;mode="rename";name.Text=current!.Design.Name;},current is not null&&!current.Builtin);
         Button(b,geometry.Actions[2],T("delete","删除"),()=>{target=current;mode="delete";},current is not null);
-        Button(b,geometry.Actions[3],T("share","分享"),()=>{target=current;mode="share";feedback="";ReleaseFocus();});
+        Button(b,geometry.Actions[3],T("share","分享"),()=>{target=current;mode="share";feedback="";shareFiles=null;ReleaseFocus();});
         Button(b,geometry.Previous,"←",()=>page--,page>0);Button(b,geometry.Next,"→",()=>page++,(page+1)*count<entries.Length);
         ArtResources.TextLine(b,feedback.Length>0?feedback:entries.Length==0?T("no-matches","没有符合条件的图纸"):$"{page+1} / {Math.Max(1,(entries.Length+count-1)/count)}",geometry.Status,ArtResources.Ink,true);
         if(!HasModal)return;
@@ -121,6 +129,7 @@ internal sealed class LibraryPanel
         if(mode=="filter"){DrawFilters(b);return;}
         if(mode=="open"){DrawOpenChoices(b);return;}
         if(mode=="share"){DrawShare(b);return;}
+        if(mode=="share-files"){DrawShareFiles(b);return;}
         int dialogWidth=Math.Min(520,frame.Width-32);
         const int dialogHeight=192;
         var box=new UiRect(frame.X+(frame.Width-dialogWidth)/2,frame.Y+(frame.Height-dialogHeight)/2,dialogWidth,dialogHeight);ArtResources.Panel(b,box);
@@ -146,7 +155,7 @@ internal sealed class LibraryPanel
     {
         if(cachedSearch!=search.Text){cachedSearch=search.Text;page=0;}
         var source=index.Find(search.Text);
-        if(!ReferenceEquals(source,filteredSource)){filtered=LibraryPreferences.Query(source,progress,e=>e.Id,e=>e.Design,filterUse,favoritesOnly,recentFirst).ToArray();filteredSource=source;}
+        if(!ReferenceEquals(source,filteredSource)){filtered=LibraryPreferences.Query(source,progress,e=>e.Id,e=>e.Design,filterUse,favoritesOnly,recentFirst,filterGroup).ToArray();filteredSource=source;}
         return filtered;
     }
     private Blueprint? ReadSelected(ListedBlueprint entry)
@@ -174,11 +183,20 @@ internal sealed class LibraryPanel
     private void DrawFilters(SpriteBatch b)
     {
         var p=LibraryFilterLayout.Calculate(frame);ArtResources.Panel(b,p.Dialog);
-        ArtResources.TextLine(b,T("filter-sort","筛选与排序"),new(p.Dialog.X+16,p.Dialog.Y+12,p.Dialog.Width-32,36),ArtResources.Ink);
-        ProductUse?[] kinds={null,ProductUse.Picture,ProductUse.WoodFurniture,ProductUse.Sword,ProductUse.Dagger,ProductUse.Hammer};
-        string[] names={T("all-kinds","全部"),T("picture-category","拼豆画"),T("ornament-short","摆件"),T("sword-short","剑"),T("dagger-short","匕首"),T("hammer-short","锤")};
+        ArtResources.TextLine(b,T("filter-sort","筛选与排序"),new(p.Dialog.X+16,p.Dialog.Y+12,p.Dialog.Width-(p.Categories.Length<10?132:32),36),ArtResources.Ink);
+        var options=new (ProductUse? Use,ProductGroup? Group,string Name)[]{
+            (null,null,T("all-kinds","全部")),(null,ProductGroup.Furniture,T("all-furniture","全部家具")),(null,ProductGroup.Weapon,T("all-weapons","全部武器"))}
+            .Concat(ProductCategories.All.Select(category=>(Use:(ProductUse?)category.Use,Group:(ProductGroup?)null,Name:T(category.NameKey,category.Use.ToString())))).ToArray();
         void Option(UiRect r,string label,bool active,Action action){ArtResources.ButtonText(b,r,label,selected:active);controls.Add((r,()=>{action();filteredSource=null;page=0;feedback="";}));}
-        for(int i=0;i<kinds.Length;i++){var kind=kinds[i];Option(p.Categories[i],names[i],filterUse==kind,()=>filterUse=kind);}
+        if(p.Categories.Length<options.Length)
+        {
+            filterCategoryPage=Math.Clamp(filterCategoryPage,0,1);
+            Button(b,p.Previous,"◀",()=>filterCategoryPage=0,filterCategoryPage>0);
+            Button(b,p.Next,"▶",()=>filterCategoryPage=1,filterCategoryPage<1);
+        }
+        int offset=p.Categories.Length<options.Length?filterCategoryPage*p.Categories.Length:0;
+        for(int i=0;i<p.Categories.Length&&offset+i<options.Length;i++)
+        {var choice=options[offset+i];Option(p.Categories[i],choice.Name,filterUse==choice.Use&&filterGroup==choice.Group,()=>{filterUse=choice.Use;filterGroup=choice.Group;});}
         Option(p.Favorites,T("favorites-only","仅看收藏"),favoritesOnly,()=>favoritesOnly=!favoritesOnly);
         Option(p.Sort,recentFirst?T("sort-recent","排序：最近使用"):T("sort-name","排序：名称"),false,()=>recentFirst=!recentFirst);
         Button(b,p.Done,T("done","完成"),()=>mode="");
@@ -189,14 +207,14 @@ internal sealed class LibraryPanel
         ArtResources.TextLine(b,T("share-title","导出与导入图纸"),new(p.Dialog.X+16,p.Dialog.Y+16,p.Dialog.Width-80,32),ArtResources.Ink);
         ArtResources.CloseButton(b,new ClickableTextureComponent(ArtResources.Rect(p.Close),Game1.mouseCursors,new Rectangle(337,494,12,12),3f));
         controls.Add((p.Close,()=>mode=""));
-        Button(b,p.Copy,T("share-copy","复制选中图纸的分享码"),()=>
+        Button(b,p.Copy,OperatingSystem.IsAndroid()?T("share-export-file","导出分享码到文件"):T("share-copy","复制选中图纸的分享码"),()=>
         {
             var design=target is null?null:ReadSelected(target);
             if(design is null)return;
             try
             {
                 string code=BlueprintSharing.Encode(design);
-                if(ShareClipboard.TryCopy(code))feedback=T("share-copied","分享码已复制");
+                if(!OperatingSystem.IsAndroid()&&ShareClipboard.TryCopy(code))feedback=T("share-copied","分享码已复制");
                 else
                 {
                     Directory.CreateDirectory(exportDirectory);
@@ -226,8 +244,38 @@ internal sealed class LibraryPanel
             if(!BlueprintSharing.TryDecode(ShareClipboard.TryPaste(),out var design)||design is null)
             {feedback=T("share-invalid","剪贴板中没有有效的拼豆图纸码");return;}
             mode="";ReleaseFocus();openDraft(design);
-        });
+        },!OperatingSystem.IsAndroid());
+        Button(b,p.ImportFile,T("share-import-file","从 imports 文件夹导入分享码"),()=>{mode="share-files";shareFiles=null;shareFilePage=0;ReleaseFocus();});
         ArtResources.TextLine(b,feedback.Length>0?feedback:T("share-hint","导入后可编辑；首次保存时命名。色号为近似参考。"),p.Note,ArtResources.MutedInk,true);
+    }
+    private void DrawShareFiles(SpriteBatch b)
+    {
+        var p=LibraryShareFilesLayout.Calculate(frame);ArtResources.Panel(b,p.Dialog);
+        ArtResources.TextLine(b,T("share-import-file","从 imports 文件夹导入分享码"),p.Title,ArtResources.Ink);
+        string[] files;
+        try{files=shareFiles??=Directory.Exists(importDirectory)?Directory.GetFiles(importDirectory,"*.txt").OrderBy(Path.GetFileName,StringComparer.OrdinalIgnoreCase).Take(100).ToArray():Array.Empty<string>();}
+        catch(Exception e) when(e is IOException or UnauthorizedAccessException){files=shareFiles=Array.Empty<string>();feedback=T("share-error","无法读取 imports 文件夹");}
+        int count=p.Rows.Length;shareFilePage=Math.Clamp(shareFilePage,0,Math.Max(0,(files.Length-1)/count));
+        for(int i=0;i<count&&shareFilePage*count+i<files.Length;i++)
+        {
+            string file=files[shareFilePage*count+i];
+            Button(b,p.Rows[i],Path.GetFileName(file),()=>
+            {
+                try
+                {
+                    if(new FileInfo(file).Length>1_000_000||!BlueprintSharing.TryDecode(File.ReadAllText(file),out var design)||design is null)
+                    {feedback=T("share-invalid","文件中没有有效的拼豆图纸码");return;}
+                    mode="";ReleaseFocus();openDraft(design);
+                }
+                catch(Exception e) when(e is IOException or UnauthorizedAccessException)
+                {feedback=T("share-error","无法读取分享码文件");}
+            });
+        }
+        Button(b,p.Previous,"◀",()=>shareFilePage--,shareFilePage>0);
+        Button(b,p.Next,"▶",()=>shareFilePage++,shareFilePage*count+count<files.Length);
+        Button(b,p.Back,T("back","返回"),()=>mode="share");
+        ArtResources.TextLine(b,feedback.Length>0?feedback:files.Length==0?T("share-no-files","将分享码 .txt 文件放入 imports 文件夹"):Path.GetFileName(importDirectory),
+            p.Note,ArtResources.MutedInk);
     }
     private static string SafeStem(Blueprint design)
     {

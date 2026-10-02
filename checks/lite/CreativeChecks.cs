@@ -5,7 +5,7 @@ internal static class CreativeChecks
 {
     internal static void Run(Action<bool,string> check)
     {
-        FurnitureTemplates.Configure(DefaultManufacturing.Furniture().Concat(SimpleCrafting.Frames()).Concat(SimpleCrafting.Ornaments()));
+        FurnitureTemplates.Configure(DefaultManufacturing.Furniture().Concat(SimpleCrafting.Frames()).Concat(SimpleCrafting.Ornaments()).Concat(FurnitureFinish.Definitions()));
         WeaponTemplates.Configure(DefaultWeapons.Templates());
         var d=SimpleCrafting.Blank(SimpleCrafting.Picture16);d.Name="source";d.Revision=3;
         var g=d.Views["front"];
@@ -73,9 +73,9 @@ internal static class CreativeChecks
 
         foreach(int size in new[]{16,32})
         {
-            var picture=SimpleCrafting.Blank(size==16?SimpleCrafting.Picture16:SimpleCrafting.Picture32);picture.Views["front"].Cells[0]=g.Cells[0]!.Copy();
+            var picture=SimpleCrafting.Blank(size==16?SimpleCrafting.Picture16:SimpleCrafting.Picture32);picture.Views["front"].Cells[8*size+8]=g.Cells[0]!.Copy();
             var art=SceneProduct.Compose(picture);var fp=SceneProduct.Footprint(picture);
-            check(art.Width==size+16&&art.Height==size+16&&art.Cells[8*art.Width+8]!.Rgba==0x123456FF&&fp==(size/16+1,size/16+1),"painting frame and native footprint "+size);
+            check(art.Width==size&&art.Height==size&&art.Cells[8*art.Width+8]!.Rgba==0x123456FF&&fp==(size/16,size/16),"compact painting frame and native footprint "+size);
         }
         foreach(var (w,h) in new[]{(16,16),(17,16),(16,17),(17,17)})
         {
@@ -83,7 +83,7 @@ internal static class CreativeChecks
             grid.Cells[0]=g.Cells[0]!.Copy();grid.Cells[(h-1)*32+w-1]=g.Cells[1]!.Copy();
             var scene=SceneProduct.Compose(ornament);var fp=SceneProduct.Footprint(ornament);
             var actual=ProductTemplates.CreateAtlas(SceneProduct.Snapshot(ornament));
-            check(scene.Width==fp.Width*16&&scene.Height==fp.Height*16&&fp==((w+15)/16,(h+15)/16)
+            check(scene.Width==fp.Width*16&&scene.Height==actual.Height&&fp==((w+15)/16,1)
                 &&scene.Cells.Select(x=>x?.Rgba).SequenceEqual(actual.Cells.Select(x=>x?.Rgba)),"scene uses actual ornament atlas and footprint "+(w,h));
         }
         foreach(string id in new[]{SimpleCrafting.Sword,SimpleCrafting.Dagger,SimpleCrafting.Hammer})
@@ -102,7 +102,7 @@ internal static class CreativeChecks
             check(new[]{dye.Back,dye.Next,dye.Apply,dye.CommonTab,dye.WorkTab,dye.Close}.All(r=>dye.Dialog.Contains(r)&&r.Height>=40),"palette button bounds and minimum sizes "+width);
             check(scene.Dialog.Contains(scene.Stage)&&scene.Stage.Bottom+8<=scene.Info.Y&&scene.Note.Bottom+8<=scene.Toggle.Y&&scene.Toggle.Height>=40,"scene layout bounds and spacing "+width);
             check(library.Row(library.Count-1).Bottom+8<=library.Previous.Y&&library.Rows.Y>=library.Filter.Bottom+8&&library.Actions.All(r=>main.Frame.Contains(r)&&r.Height>=40),"library controls and rows do not overlap "+width);
-            check(filter.Categories[^1].Bottom+8<=filter.Favorites.Y&&filter.Dialog.Contains(filter.Done),"filter overlay clears all controls "+width);
+            check(filter.Categories[^1].Bottom+8<=filter.Favorites.Y&&filter.Dialog.Contains(filter.Done),$"filter overlay clears all controls {width}: last={filter.Categories[^1]}, fav={filter.Favorites}, dialog={filter.Dialog}");
             check(dye.Cells.All(r=>!r.Overlaps(dye.Picker.SaturationValue)&&!r.Overlaps(dye.Picker.Hue))
                 &&dye.Cells[^1].Bottom+8<=dye.PreviousPage.Y,"color scheme remains visible and selectable beside picker "+width);
             check(dye.Dialog.Contains(dye.BeforeCard)&&dye.Dialog.Contains(dye.AfterCard)&&dye.Dialog.Contains(dye.Preview)

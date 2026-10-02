@@ -10,6 +10,7 @@ public static class BlueprintSharing
 {
     private const string Prefix="BB1.";
     private const string VerticalPrefix="BB2.";
+    private const string DecorationPrefix="BB3.";
     private sealed class Payload
     {
         public string Template {get;set;}="";
@@ -17,6 +18,7 @@ public static class BlueprintSharing
         public uint[] Colors {get;set;}=Array.Empty<uint>();
         public int[] Cells {get;set;}=Array.Empty<int>();
         public bool VerticalSword {get;set;}
+        public uint BackgroundRgba {get;set;}=0xEADFC6FF;
     }
     public static string Encode(Blueprint design)
     {
@@ -33,21 +35,22 @@ public static class BlueprintSharing
             cells[i]=id;
         }
         bool vertical=design.Use==ProductUse.Sword&&design.SwordOrientation==SwordOrientation.Vertical;
-        byte[] data=JsonSerializer.SerializeToUtf8Bytes(new Payload{Template=design.TemplateId,Metal=metal,Colors=colors.ToArray(),Cells=cells,VerticalSword=vertical});
+        byte[] data=JsonSerializer.SerializeToUtf8Bytes(new Payload{Template=design.TemplateId,Metal=metal,Colors=colors.ToArray(),Cells=cells,VerticalSword=vertical,BackgroundRgba=design.BackgroundRgba});
         using var compressed=new MemoryStream();
         compressed.Write(SHA256.HashData(data),0,8);
         using(var zipper=new BrotliStream(compressed,CompressionLevel.Optimal,true))zipper.Write(data);
-        return (vertical?VerticalPrefix:Prefix)+Convert.ToBase64String(compressed.ToArray()).TrimEnd('=').Replace('+','-').Replace('/','_');
+        return (SimpleCrafting.IsDecoration(design.Use)?DecorationPrefix:vertical?VerticalPrefix:Prefix)+Convert.ToBase64String(compressed.ToArray()).TrimEnd('=').Replace('+','-').Replace('/','_');
     }
     public static bool TryDecode(string? code,out Blueprint? design)
     {
         design=null;
         if(code is null)return false;
         code=code.Trim();bool verticalCode=code.StartsWith(VerticalPrefix,StringComparison.Ordinal);
-        if(!verticalCode&&!code.StartsWith(Prefix,StringComparison.Ordinal)||code.Length>20000)return false;
+        bool decorationCode=code.StartsWith(DecorationPrefix,StringComparison.Ordinal);
+        if(!verticalCode&&!decorationCode&&!code.StartsWith(Prefix,StringComparison.Ordinal)||code.Length>20000)return false;
         try
         {
-            string body=code[(verticalCode?VerticalPrefix.Length:Prefix.Length)..].Replace('-','+').Replace('_','/');
+            string body=code[(verticalCode?VerticalPrefix.Length:decorationCode?DecorationPrefix.Length:Prefix.Length)..].Replace('-','+').Replace('_','/');
             byte[] packed=Convert.FromBase64String(body.PadRight((body.Length+3)/4*4,'='));
             if(packed.Length<10||packed.Length>15000)return false;
             using var input=new MemoryStream(packed,8,packed.Length-8);
@@ -60,13 +63,17 @@ public static class BlueprintSharing
             var payload=JsonSerializer.Deserialize<Payload>(raw);
             if(payload is null||payload.Template is null||payload.Metal is null||payload.Colors is null||payload.Cells is null||payload.Colors.Length>1024
                 ||payload.VerticalSword!=verticalCode
+                ||decorationCode&&(payload.BackgroundRgba&255)!=255
                 ||payload.Colors.Any(c=>(c&255)!=255)||payload.Colors.Distinct().Count()!=payload.Colors.Length
                 ||payload.Template is not (SimpleCrafting.Picture16 or SimpleCrafting.Picture32 or SimpleCrafting.Ornament or SimpleCrafting.LargeOrnament
+                    or SimpleCrafting.Wallpaper16 or SimpleCrafting.Wallpaper32 or SimpleCrafting.Flooring16 or SimpleCrafting.Flooring32
                     or SimpleCrafting.Sword or SimpleCrafting.Sword24 or SimpleCrafting.Sword32
                     or SimpleCrafting.Dagger or SimpleCrafting.Dagger24 or SimpleCrafting.Dagger32
                     or SimpleCrafting.Hammer or SimpleCrafting.Hammer24 or SimpleCrafting.Hammer32)
                 ||payload.Cells.Any(i=>i<0||i>payload.Colors.Length))return false;
             var result=SimpleCrafting.Blank(payload.Template);
+            if(SimpleCrafting.IsDecoration(result.Use)!=decorationCode)return false;
+            if(decorationCode)result.BackgroundRgba=payload.BackgroundRgba;
             if(verticalCode)
             {
                 if(result.Use!=ProductUse.Sword)return false;

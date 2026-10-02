@@ -7,6 +7,55 @@ using System.Reflection.PortableExecutable;
 
 int passed=0;
 void Check(bool ok,string name){if(!ok)throw new Exception(name);passed++;}
+if(args.Contains("--player-ui-only"))
+{
+    try{PlayerUiChecks.Run(Check);Console.WriteLine($"PASS {passed} player UI checks.");}
+    catch(Exception ex){Console.Error.WriteLine("FAIL "+ex);Environment.ExitCode=1;}
+    return;
+}
+if(args.Contains("--player-experience-only"))
+{
+    try{PlayerExperienceChecks.Run(Check);Console.WriteLine($"PASS {passed} player experience checks.");}
+    catch(Exception ex){Console.Error.WriteLine("FAIL "+ex);Environment.ExitCode=1;}
+    return;
+}
+if(args.Contains("--reliability-only"))
+{
+    try{ReliabilityChecks.Run(Check);Console.WriteLine($"PASS {passed} reliability checks.");}
+    catch(Exception ex){Console.Error.WriteLine("FAIL "+ex);Environment.ExitCode=1;}
+    return;
+}
+if(args.Contains("--geometry-only"))
+{
+    try{GeometryChecks.Run(Check);Console.WriteLine($"PASS {passed} geometry checks.");}
+    catch(Exception ex){Console.Error.WriteLine("FAIL "+ex);Environment.ExitCode=1;}
+    return;
+}
+if(args.Contains("--geometry-reference"))
+{
+    try
+    {
+    var pixels=File.ReadAllBytes(".tools/nexus-art-reference/weapons.rgba");
+    foreach(var (use,id) in new[]{(ProductUse.Sword,4),(ProductUse.Dagger,23),(ProductUse.Hammer,29)})
+    {
+        var d=SimpleCrafting.Blank(SimpleCrafting.WeaponId(use,16));var grid=d.Views["front"];
+        for(int y=0;y<16;y++)for(int x=0;x<16;x++)if(pixels[((y+id/8*16)*128+id%8*16+x)*4+3]>=128)
+            grid.Cells[y*16+x]=new(){MaterialId="iridium",Rgba=0xffffffff};
+        var result=WeaponGeometry.Evaluate(d);var baseline=SimpleCrafting.Stats(use,"iridium");
+        Console.WriteLine(use+" "+System.Text.Json.JsonSerializer.Serialize(result));
+        Check(result.Stats.MinDamage==baseline.MinDamage&&result.Stats.MaxDamage==baseline.MaxDamage&&result.Stats.Speed==baseline.Speed
+            &&Math.Abs(result.Reach-1)<1e-10,"original Galaxy silhouette exactly calibrates damage, speed and reach");
+    }
+    Console.WriteLine($"PASS {passed} original-game reference checks.");
+    }catch(Exception ex){Console.Error.WriteLine("FAIL "+ex.Message);Environment.ExitCode=1;}
+    return;
+}
+if(args.Contains("--decor-only"))
+{
+    try{DecorationChecks.Run(Check);Console.WriteLine($"PASS {passed} decoration checks.");}
+    catch(Exception ex){Console.Error.WriteLine("FAIL "+ex);Environment.ExitCode=1;}
+    return;
+}
 if(args.Contains("--circuit-api-only"))
 {
     var controller=CircuitCreativeArtwork.CreateController();
@@ -106,7 +155,23 @@ void CheckUi()
  {
   var scale=WorkbenchScale.Calculate(size.Item1,size.Item2,32);var l=SimpleEditorLayout.Calculate(scale.Width,scale.Height);
   var tool=SimpleEditorLayout.ToolButtons(l);var cost=SimpleEditorLayout.CostBox(l);
+  var keyboard=ControllerKeyboardLayout.Calculate(l.Frame);
+  var keyboardTargets=keyboard.Targets(0);
+  Check(keyboard.Keys.Length==24&&keyboard.Pages.Length==2&&keyboard.Actions.Length==4
+      &&keyboardTargets.All(r=>keyboard.Box.Contains(r))&&keyboard.Keys.All(r=>r.Width>=40&&r.Height>=44)
+      &&keyboard.Actions.All(r=>r.Height>=44)&&keyboard.Keys[^1].Bottom<=keyboard.Actions[0].Y
+      &&keyboard.Targets(1).Length==2+ControllerKeyboardLayout.SecondPage.Length+4,
+      "paged controller keyboard separates keys and actions "+size);
+  var share=LibraryShareLayout.Calculate(l.Frame);
+  Check(share.Dialog.Contains(share.ImportFile)&&!share.ImportFile.Overlaps(share.Note)
+      &&!share.ImportFile.Overlaps(share.Paste),"share-file import fits dialog "+size);
   var mardLayout=ColorPickerLayout.Calculate(l.Frame);
+  var searchLayout=PaletteSearchLayout.Calculate(l.Frame);
+  Check(searchLayout.Dialog.Contains(searchLayout.Search)&&searchLayout.Dialog.Contains(searchLayout.Close)
+      &&searchLayout.Dialog.Contains(searchLayout.Previous)&&searchLayout.Dialog.Contains(searchLayout.Next)
+      &&searchLayout.Results.All(r=>searchLayout.Dialog.Contains(r)&&r.Height>=48&&!r.Overlaps(searchLayout.Status)
+          &&!r.Overlaps(searchLayout.Search)&&!r.Overlaps(searchLayout.Previous))
+      &&!searchLayout.Search.Overlaps(searchLayout.Close),"MARD search fits dialog "+size);
   Check(mardLayout.Dialog.Contains(mardLayout.ReferenceCaption)&&mardLayout.Dialog.Contains(mardLayout.BeforeCard)
       &&mardLayout.Dialog.Contains(mardLayout.AfterCard)&&!mardLayout.BeforeCard.Overlaps(mardLayout.AfterCard)
       &&!mardLayout.BeforeCard.Overlaps(mardLayout.Close)&&!mardLayout.AfterCard.Overlaps(mardLayout.Apply),
@@ -118,6 +183,10 @@ void CheckUi()
   Check(l.Header.Y==l.Frame.Y+(l.UsesDrawers?12:6)
       &&(l.UsesDrawers||l.Frame.Bottom-cost.Bottom==34),"wide content lift keeps frame centered "+size);
   Check(l.Frame.Contains(l.Board)&&l.Canvas.Height>0&&l.Frame.Contains(cost)&&!l.Board.Overlaps(cost),"board/dialogue bounds "+size);
+  var controllerHint=SimpleEditorLayout.ControllerHint(l);
+  Check(l.Frame.Contains(controllerHint)&&controllerHint.Height>=18&&!controllerHint.Overlaps(l.Board)
+      &&!controllerHint.Overlaps(cost)&&!controllerHint.Overlaps(l.SaveButton)&&!controllerHint.Overlaps(l.MakeButton),
+      "controller hints use clear gutter "+size);
   Check(tool[0].X==l.Board.X&&tool[^1].Right==l.Board.Right&&tool.All(r=>r.Height>=40)&&tool.Zip(tool.Skip(1)).All(p=>!p.First.Overlaps(p.Second)),"tool edges and fixed hit targets "+size);
   Check(!SimpleEditorLayout.Category(l).Overlaps(SimpleEditorLayout.Size(l))&&SimpleEditorLayout.Category(l).Width>=184
       &&SimpleEditorLayout.Size(l).Width>=200&&SimpleEditorLayout.Size(l).Right==l.Board.Right,"selectors and combined size label fit "+size);
@@ -142,10 +211,20 @@ void CheckUi()
   foreach(bool sword in new[]{false,true})
   {
    int palette=SimpleEditorLayout.PaletteCell(area,sword);
+   int paletteWidth=4*palette+24,paletteLeft=area.X+(area.Width-paletteWidth)/2;
+   var touchHits=Enumerable.Range(0,20).Select(i=>SimpleEditorLayout.TouchPaletteHit(new UiRect(
+       paletteLeft+i%4*(palette+8),area.Y+8+i/4*(palette+8),palette,palette))).ToArray();
+   Check(touchHits.All(r=>area.Contains(r)&&r.Width>=32&&r.Height>=32)
+       &&touchHits.SelectMany((r,i)=>touchHits.Skip(i+1).Select(other=>!r.Overlaps(other))).All(ok=>ok),
+       "touch palette targets expand without overlap "+size+sword);
    var preview=SimpleEditorLayout.ProductPreview(area,sword);
    int dyeTop=area.Y+8+5*(palette+8);
    Check(dyeTop+52+(sword?48:0)<=area.Bottom,"20 colors and material controls fit "+size+sword);
    var actions=SimpleEditorLayout.ColorActions(area,sword);
+   var touch=SimpleEditorLayout.TouchColorActions(area,sword);
+   Check(area.Contains(touch.View)&&area.Contains(touch.Dye)&&touch.View.Height>=44&&touch.View.Width>=60
+       &&touch.Dye.Width>=104&&!touch.View.Overlaps(touch.Dye)&&!touch.View.Overlaps(touch.Picker)
+       &&(l.UsesDrawers||!touch.View.Overlaps(l.Canvas)),"touch view stays in supply actions "+size+sword);
    Check(area.Contains(actions.Picker)&&area.Contains(actions.Dye)&&!actions.Picker.Overlaps(actions.Dye)
        &&actions.Picker.Y==dyeTop&&actions.Dye.Y==dyeTop&&actions.Picker.Width>=40&&actions.Dye.Width>=100,
        "picker sits beside dye button with usable hit targets "+size+sword);
@@ -162,10 +241,20 @@ void CheckUi()
       "dye action buttons have aligned, separate targets "+size);
   Check(!l.AcceptsCanvasInput(true,l.Canvas.X,l.Canvas.Y),"selector/sidebar isolates canvas input "+size);
   var t=new CanvasTransform();t.Layout(l.Canvas);t.Center(16,16);var cell=t.CellRect(7,7);
+  Check(cell.Width==cell.Height,"bead cells remain square "+size);
   Check(t.TryCell(scale.Logical((int)((cell.X+cell.Width/2f)*scale.Factor)),scale.Logical((int)((cell.Y+cell.Height/2f)*scale.Factor)),16,16,out int cx,out int cy)&&cx==7&&cy==7,"scaled pointer "+size);
-  dumps.Add(new{Width=size.Item1,Height=size.Item2,Scale=scale,Layout=l,Tools=tool,CostBox=cost,Category=SimpleEditorLayout.Category(l),Size=SimpleEditorLayout.Size(l),LibraryArea=libraryArea,LibraryBack=libraryBack,LibraryRows=libraryRows,SupplyButton=SimpleEditorLayout.SupplyButton(l),Cell=SimpleEditorLayout.PaletteCell(area),SwordCell=SimpleEditorLayout.PaletteCell(area,true),PicturePreview=SimpleEditorLayout.ProductPreview(area,false),SwordPreview=SimpleEditorLayout.ProductPreview(area,true)});
+  var touchPreview=SimpleEditorLayout.TouchColorActions(area,false);
+  dumps.Add(new{Width=size.Item1,Height=size.Item2,Scale=scale,Layout=l,Tools=tool,CostBox=cost,Category=SimpleEditorLayout.Category(l),Size=SimpleEditorLayout.Size(l),LibraryArea=libraryArea,LibraryBack=libraryBack,LibraryRows=libraryRows,SupplyButton=SimpleEditorLayout.SupplyButton(l),Cell=SimpleEditorLayout.PaletteCell(area),SwordCell=SimpleEditorLayout.PaletteCell(area,true),PicturePreview=SimpleEditorLayout.ProductPreview(area,false),SwordPreview=SimpleEditorLayout.ProductPreview(area,true),ControllerHint=controllerHint,Keyboard=keyboard,TouchActions=new{touchPreview.Picker,touchPreview.Dye,touchPreview.View}});
  }
  Check(WorkbenchScale.Calculate(1920,1080,32).Factor*20>=32,"native full screen font height");
+ var resizeCanvas=new CanvasTransform();resizeCanvas.Layout(new UiRect(0,0,160,160));resizeCanvas.Center(16,16);
+ resizeCanvas.Relayout(new UiRect(0,0,320,160),16,16);
+ Check(resizeCanvas.Zoom==10&&resizeCanvas.CellRect(0,0).Width==resizeCanvas.CellRect(0,0).Height,
+     "wider viewport preserves square bead size");
+ Check(DirectionalFocus.Move(new[]{new UiRect(0,0,40,40),new UiRect(60,0,40,40),new UiRect(0,60,40,40)},0,1,0)==1
+     &&DirectionalFocus.Move(new[]{new UiRect(0,0,40,40),new UiRect(60,0,40,40),new UiRect(0,60,40,40)},0,0,1)==2
+     &&DirectionalFocus.Move(new[]{new UiRect(0,0,40,40),new UiRect(60,0,40,40),new UiRect(0,60,40,40)},0,1,1)==1,
+     "controller focus follows visible target direction");
  Check(BeadPalette.Defaults.Length==20&&BeadPalette.Normalize(null).Count==20,"five default color rows");
  for(int row=0;row<5;row++)Check(Enumerable.Range(0,3).All(column=>
  {
@@ -192,6 +281,11 @@ if(args.Contains("--ui-only"))
 try {
 var mardDefinition=JsonSerializer.Deserialize<MardPaletteDefinition>(File.ReadAllText("BetterBeads/assets/Mard221.json"));
 Check(MardPaletteReference.Configure(mardDefinition)&&MardPaletteReference.Current.ColorCount==221,"MARD 221 reference loads locally");
+var lookup=MardPaletteReference.Current;
+Check(lookup.Search("").Length==221&&lookup.Search("g").All(c=>c.Code.StartsWith("G")),"MARD search lists all colors and filters prefixes");
+Check(lookup.FindExact(" g017 ") is {Code:"G17"}&&lookup.Search(" g017 ").FirstOrDefault().Code=="G17",
+    "MARD search accepts case, whitespace and leading zero");
+Check(lookup.FindExact("G") is null&&lookup.Search("Z").Length==0,"MARD search distinguishes prefix and missing code");
 Check(mardDefinition!.Colors.Select(c=>c.Code).Distinct().Count()==221&&mardDefinition.DefaultCodes.Distinct().Count()==20,
     "MARD codes and twenty defaults are unique");
 Check(Math.Abs(ColorDifference.Ciede2000(new(50,2.6772,-79.7751),new(50,0,-82.7485))-2.0425)<0.0001,
@@ -207,7 +301,10 @@ var previousColors=BeadPalette.Normalize(new[]{0x123456FFu,0xABCDEFffu});
 Check(previousColors[0]==0x123456FFu&&previousColors[1]==0xABCDEFFFu,
     "existing favorite colors survive new defaults");
 Check(!MardPaletteReference.Configure(null)&&BeadPalette.Defaults.Length==20,"invalid reference uses bundled defaults");
+Check(MardPaletteReference.Current.Search("").Length==20&&MardPaletteReference.Current.Search("G17").Length==1,
+    "MARD search uses available fallback entries");
 Check(MardPaletteReference.Configure(mardDefinition),"valid reference restores full palette");
+if(args.Contains("--mard-search-only")){CheckUi();Console.WriteLine($"PASS {passed} MARD search and layout checks.");return;}
 if(args.Contains("--ui-only")){CheckUi();Console.WriteLine($"PASS {passed} UI alignment checks; offline geometry exported.");return;}
 if(args.Contains("--picker-only"))
 {
@@ -237,15 +334,16 @@ if(args.Contains("--templates-only"))
  Check(oldSave.HiddenLiteTemplates.Count==0,"older Lite saves keep templates visible");
  Console.WriteLine($"PASS {passed} built-in template checks.");return;
 }
-FurnitureTemplates.Configure(DefaultManufacturing.Furniture().Concat(SimpleCrafting.Frames()).Concat(SimpleCrafting.Ornaments()));
+FurnitureTemplates.Configure(DefaultManufacturing.Furniture().Concat(SimpleCrafting.Frames()).Concat(SimpleCrafting.Ornaments()).Concat(FurnitureFinish.Definitions()));
 WeaponTemplates.Configure(DefaultWeapons.Templates());ClothingTemplates.Configure(new());
 var catalog=SimpleCrafting.Catalog();var recipes=SimpleCrafting.Recipes().ToArray();
 Check(ManufacturingCatalog.Validate(recipes,catalog).Count==0,"recipe registration");
-Check(recipes.Length==13&&recipes.All(r=>r.DirectItems&&r.Template.ManufacturingAvailable),"thirteen current templates enabled");
+Check(recipes.Length==17&&recipes.All(r=>r.DirectItems&&r.Template.ManufacturingAvailable),"seventeen current templates enabled");
 Check(new[]{SimpleCrafting.Picture16,SimpleCrafting.Picture32,SimpleCrafting.Ornament,SimpleCrafting.LargeOrnament,
         SimpleCrafting.Sword,SimpleCrafting.Sword24,SimpleCrafting.Sword32,
         SimpleCrafting.Dagger,SimpleCrafting.Dagger24,SimpleCrafting.Dagger32,
-        SimpleCrafting.Hammer,SimpleCrafting.Hammer24,SimpleCrafting.Hammer32}
+        SimpleCrafting.Hammer,SimpleCrafting.Hammer24,SimpleCrafting.Hammer32,
+        SimpleCrafting.Wallpaper16,SimpleCrafting.Wallpaper32,SimpleCrafting.Flooring16,SimpleCrafting.Flooring32}
     .All(id=>recipes.Any(r=>r.Template.Id==id)),"all selectable products have recipes");
 Check(new[]{"effects","souls","refinement","dual-effects"}.All(k=>!FeatureAccess.Has(k)),"advanced features disabled");
 Check(!new WorkbenchSettings().CreativeMode,"creative off by default");
@@ -350,7 +448,7 @@ foreach(var metal in SimpleCrafting.Metals)
  var d=SimpleCrafting.Blank(kind.Item1);d.SupplementaryMaterials=new(){{metal,0}};
  d.Views["front"].Cells[17]=new(){ColorId="metal",Rgba=0xABCDEFffu,MaterialId=metal};
  var cost=SimpleCrafting.Cost(d);var p=Preview(d,new InventorySlot?[]{Raw(cost.Item,cost.Count+1),null}).Plan!;
- var stats=SimpleCrafting.Stats(kind.Item2,metal);
+ var stats=SimpleCrafting.Stats(d);
  Check(SimpleCrafting.Supported(d)&&cost.Count==kind.Item3&&p.Changes.Single(c=>c.Slot==0).After!.Count==1,"weapon cost and type "+kind.Item1+metal);
  Check(p.Product.FinalStats["minDamage"]==stats.MinDamage&&p.Product.FinalStats["maxDamage"]==stats.MaxDamage
      &&p.Product.WeaponRulesVersion==SimpleCrafting.Version&&ProductTemplates.Matches(p.Product),"weapon stats and snapshot "+kind.Item1+metal);
@@ -379,6 +477,12 @@ version=renderDoc.ChangeVersion;renderDoc.ContinueStroke(1,0);
 Check(renderDoc.ChangeVersion>version&&Display().Views["front"].Cells[1]!.Rgba==BeadPalette.Defaults[1],"continuous stroke refreshes each actual edit");
 renderDoc.EndStroke();version=renderDoc.ChangeVersion;renderDoc.ClearCanvas();
 Check(renderDoc.ChangeVersion>version&&Display().Views["front"].Cells.All(c=>c is null),"clear invalidates display");
+var padStrokeDoc=new EditorDocument(SimpleCrafting.Blank(SimpleCrafting.Picture16),catalog,"front");
+padStrokeDoc.BeginStroke(0,0,BrushTool.Paint,BeadPalette.Id(BeadPalette.Defaults[1]),"decoration");
+padStrokeDoc.ContinueStroke(1,0);padStrokeDoc.EndStroke();
+Check(padStrokeDoc.ViewSnapshot().Cells[0] is not null&&padStrokeDoc.ViewSnapshot().Cells[1] is not null,"held controller stroke paints consecutive cells");
+padStrokeDoc.Undo();
+Check(padStrokeDoc.ViewSnapshot().Cells[0] is null&&padStrokeDoc.ViewSnapshot().Cells[1] is null&&!padStrokeDoc.CanUndo,"held controller stroke is one undo step");
 version=renderDoc.ChangeVersion;renderDoc.Undo();Check(renderDoc.ChangeVersion>version&&Display().Views["front"].Cells[0] is not null,"undo invalidates display");
 version=renderDoc.ChangeVersion;renderDoc.Redo();Check(renderDoc.ChangeVersion>version&&Display().Views["front"].Cells[0] is null,"redo invalidates display");
 version=renderDoc.ChangeVersion;renderDoc.DiscardChanges();Check(renderDoc.ChangeVersion>version&&Display().Views["front"].Cells.All(c=>c is not null),"discard invalidates display");

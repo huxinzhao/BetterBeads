@@ -1,7 +1,7 @@
 namespace BetterBeads.Data;
 
 // DTOs contain no game objects or textures. IDs, not translated names, define identity.
-public enum ProductUse { Picture, WoodFurniture, Statue, Sword, Dagger, Hammer, Hat, Shirt, Pants }
+public enum ProductUse { Picture, WoodFurniture, Statue, Sword, Dagger, Hammer, Hat, Shirt, Pants, Wallpaper, Flooring }
 public enum SwordOrientation { Diagonal, Vertical }
 public enum MaterialSeries { Other, Metal, Gem }
 
@@ -50,6 +50,8 @@ public sealed class Blueprint
     public ProductUse Use { get; set; }
     public string TemplateId { get; set; } = "";
     public SwordOrientation SwordOrientation { get; set; }
+    // Opaque RGBA; older blueprints use the same neutral canvas by default.
+    public uint BackgroundRgba { get; set; } = 0xEADFC6FF;
     public Dictionary<string, BeadGrid> Views { get; set; } = new();
     public Dictionary<string, int> WoolMaterials { get; set; } = new();
     public Dictionary<string, int> SupplementaryMaterials { get; set; } = new();
@@ -59,7 +61,7 @@ public sealed class Blueprint
     public Blueprint Copy(bool newIdentity = false) => new()
     {
         Id = newIdentity ? Guid.NewGuid().ToString("N") : Id,
-        Name = Name, Revision = newIdentity ? 0 : Revision, Use = Use, TemplateId = TemplateId, SwordOrientation = SwordOrientation,
+        Name = Name, Revision = newIdentity ? 0 : Revision, Use = Use, TemplateId = TemplateId, SwordOrientation = SwordOrientation, BackgroundRgba = BackgroundRgba,
         Views = Views.ToDictionary(p => p.Key, p => p.Value.Copy()),
         WoolMaterials = new(WoolMaterials), SupplementaryMaterials = new(SupplementaryMaterials), SelectedEffects = new(SelectedEffects), Reference = Reference?.Copy()
     };

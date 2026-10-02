@@ -44,10 +44,10 @@ internal static class LibraryPreferences
     internal static void Remove(SaveProgress progress,string id)
     {progress.FavoriteBlueprintIds.Remove(id);progress.RecentBlueprintIds.RemoveAll(v=>v==id);}
     internal static IEnumerable<T> Query<T>(IEnumerable<T> source,SaveProgress progress,Func<T,string> id,Func<T,Blueprint> design,
-        ProductUse? use,bool favorites,bool recent)
+        ProductUse? use,bool favorites,bool recent,ProductGroup? group=null)
     {
         var ranks=progress.RecentBlueprintIds.Select((value,index)=>(value,index)).ToDictionary(p=>p.value,p=>p.index,StringComparer.Ordinal);
-        return source.Where(e=>(use is null||design(e).Use==use)&&(!favorites||progress.FavoriteBlueprintIds.Contains(id(e))))
+        return source.Where(e=>(use is null||design(e).Use==use)&&(group is null||ProductCategories.For(design(e).Use)?.Group==group)&&(!favorites||progress.FavoriteBlueprintIds.Contains(id(e))))
             .OrderBy(e=>recent?ranks.GetValueOrDefault(id(e),int.MaxValue):0)
             .ThenBy(e=>design(e).Name,StringComparer.OrdinalIgnoreCase).ThenBy(id,StringComparer.Ordinal);
     }

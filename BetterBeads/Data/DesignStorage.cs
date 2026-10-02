@@ -79,6 +79,7 @@ public static class DesignStorage
     {
         var text = new StringBuilder();
         text.Append(snapshot.Design.TemplateId).Append('|').Append(snapshot.FurnitureVariantId).Append('|').Append((int)snapshot.Design.Use)
+            .Append('|').Append(snapshot.Design.BackgroundRgba)
             .Append('|').Append((int)snapshot.Design.SwordOrientation);
         foreach (var view in snapshot.Design.Views.OrderBy(p => p.Key, StringComparer.Ordinal))
         {

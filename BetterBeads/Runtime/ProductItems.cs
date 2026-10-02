@@ -18,6 +18,8 @@ internal sealed class ProductItems
 
     public static bool IsProduct(Item? item) => item is not null &&
         ((item.QualifiedItemId == "(F)"+item.ItemId && FurnitureTemplates.TryGet(item.ItemId,out _))
+            || (item.ItemId is SimpleCrafting.Wallpaper16 or SimpleCrafting.Wallpaper32) && item.QualifiedItemId=="(WP)"+item.ItemId
+            || (item.ItemId is SimpleCrafting.Flooring16 or SimpleCrafting.Flooring32) && item.QualifiedItemId=="(FL)"+item.ItemId
             || item.QualifiedItemId == "(H)" + ProductTemplates.Hat
             || item.QualifiedItemId == "(S)" + ClothingTemplates.Shirt || item.QualifiedItemId == "(P)" + ClothingTemplates.Pants
             || (item.QualifiedItemId == "(W)"+item.ItemId && WeaponTemplates.TryGet(item.ItemId,out _)));

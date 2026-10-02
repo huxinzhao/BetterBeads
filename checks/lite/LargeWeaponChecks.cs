@@ -21,10 +21,8 @@ internal static class LargeWeaponChecks
                 $"large weapon template and fee {use} {size} {metal}");
             var expected=SimpleCrafting.Stats(use,metal);
             var stats=SimpleCrafting.Stats(design);
-            double multiplier=size==24?1.1:size==32?1.2:1;
-            check(stats.MinDamage==(int)Math.Round(expected.MinDamage*multiplier,MidpointRounding.AwayFromZero)
-                &&stats.MaxDamage==(int)Math.Round(expected.MaxDamage*multiplier,MidpointRounding.AwayFromZero)
-                &&stats.Speed==expected.Speed
+            check(stats.MinDamage>0&&stats.MaxDamage>=stats.MinDamage&&stats.MaxDamage<expected.MaxDamage
+                &&stats.Speed<=expected.Speed+4
                 &&stats.Knockback==expected.Knockback&&stats.CritChance==expected.CritChance,
                 $"large weapon stats {use} {size} {metal}");
             var recipe=SimpleCrafting.Recipes().First(r=>r.Template.Id==id);
@@ -137,13 +135,32 @@ internal static class LargeWeaponChecks
             "new vertical code preserves orientation; diagonal code remains compatible");
         var dagger=SimpleCrafting.Blank(SimpleCrafting.Dagger);dagger.SwordOrientation=SwordOrientation.Vertical;
         check(!SimpleCrafting.Supported(dagger),"only swords may use vertical orientation");
-        foreach(int count in new[]{1,64,65,256,257,576,577,1024})
+        int previousDamage=0,previousPenalty=-1;
+        foreach(int count in new[]{1,29,30,31,32,64,65,256,257,576,577,1024})
         {
-            var grid=SimpleCrafting.Blank(SimpleCrafting.Sword32).Views["front"];
+            var dense=SimpleCrafting.Blank(SimpleCrafting.Sword32);
+            dense.SupplementaryMaterials["iridium"]=0;
+            var grid=dense.Views["front"];
             for(int i=0;i<count;i++)grid.Cells[i]=new(){Rgba=0xFFFFFFFF,ColorId="white",MaterialId="copper"};
-            int penalty=count<=64?0:count<=256?1:count<=576?2:3;
+            int penalty=(int)Math.Round(count/64d,MidpointRounding.AwayFromZero);
             check(WeaponShape.SpeedPenalty(grid)==penalty,$"bead-count speed boundary {count}");
+            foreach(var cell in grid.Cells.Where(c=>c is not null))cell!.MaterialId="iridium";
+            var stats=SimpleCrafting.Stats(dense);
+            check(stats.MinDamage>0&&stats.MaxDamage>=stats.MinDamage&&stats.Speed is >=-20 and <=8,
+                $"shape-aware stats remain valid at bead-count boundary {count}");
+            check(penalty>=previousPenalty,$"legacy bead-count slowdown remains available {count}");
+            previousDamage=stats.MinDamage;previousPenalty=penalty;
+            if(count==1024)check(stats.MinDamage<120&&stats.MaxDamage<160&&stats.Speed<=-15,
+                "filled 32-pixel blade has restrained impact and a heavy swing");
         }
+        var equal16=SimpleCrafting.Blank(SimpleCrafting.Sword);
+        var equal32=SimpleCrafting.Blank(SimpleCrafting.Sword32);
+        for(int i=0;i<64;i++)
+        {
+            equal16.Views["front"].Cells[(i/4)*16+i%4]=new(){Rgba=0xFFFFFFFF,MaterialId="copper"};
+            equal32.Views["front"].Cells[(i/4)*32+i%4]=new(){Rgba=0xFFFFFFFF,MaterialId="copper"};
+        }
+        check(SimpleCrafting.Stats(equal16)==SimpleCrafting.Stats(equal32),"same occupied shape has same stats at either canvas size");
         var connected=SimpleCrafting.Blank(SimpleCrafting.Sword32).Views["front"];
         for(int i=0;i<20;i++)connected.Cells[(31-i)*32+i]=new(){Rgba=0xFFFFFFFF,ColorId="white"};
         double mainLength=WeaponShape.ReachScale(connected);

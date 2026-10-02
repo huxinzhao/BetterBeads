@@ -196,6 +196,9 @@ internal static class ArtResources
     private static (Texture2D Texture,Rectangle Source) CreatePreview((Blueprint Design,int Revision,bool Framed,bool Trim) key)
     {
         var design=key.Design;var grid=design.Views["front"];
+#if BEADS_LITE
+        if(SimpleCrafting.IsDecoration(design.Use))return BuildDecorationPreview(design);
+#endif
         bool fused=false;
 #if BEADS_LITE
         if(key.Framed&&SimpleCrafting.Supported(design)){grid=SceneProduct.Compose(design,PaintingFrame());fused=FurnitureFinish.IsNew(FurnitureFinish.Variant(design));}
@@ -205,6 +208,23 @@ internal static class ArtResources
 #endif
         return BuildPreview(grid,fused,key.Trim);
     }
+#if BEADS_LITE
+    private static (Texture2D Texture,Rectangle Source) BuildDecorationPreview(Blueprint design)
+    {
+        var grid=design.Views["front"];
+        var finish=BeadFinish.Bake(grid,Definition,false);
+        uint background=design.BackgroundRgba;
+        var pixels=finish.Pixels.Select(c=>
+        {
+            if((c&255)==0)c=background;
+            return new Color((byte)(c>>24),(byte)(c>>16),(byte)(c>>8),(byte)c);
+        }).ToArray();
+        var texture=new Texture2D(Game1.graphics.GraphicsDevice,finish.Width,finish.Height);
+        try{texture.SetData(pixels);}catch{texture.Dispose();throw;}
+        TextureCache.MarkDense(texture);
+        return(texture,new Rectangle(0,0,finish.Width,finish.Height));
+    }
+#endif
     private static (Texture2D Texture,Rectangle Source) BuildPreview(BeadGrid grid,bool fused,bool trim)
     {
         int minX=grid.Width,minY=grid.Height,maxX=-1,maxY=-1;
@@ -357,6 +377,22 @@ internal static class ArtResources
         }
         var size=UiTextCache.Measure(font,label)*scale;
         b.DrawString(font,label,new Vector2((int)(r.X+(centered?(r.Width-size.X)/2:0)),(int)(r.Y+(r.Height-size.Y)/2)),color,0,Vector2.Zero,scale,SpriteEffects.None,0);
+    }
+    internal static string[] ParagraphLines(string text,int width)
+    {
+        float scale=TextHeight(true)/UiTextCache.Measure(Game1.smallFont,ContentText.Get("copy.ArtResources.16e7a38c73","国Ag")).Y;
+        return UiTextCache.Wrap(Game1.smallFont,text,width,scale);
+    }
+    internal static string[][] ParagraphPages(string text,int width,int rows)
+    {
+        float scale=TextHeight(true)/UiTextCache.Measure(Game1.smallFont,ContentText.Get("copy.ArtResources.16e7a38c73","国Ag")).Y;
+        return UiTextCache.Pages(Game1.smallFont,text,width,scale,rows);
+    }
+    internal static void Paragraph(SpriteBatch b,string text,UiRect area,Color color)
+    {
+        var lines=ParagraphLines(text,area.Width);int count=Math.Min(lines.Length,area.Height/24);
+        for(int i=0;i<count;i++)TextLine(b,lines[i],new(area.X,area.Y+i*24,area.Width,24),color);
+        if(count<lines.Length&&area.Contains(WorkbenchUi.MouseX,WorkbenchUi.MouseY))Hint(text);
     }
     public static void ButtonText(SpriteBatch b,UiRect r,string label,bool enabled=true,bool selected=false,string iconKey="")
     {

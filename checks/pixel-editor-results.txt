@@ -1,5 +1,5 @@
 PASS 1: 页面脚本可解析且所有固定控件引用存在
-PASS 2: 编辑器覆盖全部42张运行PNG
+PASS 2: 编辑器覆盖全部运行PNG且没有重复条目
 PASS 3: 连续画笔补齐像素且一笔只记一次撤销
 PASS 4: 编辑后标记未保存
 PASS 5: 撤销恢复干净状态
@@ -14,4 +14,4 @@ PASS 13: 外部文件变化时拒绝覆盖
 PASS 14: 备份失败时不碰原文件
 PASS 15: 写入失败不返回保存成功
 PASS 16: 备份期间发生外部修改，二次复核阻止覆盖
-16 targeted editor checks passed. Test files only: C:\Users\xinzh\Desktop\星露谷拼豆mod\.tools\pixel-editor-check-NH2n1a
+16 targeted editor checks passed. Test files only: C:\Users\xinzh\Desktop\星露谷拼豆mod\.tools\pixel-editor-check-lqldDO

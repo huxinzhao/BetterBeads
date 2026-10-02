@@ -2,6 +2,16 @@ namespace BetterBeads.Data;
 
 public static class MaterialSupply
 {
+    internal static IReadOnlyList<T> NeededSources<T>(long missing,IEnumerable<(T Source,long Count)> sources)
+    {
+        var result=new List<T>();if(missing<=0)return result;
+        foreach(var source in sources)
+        {
+            if(source.Count<=0)continue;
+            result.Add(source.Source);missing-=source.Count;if(missing<=0)break;
+        }
+        return result;
+    }
     public static bool WithinRange(double x,double y,double originX,double originY,int radius)
         =>radius>=0 && Math.Abs(x-originX)<=radius && Math.Abs(y-originY)<=radius;
     public static string? BeadMaterial(InventorySlot? slot,ProcessingCatalog catalog)

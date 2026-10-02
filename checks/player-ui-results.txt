@@ -1,0 +1,16 @@
+Player UI consistency review — 2026-10-02
+
+PASS 58 targeted player UI checks:
+- Seven viewport sizes: 480x420, 640x480, 854x480, 1024x768, 1280x720, 1280x900, 1920x1080.
+- Native close rectangles, uniform header alignment, minimum button dimensions and non-overlapping hit areas.
+- Move/copy selection controls; 44px normal and 48px action rows, bounded short action widths.
+- Recovery picture, name, summary and actions; square weapon diagram, text and paging separation.
+- Chinese and English wrapping, surrogate pairs, long tokens, paragraph-preserving pagination and label/value binding.
+
+PASS 90 related creative experience checks (shared scene layout).
+PASS current and retained full builds: 0 warnings, 0 errors each.
+Total: 148 related checks passed. Previously passed unrelated tests were not repeated.
+
+Eight offline images generated from actual layout rectangles, original menu/close art and existing mod assets; visually reviewed.
+Reference textures were read from the local game installation into workspace-only .tools; source ZIP excludes these raw textures.
+No game launched. No Mods or save files changed. Game fonts, hover/press animation and controller feel still require in-game verification.

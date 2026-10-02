@@ -13,6 +13,25 @@ AssemblyLoadContext.Default.Resolving+=(_,name)=>
     return null;
 };
 var assembly=AssemblyLoadContext.Default.LoadFromAssemblyPath(mod);
+if(args.Contains("--shape-bindings"))
+{
+    System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(assembly.GetType("BetterBeads.Runtime.ShapeCombat",true)!.TypeHandle);
+    Console.WriteLine("PASS exact-target wound kill lifecycle binds to native game method");
+}
+if(args.Contains("--combat-api"))
+{
+    var ga=AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(game,"Stardew Valley.dll"));
+    var ha=AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(game,"smapi-internal","0Harmony.dll"));
+    var original=ha.GetType("HarmonyLib.PatchProcessor")!.GetMethods().Single(m=>m.Name=="GetOriginalInstructions"&&m.GetParameters()[1].ParameterType.IsByRef);
+    foreach(string name in new[]{"StardewValley.Monsters.Monster","StardewValley.GameLocation","StardewValley.Tools.MeleeWeapon"})
+    {
+        var t=ga.GetType(name)!;
+        foreach(var f in t.GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance).Where(f=>f.Name.Contains("Id",StringComparison.OrdinalIgnoreCase)||f.Name.Contains("special",StringComparison.OrdinalIgnoreCase)))Console.WriteLine(f);
+        foreach(var m in t.GetMethods(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.DeclaredOnly).Where(m=>m.Name=="onMonsterKilled"||m.Name=="damageMonster"&&m.GetParameters().Length==11))
+        {Console.WriteLine(m);foreach(var line in (System.Collections.IEnumerable)original.Invoke(null,new object?[]{m,null})!)Console.WriteLine(line);}
+    }
+    return;
+}
 if(args.Length==2)
 {
     var native=AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(game,"Stardew Valley.dll"));
@@ -29,6 +48,10 @@ if(args.Length==2)
 if(args.Contains("--network-api"))
 {
     var ga=AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(game,"Stardew Valley.dll"));
+    var farmer=ga.GetType("StardewValley.Farmer")!;
+    var netItems=farmer.GetField("netItems",BindingFlags.Instance|BindingFlags.Public);
+    if(netItems?.FieldType.GetMethod("MarkReassigned",BindingFlags.Instance|BindingFlags.Public) is null)
+        throw new Exception("Native inventory full-resync marker is unavailable");
     foreach(var m in ga.GetType("StardewValley.Game1")!.GetMethods().Where(m=>m.Name=="GetPlayer"))Console.WriteLine(m+" "+string.Join(",",m.GetParameters().Select(p=>p.Name+"="+p.DefaultValue)));
     foreach(var name in new[]{"StardewValley.Network.NetMutex","StardewValley.Objects.Chest","StardewValley.Locations.FarmHouse","StardewValley.Multiplayer"})
     {
@@ -36,6 +59,28 @@ if(args.Contains("--network-api"))
         foreach(var m in t.GetMembers(BindingFlags.Public|BindingFlags.Instance|BindingFlags.DeclaredOnly)
             .Where(m=>name.EndsWith("NetMutex")||m.Name.Contains("Owner")||m.Name.Contains("ItemsFor")||m.Name.Contains("Mutex")||name.EndsWith("Multiplayer")&&m.MemberType==MemberTypes.Method))Console.WriteLine(m);
     }
+    return;
+}
+if(args.Contains("--decor-tile"))
+{
+    var xtile=AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(game,"xTile.dll"));
+    var harmony=AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(game,"smapi-internal","0Harmony.dll"));
+    var draw=xtile.GetType("xTile.Display.XnaDisplayDevice",true)!.GetMethod("DrawImpl",
+        BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic)!;
+    var original=harmony.GetType("HarmonyLib.PatchProcessor")!.GetMethods()
+        .Single(m=>m.Name=="GetOriginalInstructions"&&m.GetParameters()[1].ParameterType.IsByRef);
+    var instructions=(System.Collections.IEnumerable)original.Invoke(null,new object?[]{draw,null})!;
+    var patch=assembly.GetType("BetterBeads.Runtime.DecorationPlacement",true)!.GetMethod("DenseTileCalls",
+        BindingFlags.Static|BindingFlags.NonPublic)!;
+    var transformed=(System.Collections.IEnumerable)patch.Invoke(null,new object[]{instructions})!;
+    int wrapped=0;
+    foreach(var instruction in transformed)
+    {
+        var operand=instruction!.GetType().GetField("operand")!.GetValue(instruction);
+        if(operand is MethodInfo called&&called.Name=="DrawDecorTile")wrapped++;
+    }
+    if(wrapped!=1)throw new Exception("Native tile draw could not be adapted safely: "+wrapped+" calls matched");
+    Console.WriteLine("PASS game tile rendering uses the guarded dense decoration draw wrapper");
     return;
 }
 if(args.Contains("--network-il"))

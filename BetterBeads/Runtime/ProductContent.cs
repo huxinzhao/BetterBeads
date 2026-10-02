@@ -5,6 +5,7 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.GameData.Weapons;
+using StardewValley.GameData;
 
 namespace BetterBeads.Runtime;
 
@@ -16,6 +17,24 @@ internal sealed class ProductContent
 
     public void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
     {
+#if BEADS_LITE
+        if(DecorationPlacement.TryAsset(e))return;
+#endif
+        if(e.NameWithoutLocale.IsEquivalentTo("Data/AdditionalWallpaperFlooring"))
+        {
+            e.Edit(asset=>
+            {
+                var data=asset.GetData<List<ModWallpaperOrFlooring>>();
+                foreach(string id in new[]{SimpleCrafting.Wallpaper16,SimpleCrafting.Wallpaper32,SimpleCrafting.Flooring16,SimpleCrafting.Flooring32})
+                    if(!data.Any(entry=>entry.Id==id))data.Add(new ModWallpaperOrFlooring
+                    {Id=id,Texture="Mods/xinzh.BetterBeads/DecorationPlaceholder",IsFlooring=id is SimpleCrafting.Flooring16 or SimpleCrafting.Flooring32,Count=1});
+            });return;
+        }
+        if(e.NameWithoutLocale.IsEquivalentTo("Mods/xinzh.BetterBeads/DecorationPlaceholder"))
+        {
+            e.LoadFrom(()=>{var t=new Texture2D(Game1.graphics.GraphicsDevice,256,48);var pixels=Enumerable.Repeat(new Color(234,223,198),256*48).ToArray();t.SetData(pixels);return t;},AssetLoadPriority.Low);
+            return;
+        }
         if(WeaponTemplates.All.Any(w=>w.PixelWidth>16&&e.NameWithoutLocale.IsEquivalentTo(w.TextureAsset)))
         {e.LoadFrom(()=>{var t=new Texture2D(Game1.graphics.GraphicsDevice,16,16);t.SetData(new Color[256]);return t;},AssetLoadPriority.Low);return;}
         if(e.NameWithoutLocale.IsEquivalentTo("Mods/xinzh.BetterBeads/WallPicture16") || e.NameWithoutLocale.IsEquivalentTo("Mods/xinzh.BetterBeads/WallPicture32")

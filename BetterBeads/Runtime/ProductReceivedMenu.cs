@@ -16,7 +16,7 @@ internal sealed class ProductReceivedMenu : DialogueBox
     private readonly int originalFrame,originalDirection;
     private readonly ReceivedPresentation presentation=new();
     private bool poseRestored;
-    public ProductReceivedMenu(ProductSnapshot snapshot,bool unsaved=false):base(ReceivedPresentation.Message(snapshot,ProductLabels.SaleLine(snapshot))+(unsaved?"\n"+ContentText.Get("simple.draft-unsaved","图纸未保存；本次游戏中可返回拼豆台继续编辑。"):""))
+    public ProductReceivedMenu(ProductSnapshot snapshot,bool unsaved=false):base(ReceivedPresentation.Message(snapshot,ProductLabels.SaleLine(snapshot))+(unsaved?"\n"+ContentText.Get("simple.draft-unsaved","图纸未保存；可返回编辑，未保存作品会单独缓存供下次恢复。"):""))
     {
         product=snapshot.Copy();farmer=Game1.player;
         originalFrame=farmer.FarmerSprite.CurrentFrame;originalDirection=farmer.FacingDirection;

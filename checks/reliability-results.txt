@@ -1,0 +1,17 @@
+2026-10-02
+MSBuild version 17.3.4+a400405ba for .NET
+  LiteChecks -> C:\Users\xinzh\Desktop\星露谷拼豆mod\checks\lite\bin\Release\net6.0\LiteChecks.dll
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:00.88
+PASS 32 reliability checks.
+PASS 35 decoration checks.
+PASS 13 gift gallery checks.
+
+PASS 11 reliability runtime checks.
+Native layer validation, native decoration covering, wallpaper/floor rollback including properties and empty cells, busy controller input isolation and fresh key presses.
+Actual game interfaces with injected failures/input; no game launched.
+Current and retained full builds: 0 warnings, 0 errors.

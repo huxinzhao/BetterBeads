@@ -5,6 +5,7 @@ public sealed class FrameControls
 {
     private readonly List<(UiRect Rect,Action Action)> entries=new();
     public bool IsReady=>entries.Count>0;
+    public IReadOnlyList<UiRect> Targets=>entries.Select(e=>e.Rect).ToArray();
     public void Add((UiRect Rect,Action Action) entry)=>entries.Add(entry);
     public void Clear()=>entries.Clear();
     public UiRect? HitTest(int x,int y)

@@ -13,6 +13,7 @@ internal static class WeaponPatches
 {
     private static ProductItems products=null!;
     private static ITranslationHelper text=null!;
+    private static readonly AccessTools.FieldRef<MeleeWeapon,float> swipeDuration=AccessTools.FieldRefAccess<MeleeWeapon,float>("swipeSpeed");
     public static void Apply(Harmony harmony,ProductItems items,ITranslationHelper translations)
     {
         products=items;text=translations;
@@ -22,6 +23,7 @@ internal static class WeaponPatches
         harmony.Patch(AccessTools.Method(typeof(MeleeWeapon),"ReloadData"),postfix:Patch(nameof(Restore)));
         foreach(string method in new[]{"drawTooltip","setFarmerAnimating","animateSpecialMove"})
             harmony.Patch(AccessTools.Method(typeof(MeleeWeapon),method),prefix:Patch(nameof(Restore)));
+        harmony.Patch(AccessTools.Method(typeof(MeleeWeapon),"setFarmerAnimating"),transpiler:Patch(nameof(SwingTiming)));
         harmony.Patch(AccessTools.Method(typeof(MeleeWeapon),"DoDamage"),prefix:Patch(nameof(BeforeDamage)));
         harmony.Patch(AccessTools.Method(typeof(MeleeWeapon),"getAreaOfEffect"),postfix:Patch(nameof(ScaleArea)));
         harmony.Patch(AccessTools.Method(typeof(MeleeWeapon),"triggerClubFunction"),transpiler:Patch(nameof(HammerSpecial)));
@@ -38,6 +40,12 @@ internal static class WeaponPatches
 #if BEADS_LITE
         __result+="\n"+Game1.parseText(ProductLabels.SaleLine(snapshot),Game1.smallFont,320);
 #endif
+        if(WeaponGeometry.HasShapeEffects(snapshot.WeaponRulesVersion)&&WeaponGeometry.BleedingStrength(snapshot)>0)
+            __result+="\n"+Game1.parseText(snapshot.WeaponRulesVersion==WeaponGeometry.Version&&snapshot.FinalStats.GetValueOrDefault("shapeWave")>0
+                ?ContentText.Get("weapon.shape.wave","波刃：普通命中附加3秒持续伤害")
+                :ContentText.Get("weapon.shape.bleed","锯齿：普通命中附加3秒持续伤害"),Game1.smallFont,320);
+        if(WeaponGeometry.HasSwingTiming(snapshot.WeaponRulesVersion)&&snapshot.FinalStats.GetValueOrDefault("shapeSwingTimeScale",1)<1)
+            __result+="\n"+Game1.parseText(ContentText.Get("weapon.shape.swing","挥舞时长 −5%"),Game1.smallFont,320);
         var lines=snapshot.EffectRulesVersion==SpecialEffects.RulesVersion
             ?snapshot.Effects.Select(id=>id switch{"ruby"=>ContentText.Format("copy.WeaponPatches.50078dca31",$"红宝石：伤害 +{snapshot.EffectParameters.GetValueOrDefault("damageBonusPercent"):0.##}%"),
                 "jade"=>ContentText.Format("copy.WeaponPatches.ba32a2d6c7",$"翡翠：实际伤害吸血 {snapshot.EffectParameters.GetValueOrDefault("lifeStealRate")*100:0.##}%"),
@@ -49,6 +57,28 @@ internal static class WeaponPatches
         if(lines.Count>0)__result+="\n"+Game1.parseText(string.Join("\n",lines),Game1.smallFont,320);
     }
     private static bool IsCustom(MeleeWeapon item)=>item.QualifiedItemId=="(W)"+item.ItemId && WeaponTemplates.TryGet(item.ItemId,out _);
+    private static IEnumerable<CodeInstruction> SwingTiming(IEnumerable<CodeInstruction> instructions)
+    {
+        var codes=instructions.ToList();
+        var assignments=Enumerable.Range(0,codes.Count).Where(i=>codes[i].opcode==OpCodes.Stfld
+            &&codes[i].operand is FieldInfo f&&f.DeclaringType==typeof(MeleeWeapon)&&f.Name=="swipeSpeed").ToArray();
+        // First assignment is the raw duration, second applies player buffs, third is dagger division.
+        // Guard the local native structure; unknown game implementations keep native timing.
+        if(assignments.Length!=3||!codes.Skip(assignments[1]+1).Take(assignments[2]-assignments[1]-1)
+            .Any(c=>c.operand is MethodInfo m&&m.Name=="OnSwing"))return codes;
+        codes.InsertRange(assignments[1]+1,new[]{new CodeInstruction(OpCodes.Ldarg_0),
+            CodeInstruction.Call(typeof(WeaponPatches),nameof(ApplySwingTime))});
+        return codes;
+    }
+    private static void ApplySwingTime(MeleeWeapon weapon)
+    {
+        if(!IsCustom(weapon)||products.Read(weapon) is not {} snapshot||!WeaponGeometry.HasSwingTiming(snapshot.WeaponRulesVersion))return;
+        double factor=snapshot.FinalStats.GetValueOrDefault("shapeSwingTimeScale",1);
+        if(!double.IsFinite(factor)||factor<.9||factor>1||factor==1)return;
+        // Keep buffed fast swings positive. Apply once before native division and OnSwing hooks.
+        ref float duration=ref swipeDuration(weapon);
+        duration=Math.Max(40,duration*(float)factor);
+    }
     private static void Restore(MeleeWeapon __instance)
     {
         if(IsCustom(__instance))WeaponInstances.Apply(__instance,products.Read(__instance));
@@ -59,7 +89,7 @@ internal static class WeaponPatches
     {
         if(!IsCustom(__instance)||products.Read(__instance) is not {} snapshot)return;
         double factor=snapshot.FinalStats.GetValueOrDefault("reachScale",1);
-        if(snapshot.WeaponRulesVersion==SimpleCrafting.Version)
+        if(snapshot.WeaponRulesVersion is "simple-2" or "simple-3" or "simple-4" or "simple-5" or "simple-6" or SimpleCrafting.Version)
         {
             if(!double.IsFinite(factor)||factor<.5||factor>2)return;
             var forward=WeaponReach.ExtendForward(__result.X,__result.Y,__result.Width,__result.Height,
@@ -89,7 +119,7 @@ internal static class WeaponPatches
     private static Rectangle ScaleHammerSpecial(Rectangle area,MeleeWeapon weapon)
     {
         if(!IsCustom(weapon)||products.Read(weapon) is not {} snapshot
-            ||snapshot.WeaponRulesVersion!=SimpleCrafting.Version)return area;
+            ||snapshot.WeaponRulesVersion is not ("simple-2" or "simple-3" or "simple-4" or "simple-5" or "simple-6" or SimpleCrafting.Version))return area;
         double factor=snapshot.FinalStats.GetValueOrDefault("reachScale",1);
         if(!double.IsFinite(factor)||factor<.5||factor>2)return area;
         var scaled=WeaponReach.ScaleCentered(area.X,area.Y,area.Width,area.Height,factor);

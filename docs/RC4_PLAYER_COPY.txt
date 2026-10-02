@@ -1,0 +1,155 @@
+Better Beads：玩家体验新增文案（2026-10-02）
+
+可直接修改下面的“中文 =”和“英文 =”内容。不要改方括号中的文案键。
+{0}、{1} 等为运行时占位符，中英文须保留相同的编号。
+修改后，在项目目录运行：node tools/apply-player-copy.mjs
+该操作更新 BetterBeads/i18n/zh.json 和 default.json；游戏重启后读取。
+这份文档不包含全部旧文案；其余仍可使用原有文案编辑器。
+
+[simple.recovery-title]
+中文 = 发现上次未保存作品
+英文 = Unsaved artwork found
+
+[simple.recovery-note]
+中文 = 不会自动加入图纸库；恢复后仍需手动保存。
+英文 = Recovery does not add a design to your library. Save it manually.
+
+[simple.recovery-restore]
+中文 = 恢复作品
+英文 = Recover artwork
+
+[simple.recovery-delete]
+中文 = 删除恢复缓存
+英文 = Delete recovery
+
+[simple.recovery-delete-confirm]
+中文 = 删除未保存作品的恢复缓存？
+英文 = Delete the unsaved recovery?
+
+[simple.recovery-later]
+中文 = 稍后决定
+英文 = Decide later
+
+[simple.recovery-restored]
+中文 = 已恢复未保存作品，请手动保存图纸。
+英文 = Artwork recovered. Save the design when ready.
+
+[simple.recovery-failed]
+中文 = 草稿未能恢复或删除，原缓存已保留。
+英文 = Recovery could not be restored or deleted. The original file was kept.
+
+[simple.recovery-unreadable]
+中文 = 恢复缓存无法读取，原文件已保留；请勿直接覆盖。
+英文 = Recovery could not be read. The original file was kept; do not overwrite it.
+
+[simple.draft-unsaved]
+中文 = 图纸未保存；可返回编辑，未保存作品会单独缓存供下次恢复。
+英文 = Design not saved. Continue editing, or recover the cached draft next time.
+
+[simple.pattern-edit]
+中文 = 移动与复制
+英文 = Move / Copy
+
+[simple.pattern-all]
+中文 = 整幅图案
+英文 = Whole pattern
+
+[simple.pattern-select]
+中文 = 框选区域
+英文 = Select an area
+
+[simple.pattern-select-note]
+中文 = 拖动框选；手柄按A定起点，再按A定终点。Esc取消。
+英文 = Drag to select. Controller: A sets each corner. Esc cancels.
+
+[simple.pattern-offset]
+中文 = 位移：横向 {0}，纵向 {1}
+英文 = Offset: X {0}, Y {1}
+
+[simple.pattern-overwrite]
+中文 = 将覆盖 {0} 颗豆，可撤销。
+英文 = Overwrites {0} beads. You can undo it.
+
+[simple.pattern-safe]
+中文 = 保留颜色与材料；应用后可一步撤销。
+英文 = Colors and materials are kept. Apply as one undo step.
+
+[simple.pattern-copy]
+中文 = 复制
+英文 = Copy
+
+[simple.pattern-move]
+中文 = 移动
+英文 = Move
+
+[simple.shape-explain]
+中文 = 判定说明
+英文 = Shape details
+
+[simple.shape-count]
+中文 = 总豆数 {0} · 主体 {1} · 孤立 {2}
+英文 = Beads {0} / Main {1} / Separate {2}
+
+[simple.shape-markers]
+中文 = 主体亮色 握持端十字
+英文 = Bright: body; Cross: grip end
+
+[simple.shape-range-note]
+中文 = 孤立豆计入重量，但不增加主体攻击距离。
+英文 = Separate beads add weight, not reach.
+
+[simple.shape-length]
+中文 = 主体长度约 {0:0.#}px
+英文 = Main length ~{0:0.#}px
+
+[simple.scene-standard]
+中文 = 返回场景
+英文 = Back to scene
+
+[simple.shape-heavy-tip]
+中文 = 重量较偏向远端，可能使挥舞更慢。
+英文 = Weight is farther from the grip and may slow swings.
+
+[simple.shape-weight-note]
+中文 = 豆数、主体长度与重量分布共同影响攻速。
+英文 = Bead count, length and weight distribution affect swing speed.
+
+[simple.shape-result]
+中文 = 伤害 {0}～{1} · 攻速 {2} · 范围 ×{3}
+英文 = Damage {0}-{1} / Speed {2} / Reach x{3}
+
+[simple.shape-preview-note]
+中文 = 图案形状启发式判定；实际手感以游戏内为准。
+英文 = Shape estimates; test the feel in game.
+
+[simple.scene-seams]
+中文 = 接缝标记
+英文 = Tile seams
+
+[simple.scene-seam-note]
+中文 = 金线为纹样边界；铺设前会高亮覆盖区域。
+英文 = Gold lines mark repeat edges. Placement highlights the covered area.
+
+[gift.display-hearts]
+中文 = 画作已记录，达到6心后的次日才会展示。
+英文 = Painting recorded. Display can begin the day after reaching 6 hearts.
+
+[gift.display-tomorrow]
+中文 = 计划次日在当前住宅展示；挂点需保持可用。
+英文 = Scheduled for tomorrow at their current home, if the wall remains available.
+
+[gift.display-unsupported]
+中文 = 当前住宅暂不适配展示，赠画记录仍会保留。
+英文 = Their current home does not support display. The gift record is kept.
+
+[gift.display-unavailable]
+中文 = 当前挂点不可用；记录已保留，请检查住宅布局。
+英文 = The wall slot is unavailable. The record is kept; check the home layout.
+
+[gift.display-blocked]
+中文 = {0}的挂画暂未显示：住宅挂点不可用。
+英文 = {0}'s painting is not displayed: the wall slot is unavailable.
+
+[market.random-note]
+中文 = 市场估价随机，不代表图案好坏。
+英文 = Market appraisal is random, not a rating of your design.

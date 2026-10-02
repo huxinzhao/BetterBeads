@@ -1,12 +1,12 @@
 {
   "Name": "Better Beads",
   "Author": "xinzh",
-  "Version": "1.0.0",
-  "Description": "Create bead paintings, ornaments and weapons with editable colors and nearby materials. English and Chinese.",
+  "Version": "1.1.0",
+  "Description": "Create bead furniture, wallpaper, flooring and weapons with editable colors. English and Chinese.",
   "UniqueID": "xinzh.BetterBeads",
   "EntryDll": "BetterBeads.dll",
   "MinimumApiVersion": "4.5.1",
-  "UpdateKeys": [],
+  "UpdateKeys": ["Nexus:53029"],
   "Dependencies": [
     {
       "UniqueID": "spacechase0.GenericModConfigMenu",

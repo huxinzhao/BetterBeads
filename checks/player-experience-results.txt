@@ -1,0 +1,31 @@
+Applied 37 Chinese / English text entries. No game, Mods or save files were accessed.
+MSBuild version 17.3.4+a400405ba for .NET
+  BetterBeads -> C:\Users\xinzh\Desktop\星露谷拼豆mod\BetterBeads\bin\Current\net6.0\BetterBeads.dll
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:00.77
+MSBuild version 17.3.4+a400405ba for .NET
+  LiteChecks -> C:\Users\xinzh\Desktop\星露谷拼豆mod\checks\lite\bin\Release\net6.0\LiteChecks.dll
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:01.69
+PASS 51 player experience checks.
+tip 0.585786437626905; teeth 0.5
+straight WeaponStatValues { MinDamage = 57, MaxDamage = 74, Speed = 7, Knockback = 0.92, CritChance = 0.02, CritMultiplier = 3 }, curved WeaponStatValues { MinDamage = 57, MaxDamage = 74, Speed = 7, Knockback = 0.92, CritChance = 0.02, CritMultiplier = 3 }, sickle WeaponStatValues { MinDamage = 60, MaxDamage = 78, Speed = 5, Knockback = 0.92, CritChance = 0.02, CritMultiplier = 3 }, full32 WeaponStatValues { MinDamage = 84, MaxDamage = 110, Speed = -18, Knockback = 0.92, CritChance = 0.02, CritMultiplier = 3 }
+PASS 97 geometry checks.
+PASS 90 creative experience checks.
+PASS 13 gift gallery checks.
+PASS 25 localization checks.
+
+Offline preview: renderer corrected; all 5 PNG files generated and visually reviewed.
+PASS 11 player experience runtime checks (prior targeted run: actual recovery file operations in workspace temporary files).
+Total: 287 related checks passed.
+No game launched; no Mods or save files changed.
+
+Final current and retained full builds after placement reference cleanup: PASS, 0 warnings / 0 errors each.

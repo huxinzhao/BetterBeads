@@ -1,0 +1,15 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Better Beads RC4 审阅</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#302116;color:#f6dfbb;font:16px/1.55 "Microsoft YaHei",sans-serif}main{max-width:1520px;margin:auto;padding:24px}h1{font-size:26px;margin:0 0 5px}h2{font-size:21px;margin:26px 0 10px}p{margin:6px 0 16px;color:#e8d0a8}.panel{background:#6a4024;border:6px solid #a46227;box-shadow:0 6px #24150e;padding:18px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px}.scene{background:linear-gradient(#e7ca9c 0 60%,#8b5e39 60% 100%);min-height:310px;display:flex;align-items:center;justify-content:center;border:5px solid #4a2c19}.scene canvas{width:min(100%,288px);height:auto;image-rendering:pixelated;box-shadow:0 0 0 4px #654029,0 5px #3d2918}img{display:block;max-width:100%;height:auto}table{border-collapse:collapse;width:100%;background:#f5cd91;color:#4c2d19}th,td{border:2px solid #9b683a;padding:9px 13px;text-align:left}th{background:#e9af62}a{color:#fff0bd}.small{font-size:14px;color:#e6c99c}
+</style><main><h1>拼豆台 RC4 审阅</h1><p>下图由模组布局、美术素材和拼豆纹理算法离线生成；全部为<strong>非游戏截图</strong>，未使用 AI 生图。</p>
+<h2>宽屏、紧凑窗口与手柄输入</h2><div class="panel"><img src="../input-1.1.0-RC4/preview.png" alt="宽屏、480×420、触控和手柄屏幕键盘离线预览"><p class="small">黄色外框显示操作焦点；屏幕键盘当前焦点位于字母 A。豆色中孔与吸管使用现有模组素材。</p></div>
+<h2>壁纸与地板的拼豆质感</h2><p>同一16格纹样重复铺设。左侧为现有纯色图块，右侧按照模组 art.json 的4×4熨烫遮罩与0.65强度合成。实际地图比例和图层仍需游戏内验收。</p><div class="grid"><div class="panel"><h3>原有纯色图块</h3><div class="scene"><canvas id="flat" width="128" height="128"></canvas></div></div><div class="panel"><h3>新拼豆纹理</h3><div class="scene"><canvas id="beads" width="128" height="128"></canvas></div></div></div>
+<h2>武器数值已更新</h2><div class="panel"><p>旧的30豆参考和简单豆数增伤表已移除。当前按形状、重量、实际伸出长度计算；原版银河剑参考为96豆。</p><a href="../weapon-shape-1.1.0-RC4/index.html">查看直剑、弯剑与镰刀状剑的代码计算对照</a></div><p class="small">预览只用于审阅界面与纹理。实际联机操作、地图铺设、挥舞手感仍需游戏内检查。</p>
+</main><script>
+const mask=[.98,1.08,1.06,.96,1.04,1.02,.96,.94,1.02,.96,.91,.93,.94,.93,.92,.89],strength=.65;
+const bg=[234,223,198];
+function color(x,y){let dx=x-7.5,dy=y-7.5,d=dx*dx+dy*dy;if(d<12)return [232,164,79];if(d<25)return [140,83,49];if(Math.abs(dx)<2&&Math.abs(dy)<7)return [181,102,54];return null}
+function draw(id,fused){let canvas=document.getElementById(id),ctx=canvas.getContext('2d'),image=ctx.createImageData(128,128);for(let y=0;y<128;y++)for(let x=0;x<128;x++){let bead=color(Math.floor(x/4)%16,Math.floor(y/4)%16),base=bead||bg,shade=bead&&fused?1+(mask[(y%4)*4+x%4]-1)*strength:1,at=(y*128+x)*4;for(let c=0;c<3;c++)image.data[at+c]=Math.max(0,Math.min(255,Math.round(base[c]*shade)));image.data[at+3]=255}ctx.putImageData(image,0,0)}draw('flat',false);draw('beads',true);
+</script></html>
+

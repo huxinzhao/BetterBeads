@@ -7,6 +7,8 @@ public interface IGenericModConfigMenuApi
 {
     void Register(IManifest mod,Action reset,Action save,bool titleScreenOnly=false);
     void AddBoolOption(IManifest mod,Func<bool> getValue,Action<bool> setValue,Func<string> name,Func<string>? tooltip=null,string? fieldId=null);
+    void AddTextOption(IManifest mod,Func<string> getValue,Action<string> setValue,Func<string> name,Func<string>? tooltip=null,
+        string[]? allowedValues=null,Func<string,string>? formatAllowedValue=null,string? fieldId=null);
 }
 internal static class PlayMode
 {
@@ -14,6 +16,8 @@ internal static class PlayMode
     public static bool? RemoteCreative {get;set;}
     public static bool Creative=>Context.IsMultiplayer&&!Context.IsMainPlayer?RemoteCreative??false:settings.CreativeMode;
     public static WorkbenchSettings Feedback=>settings;
+    public static string InputMode=>settings.InputMode is "touch" or "controller" or "mouse" ? settings.InputMode : "auto";
+    public static void SetInputMode(string mode){settings.InputMode=mode;owner?.WriteConfig(settings);}
     private static IModHelper? owner;
     public static bool AllowValuableSources=>settings.AllowValuableOrdinarySources;
     public static void ToggleValuableSources(){settings.AllowValuableOrdinarySources=!settings.AllowValuableOrdinarySources;owner?.WriteConfig(settings);}
@@ -26,7 +30,10 @@ internal static class PlayMode
         {
             var api=helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
             if(api is null)return;
-            api.Register(manifest,()=>{settings.CreativeMode=false;settings.AllowValuableOrdinarySources=false;settings.ReducedMotion=false;settings.HoverSounds=settings.ClickSounds=settings.BeadSounds=settings.SuccessSounds=true;},()=>helper.WriteConfig(settings),titleScreenOnly:false);
+            api.Register(manifest,()=>{settings.CreativeMode=false;settings.AllowValuableOrdinarySources=false;settings.ReducedMotion=false;settings.InputMode="auto";settings.HoverSounds=settings.ClickSounds=settings.BeadSounds=settings.SuccessSounds=true;},()=>helper.WriteConfig(settings),titleScreenOnly:false);
+            api.AddTextOption(manifest,()=>InputMode,v=>settings.InputMode=v,()=>ContentText.Get("input.mode","输入方式"),
+                allowedValues:new[]{"auto","mouse","touch","controller"},
+                formatAllowedValue:v=>ContentText.Get("input.mode."+v,v),fieldId:"InputMode");
             api.AddBoolOption(manifest,()=>settings.ReducedMotion,v=>settings.ReducedMotion=v,()=>ContentText.Get("feedback.reduced","减少动效"),fieldId:"ReducedMotion");
             api.AddBoolOption(manifest,()=>settings.HoverSounds,v=>settings.HoverSounds=v,()=>ContentText.Get("feedback.hover","按钮悬停音效"),fieldId:"HoverSounds");
             api.AddBoolOption(manifest,()=>settings.ClickSounds,v=>settings.ClickSounds=v,()=>ContentText.Get("feedback.click","按钮点击音效"),fieldId:"ClickSounds");
