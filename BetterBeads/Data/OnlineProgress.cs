@@ -24,7 +24,7 @@ public sealed class OnlineGallerySlot
 }
 public static class OnlineRules
 {
-    public const string Protocol="1.1.0-RC4-reliability1";
+    public const string Protocol="1.1.0-RC6-noappearance1";
     public static bool ValidPersonal(SaveProgress? p)=>p is not null&&p.SchemaVersion==1
         &&p.BlueprintRecords is not null&&p.BlueprintRecords.Count<=10000
         &&p.BlueprintRecords.All(pair=>!string.IsNullOrWhiteSpace(pair.Key)&&pair.Key.Length<=128&&pair.Value is not null&&pair.Value.Length<=2_000_000)

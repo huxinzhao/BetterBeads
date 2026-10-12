@@ -20,7 +20,7 @@ internal static class PlayerExperienceRuntimeChecks
         {var r=ctor.Invoke(new object[]{root,monitor});type.GetMethod("Bind",flags)!.Invoke(r,new object[]{save,player});return r;}
         object? Pending(object r)=>type.GetProperty("Pending",flags)!.GetValue(r);
         void Capture(object r,EditorDocument d)=>type.GetMethod("Checkpoint",flags)!.Invoke(r,new object[]{d});
-        bool Resolve(object r,EditorDocument d,bool restore)=>(bool)type.GetMethod("Resolve",flags)!.Invoke(r,new object[]{d,restore})!;
+        bool Resolve(object r,EditorDocument d,bool restore)=>(bool)type.GetMethod("Resolve",flags)!.Invoke(r,new object[]{d,restore,false})!;
         var d=new EditorDocument(SimpleCrafting.Blank(SimpleCrafting.Picture16),SimpleCrafting.Catalog(),"front");
         d.BeginStroke(3,4,BrushTool.Paint,BeadPalette.Id(0x123456ff),"decoration");d.EndStroke();
         var recovery=Recovery(123,42);Capture(recovery,d);

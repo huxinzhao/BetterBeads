@@ -1,0 +1,2 @@
+Blueprint content key with 256x256 reference: previous 275,768 B/op; optimized 13,104 B/op.
+PASS 247 focused code optimization checks.

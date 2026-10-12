@@ -223,11 +223,16 @@ internal static class DecorationPlacement
         var key=(location,region.Key,floor);
         if(placementKey!=key){placementKey=key;placementTargets=RegionTargets(location,region.Value,floor);}
         if(!placementTargets.Any(t=>t.X==x&&t.Y==y))return;
+        var viewport=new Rectangle(0,0,Game1.viewport.Width,Game1.viewport.Height);
+        var ink=new Color(255,213,105)*.8f;
+        var fill=new Color(255,213,105)*.14f;
         foreach(var target in placementTargets)
         {
             var point=Game1.GlobalToLocal(Game1.viewport,new Vector2(target.X*64,target.Y*64));
-            var r=new Rectangle((int)point.X,(int)point.Y,64,64);var ink=new Color(255,213,105)*.8f;
-            batch.Draw(Game1.staminaRect,r,new Color(255,213,105)*.14f);
+            var r=new Rectangle((int)point.X,(int)point.Y,64,64);
+            // Keep the full region for placement, but submit only visible highlight tiles.
+            if(!r.Intersects(viewport))continue;
+            batch.Draw(Game1.staminaRect,r,fill);
             batch.Draw(Game1.staminaRect,new Rectangle(r.X,r.Y,64,2),ink);
             batch.Draw(Game1.staminaRect,new Rectangle(r.X,r.Bottom-2,64,2),ink);
             batch.Draw(Game1.staminaRect,new Rectangle(r.X,r.Y,2,64),ink);

@@ -19,6 +19,7 @@ internal sealed class SaveSession
 #if BEADS_LITE
     public OnlineProgress Online {get;private set;}=new();
     public bool OnlineReadable {get;private set;}=true;
+    internal bool CanWriteGallery=>Progress is not null&&OnlineReadable;
     public SaveProgress ForPlayer(long id)
     {
         if(id==StardewValley.Game1.MasterPlayer.UniqueMultiplayerID)return Progress!;

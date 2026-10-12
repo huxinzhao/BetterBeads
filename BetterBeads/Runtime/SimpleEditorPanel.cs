@@ -43,6 +43,7 @@ internal sealed partial class EditorPanel
     private bool naming;
     private string namingError="";
     private string? approvedNewId;
+    private Blueprint? saveCopy;
     private Action? afterNamed;
     private Action? namingCanceled;
     private (long Version,bool Creative)? availabilityKey;
@@ -95,15 +96,11 @@ internal sealed partial class EditorPanel
     public void CloseFitting()=>scene.Close();
     public void Locate(DraftIssue? issue){}
     public void BeginImport(){} // Shared full-version host contract; no Lite entry point.
-    public void ResetForOpenedDesign(){ClosePalette();EndNaming();CancelPattern();Suspend();plan=null;clearConfirm=false;pendingConversion=null;drawer="";selector="";approvedNewId=null;padCellInitialized=false;if(tool=="picker")tool="paint";Normalize();Center();}
-    private bool NeedsName()
-    {
-        var d=document.Snapshot();return d.Revision==0&&(approvedNewId!=d.Id||string.IsNullOrWhiteSpace(d.Name));
-    }
+    public void ResetForOpenedDesign(){ClosePalette();EndNaming();CancelPattern();Suspend();plan=null;saveCopy=null;clearConfirm=false;pendingConversion=null;drawer="";selector="";approvedNewId=null;padCellInitialized=false;if(tool=="picker")tool="paint";Normalize();Center();}
     private void BeginNaming(Action continuation,Action? canceled=null)
     {
         Suspend();naming=true;afterNamed=continuation;namingCanceled=canceled;namingError="";
-        nameBox.Text=document.Snapshot().Name;nameBox.Selected=true;
+        nameBox.Text=(saveCopy??document.Snapshot()).Name;nameBox.Selected=true;
         Game1.keyboardDispatcher.Subscriber=nameBox;
     }
     private void EndNaming()
@@ -111,48 +108,52 @@ internal sealed partial class EditorPanel
         if(ReferenceEquals(Game1.keyboardDispatcher.Subscriber,nameBox))Game1.keyboardDispatcher.Subscriber=null;
         nameBox.Selected=false;naming=false;namingError="";afterNamed=null;namingCanceled=null;Suspend();
     }
-    private void CancelNaming(){var canceled=namingCanceled;EndNaming();canceled?.Invoke();}
+    private void CancelNaming(){var canceled=namingCanceled;saveCopy=null;EndNaming();canceled?.Invoke();}
     private void ConfirmNaming()
     {
         string name=nameBox.Text.Trim();
         if(name.Length is <1 or >24){namingError=T("name-length","请输入1至24个字符的图纸名称");return;}
-        document.Rename(name);approvedNewId=document.Snapshot().Id;
+        if(saveCopy is {} copy){copy.Name=name;approvedNewId=copy.Id;}
+        else{document.Rename(name);approvedNewId=document.Snapshot().Id;}
         var continuation=afterNamed;EndNaming();continuation?.Invoke();
     }
     public bool Save(Action? afterSaved=null,Action? onCanceled=null,Action? onFailed=null)
     {
         Suspend();
-        var source=document.Snapshot();
+        var source=saveCopy??document.Snapshot();
         var decision=BlueprintManualSave.Prepare(progress,source);
         if(decision.Kind is BlueprintSaveKind.Reused or BlueprintSaveKind.Unchanged)
         {
             var existing=decision.Existing!;
-            if(decision.Kind==BlueprintSaveKind.Reused)document.AdoptSaved(existing);
+            if(decision.Kind==BlueprintSaveKind.Reused||saveCopy is not null)document.AdoptSaved(existing);
             else document.MarkSaved(existing.Revision);
+            saveCopy=null;
             Saved?.Invoke(existing.Id);
             notice=decision.Kind==BlueprintSaveKind.Unchanged?T("unchanged","没有需要保存的修改"):T("already-exists","已有相同图纸：")+existing.Name;
             noticeUntil=Now+2;afterSaved?.Invoke();return true;
         }
         if(decision.Kind==BlueprintSaveKind.Conflict)
-        {notice=text.Get("library.conflict");onFailed?.Invoke();return false;}
-        if(NeedsName()){BeginNaming(()=>Save(afterSaved,onCanceled,onFailed),onCanceled);return false;}
+        {saveCopy=null;notice=text.Get("library.conflict");onFailed?.Invoke();return false;}
+        if(decision.Kind==BlueprintSaveKind.NeedsName||source.Revision==0&&(approvedNewId!=source.Id||string.IsNullOrWhiteSpace(source.Name))){BeginNaming(()=>Save(afterSaved,onCanceled,onFailed),onCanceled);return false;}
         var save=decision.Change;
-        if(save is null){notice=text.Get("library.conflict");onFailed?.Invoke();return false;}
+        if(save is null){saveCopy=null;notice=text.Get("library.conflict");onFailed?.Invoke();return false;}
         if(Context.IsMultiplayer&&!Context.IsMainPlayer&&OnlineSession.Current is {} online)
         {
             var previous=new Dictionary<string,string>(progress.BlueprintRecords);
-            try{save.Apply(progress);}catch(InvalidOperationException){onFailed?.Invoke();return false;}
+            try{save.Apply(progress);}catch(InvalidOperationException){saveCopy=null;notice=text.Get("library.conflict");onFailed?.Invoke();return false;}
             online.Sync(ok=>
             {
-                if(!ok){progress.BlueprintRecords=previous;notice=text.Get("editor.save-failed");onFailed?.Invoke();return;}
-                document.MarkSaved(save.Saved.Revision);Saved?.Invoke(save.Id);notice=T("saved","图纸已保存");noticeUntil=Now+2;afterSaved?.Invoke();
+                if(!ok){progress.BlueprintRecords=previous;saveCopy=null;notice=text.Get("editor.save-failed");onFailed?.Invoke();return;}
+                if(saveCopy is not null)document.AdoptSaved(save.Saved);else document.MarkSaved(save.Saved.Revision);saveCopy=null;
+                Saved?.Invoke(save.Id);notice=T("saved","图纸已保存");noticeUntil=Now+2;afterSaved?.Invoke();
             });return false;
         }
         try{save.Apply(progress);}
-        catch(InvalidOperationException){notice=text.Get("library.conflict");onFailed?.Invoke();return false;}
-        document.MarkSaved(save.Saved.Revision);Saved?.Invoke(save.Id);notice=T("saved","图纸已保存");noticeUntil=Now+2;afterSaved?.Invoke();return true;
+        catch(InvalidOperationException){saveCopy=null;notice=text.Get("library.conflict");onFailed?.Invoke();return false;}
+        if(saveCopy is not null)document.AdoptSaved(save.Saved);else document.MarkSaved(save.Saved.Revision);saveCopy=null;
+        Saved?.Invoke(save.Id);notice=T("saved","图纸已保存");noticeUntil=Now+2;afterSaved?.Invoke();return true;
     }
-    public bool SaveAs()=>Save();
+    public bool SaveAs(Action? afterSaved=null){saveCopy=BlueprintManualSave.NewCopy(document.Snapshot());return Save(afterSaved);}
     private void RequestDesign(string id)
     {
         var current=document.Snapshot();
@@ -288,7 +289,7 @@ internal sealed partial class EditorPanel
         DrawPatternSelection(b);
         if(recipeTemplate!=d.TemplateId){cachedRecipe=manufacturing?.FindRecipe(d.TemplateId);recipeTemplate=d.TemplateId;}
         var available=Availability(d,cachedRecipe);
-        string status=notice.Length>0?notice:CostText(d,cachedOwned);
+        string status=StatusText(d,available);
         var costBox=SimpleEditorLayout.CostBox(layout);ArtResources.DialogueBox(b,costBox);
         if(SimpleCrafting.IsWeapon(d.Use) && SimpleCrafting.Metal(d) is {} metal && metal.Length>0)
         {
@@ -336,6 +337,8 @@ internal sealed partial class EditorPanel
         if(available?.Failure==ManufacturingFailure.NoSpace)return T("no-output-space","背包无法接收成品，请腾出空位");
         return text.Get("manufacturing.error."+(available?.Failure??ManufacturingFailure.InvalidRecipe)).ToString();
     }
+    private string StatusText(Blueprint d,ManufacturingAvailability? available)
+        =>notice.Length>0?notice:available?.CanMake==true?CostText(d,cachedOwned):MakeReason(d,available);
     private void DrawCellHint(SpriteBatch b,int width,int height)
     {
         if(WorkbenchInput.Touch||HasOverlay||waitRelease||!ArtResources.InteractiveScope)return;

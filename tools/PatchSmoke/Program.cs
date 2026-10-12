@@ -13,6 +13,13 @@ AssemblyLoadContext.Default.Resolving+=(_,name)=>
     return null;
 };
 var assembly=AssemblyLoadContext.Default.LoadFromAssemblyPath(mod);
+if(args.Contains("--image-api"))
+{
+    var native=AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(game,"MonoGame.Framework.dll"));
+    foreach(var t in native.GetTypes().Where(t=>t.FullName!.Contains("ImageReader")||t.FullName.Contains("ImageResult")||t.FullName.Contains("StbImage")&&!t.FullName.Contains("Native")))
+    {Console.WriteLine("TYPE "+t.FullName);foreach(var m in t.GetMethods(BindingFlags.Static|BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.DeclaredOnly).Where(m=>!m.Name.StartsWith("stbi_")))Console.WriteLine(m);}
+    return;
+}
 if(args.Contains("--shape-bindings"))
 {
     System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(assembly.GetType("BetterBeads.Runtime.ShapeCombat",true)!.TypeHandle);

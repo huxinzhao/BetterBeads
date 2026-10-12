@@ -113,7 +113,7 @@ internal sealed partial class EditorPanel
         var searchButton=new UiRect(p.WorkTab.Right+8,p.Dialog.Y+16,Math.Min(128,p.Close.X-p.WorkTab.Right-16),40);
         TextButton(b,searchButton,T("search-code","搜索色号"),OpenPaletteSearch);
         RefreshWorkColors();
-        uint before=backgroundPage?document.Snapshot().BackgroundRgba:workColorsPage?workFrom:progress.FavoriteColors[favoriteIndex];
+        uint before=backgroundPage?display.Get(document.ChangeVersion,document.Snapshot).BackgroundRgba:workColorsPage?workFrom:progress.FavoriteColors[favoriteIndex];
         uint after=backgroundPage?backgroundCandidate:workColorsPage?workTo:paletteDraft![favoriteIndex];
         int count=workColors.FirstOrDefault(c=>c.Rgba==workFrom)?.Count??0;
         DrawDyeSurface(b,p.Picker);

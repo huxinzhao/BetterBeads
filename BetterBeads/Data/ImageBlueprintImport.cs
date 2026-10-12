@@ -4,14 +4,14 @@ public sealed record ImageImportSettings(string TemplateId, bool RestorePixels =
     bool RemoveBackground = false, int BackgroundTolerance = 24, bool Outline = true);
 public sealed record ImageImportResult(Blueprint Design, int SourceWidth, int SourceHeight,
     int WorkingWidth, int WorkingHeight, bool Restored, bool Reduced, bool HasHalfAlpha, int Beads);
-internal sealed record ImageImportPrepared(uint[] Pixels,int Width,int Height,int ExactScale,bool HasHalfAlpha,bool HasTransparency);
+internal sealed record ImageImportPrepared(IReadOnlyList<uint> Pixels,int Width,int Height,int ExactScale,bool HasHalfAlpha,bool HasTransparency);
 
 /// <summary>Pure image-to-bead conversion. Source pixels are straight-alpha RGBA.</summary>
 public static class ImageBlueprintImport
 {
     public const int MaxFileBytes=20*1024*1024, MaxSide=4096, MaxPixels=16_000_000;
     public static int RestorableScale(uint[] pixels,int width,int height)=>RestorableScale(pixels,width,height,CancellationToken.None);
-    private static int RestorableScale(uint[] pixels,int width,int height,CancellationToken token)
+    private static int RestorableScale(IReadOnlyList<uint> pixels,int width,int height,CancellationToken token)
     {
         Validate(pixels,width,height);
         for(int factor=Math.Min(width,height);factor>=2;factor--)
@@ -28,15 +28,20 @@ public static class ImageBlueprintImport
     {
         return Create(Prepare(source,width,height,settings.RemoveBackground,settings.BackgroundTolerance),settings);
     }
-    internal static ImageImportPrepared Prepare(uint[] source,int width,int height,bool removeBackground,int tolerance,CancellationToken token=default)
+    internal static ImageImportPrepared Prepare(IReadOnlyList<uint> source,int width,int height,bool removeBackground,int tolerance,CancellationToken token=default)
     {
         token.ThrowIfCancellationRequested();
         Validate(source,width,height);
         if(tolerance is <0 or >255)throw new ArgumentOutOfRangeException(nameof(tolerance));
-        var pixels=removeBackground?(uint[])source.Clone():source;
-        if(removeBackground)RemoveConnectedBackground(pixels,width,height,tolerance,token);
+        IReadOnlyList<uint> pixels=source;
+        if(removeBackground)
+        {
+            var editable=new uint[source.Count];
+            for(int i=0;i<editable.Length;i++){if((i&4095)==0)token.ThrowIfCancellationRequested();editable[i]=source[i];}
+            RemoveConnectedBackground(editable,width,height,tolerance,token);pixels=editable;
+        }
         bool half=false,transparent=false;
-        for(int i=0;i<pixels.Length;i++){if(i%4096==0)token.ThrowIfCancellationRequested();byte alpha=(byte)pixels[i];half|=alpha is >0 and <255;transparent|=alpha<128;}
+        for(int i=0;i<pixels.Count;i++){if(i%4096==0)token.ThrowIfCancellationRequested();byte alpha=(byte)pixels[i];half|=alpha is >0 and <255;transparent|=alpha<128;}
         return new(pixels,width,height,RestorableScale(pixels,width,height,token),half,transparent);
     }
     internal static ImageImportResult Create(ImageImportPrepared prepared,ImageImportSettings settings,CancellationToken token=default)
@@ -106,9 +111,9 @@ public static class ImageBlueprintImport
         return new(design,sourceWidth,sourceHeight,width,height,restored,shrink,halfAlpha,beads);
     }
     private static BeadCell Cell(uint rgba,ProductUse use)=>new(){Rgba=rgba,ColorId=BeadPalette.Id(rgba),MaterialId=SimpleCrafting.IsWeapon(use)?"copper":"decoration"};
-    private static void Validate(uint[] pixels,int width,int height)
+    private static void Validate(IReadOnlyList<uint> pixels,int width,int height)
     {
-        if(width<1||height<1||width>MaxSide||height>MaxSide||(long)width*height>MaxPixels||pixels.Length!=(long)width*height)
+        if(width<1||height<1||width>MaxSide||height>MaxSide||(long)width*height>MaxPixels||pixels.Count!=(long)width*height)
             throw new ArgumentException("Image dimensions are invalid or exceed the import limit.");
     }
     private static void RemoveConnectedBackground(uint[] pixels,int width,int height,int tolerance,CancellationToken token)
@@ -135,7 +140,7 @@ public static class ImageBlueprintImport
             if(y>0)Visit(i-width);if(y+1<height)Visit(i+width);
         }
     }
-    private static uint AreaSample(uint[] pixels,int width,int height,int x,int y,int outWidth,int outHeight,CancellationToken token)
+    private static uint AreaSample(IReadOnlyList<uint> pixels,int width,int height,int x,int y,int outWidth,int outHeight,CancellationToken token)
     {
         double left=x*width/(double)outWidth,right=(x+1)*width/(double)outWidth;
         double top=y*height/(double)outHeight,bottom=(y+1)*height/(double)outHeight;

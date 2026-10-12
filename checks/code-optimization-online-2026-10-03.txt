@@ -1,0 +1,14 @@
+PASS native pending request belongs to its craft
+PASS repeated clear cancels work and preserves only the pending weak reservation
+PASS clearing an unacquired request does not release or reply
+PASS late acquisition releases exactly once and cannot resume or reply after clear
+PASS native pending request belongs to its craft
+PASS released chest is immediately available to a new craft
+PASS native pending request belongs to its craft
+PASS late failure forgets its reservation without releasing another player's lock or replying
+PASS native pending request belongs to its craft
+PASS old success and failure callbacks cannot erase a replacement reservation or release its lock
+PASS clear releases owned locks once and leaves lost locks untouched
+PASS native pending request belongs to its craft
+PASS normal timeout replies once and late acquisition still releases its own lock
+PASS 13 online cancellation checks. Native mutex state is exercised offline; no game is launched.

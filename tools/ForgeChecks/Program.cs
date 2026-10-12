@@ -23,7 +23,15 @@ catch(Exception ex){Console.Error.WriteLine(ex);Environment.ExitCode=1;}
 [MethodImpl(MethodImplOptions.NoInlining)]
 static void RunChecks(string[] args,string game)
 {
-    if(args.Contains("--player-experience-only"))PlayerExperienceRuntimeChecks.Run();
+    if(args.Contains("--no-appearance-only")){NoAppearanceChecks.Run();Rc6ReliabilityChecks.Run();PlayerExperienceRuntimeChecks.Run();ShapeRuntimeChecks.Run();ForgeRuntimeChecks.Run();}
+    else if(args.Contains("--rc6-only")){Rc6ReliabilityChecks.Run();PlayerExperienceRuntimeChecks.Run();ShapeRuntimeChecks.Run();}
+    else if(args.Contains("--code-optimization-only"))
+    {
+        ReliabilityRuntimeChecks.Run();
+        OnlineCancellationChecks.Run();
+    }
+    else if(args.Contains("--online-cancellation-only"))OnlineCancellationChecks.Run();
+    else if(args.Contains("--player-experience-only"))PlayerExperienceRuntimeChecks.Run();
     else if(args.Contains("--reliability-only"))ReliabilityRuntimeChecks.Run();
     else if(args.Contains("--weapon-speed-api"))GalaxyBalanceChecks.InspectTiming();
     else if(args.Contains("--native-shape-survey"))GalaxyBalanceChecks.Run(game,true);

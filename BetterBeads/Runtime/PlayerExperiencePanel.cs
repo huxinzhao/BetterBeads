@@ -53,7 +53,7 @@ internal sealed partial class EditorPanel
         int noteHeight=Math.Min(p.Description.Height,ArtResources.ParagraphLines(note,p.Description.Width).Length*24);
         ArtResources.Paragraph(b,note,p.Description with{Y=p.Description.Y+(p.Description.Height-noteHeight)/2,Height=noteHeight},ArtResources.MutedInk);
         TextButton(b,p.Delete,T("recovery-delete","删除恢复缓存"),()=>recoveryDeleteConfirm=true);
-        TextButton(b,p.Restore,T("recovery-restore","恢复作品"),()=>Resolve(true),iconKey:"primary");
+        TextButton(b,p.Restore,T("recovery-copy","恢复为新副本"),()=>Resolve(true),iconKey:"primary");
     }
     private void DrawOverlayClose(SpriteBatch b,UiRect r,Action close)
     {

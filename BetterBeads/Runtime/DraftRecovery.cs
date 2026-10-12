@@ -30,10 +30,10 @@ internal sealed class DraftRecovery
         }
         catch(Exception ex){readable=false;Report(ex);}
     }
-    internal bool Resolve(EditorDocument document,bool restore)
+    internal bool Resolve(EditorDocument document,bool restore,bool asNewCopy=false)
     {
         if(Pending is not {} entry)return false;
-        if(restore&&!document.RestoreRecovery(entry))return false;
+        if(restore&&!(asNewCopy?document.RestoreRecoveryCopy(entry):document.RestoreRecovery(entry)))return false;
         if(!restore)
         {
             try{if(path is not null)File.Delete(path);}catch(Exception ex){Report(ex);return false;}

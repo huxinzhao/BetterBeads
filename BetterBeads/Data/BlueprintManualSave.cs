@@ -6,6 +6,8 @@ public sealed record BlueprintSaveDecision(BlueprintSaveKind Kind,Blueprint? Exi
 /// <summary>Resolves manual saves before any progress record is changed.</summary>
 public static class BlueprintManualSave
 {
+    internal static Blueprint NewCopy(Blueprint source)
+    {var copy=source.Copy(true);copy.Name="";return copy;}
     public static BlueprintSaveDecision Prepare(SaveProgress progress,Blueprint source)
     {
         if(!DesignStorage.IsStructurallyValid(source))return new(BlueprintSaveKind.Conflict);

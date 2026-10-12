@@ -7,12 +7,17 @@ public static class BlueprintContent
 {
     public static string Key(Blueprint source)
     {
-        var design=source.Copy();
-        design.Id="";design.Name="";design.Revision=0;design.Reference=null;
-        design.Views=design.Views.OrderBy(p=>p.Key,StringComparer.Ordinal).ToDictionary(p=>p.Key,p=>p.Value);
-        design.WoolMaterials=design.WoolMaterials.OrderBy(p=>p.Key,StringComparer.Ordinal).ToDictionary(p=>p.Key,p=>p.Value);
-        design.SupplementaryMaterials=design.SupplementaryMaterials.OrderBy(p=>p.Key,StringComparer.Ordinal).ToDictionary(p=>p.Key,p=>p.Value);
-        design.SelectedEffects.Sort(StringComparer.Ordinal);
+        // Copy only the data used by this key. Reference pixels and library identity are ignored;
+        // cloning the full blueprint first needlessly duplicates the reference image on every comparison.
+        var design=new Blueprint
+        {
+            Id="",Name="",Revision=0,Reference=null,
+            Use=source.Use,TemplateId=source.TemplateId,SwordOrientation=source.SwordOrientation,BackgroundRgba=source.BackgroundRgba,
+            Views=source.Views.OrderBy(p=>p.Key,StringComparer.Ordinal).ToDictionary(p=>p.Key,p=>p.Value.Copy()),
+            WoolMaterials=source.WoolMaterials.OrderBy(p=>p.Key,StringComparer.Ordinal).ToDictionary(p=>p.Key,p=>p.Value),
+            SupplementaryMaterials=source.SupplementaryMaterials.OrderBy(p=>p.Key,StringComparer.Ordinal).ToDictionary(p=>p.Key,p=>p.Value),
+            SelectedEffects=source.SelectedEffects.OrderBy(id=>id,StringComparer.Ordinal).ToList()
+        };
         foreach(var cell in design.Views.Values.SelectMany(grid=>grid.Cells))
             if(cell is not null)cell.ColorId="rgba:"+cell.Rgba.ToString("X8");
         return JsonSerializer.Serialize(design);

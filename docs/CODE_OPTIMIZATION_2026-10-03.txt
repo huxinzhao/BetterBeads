@@ -1,0 +1,58 @@
+Better Beads · 代码优化审阅记录
+日期：2026-10-03
+基线：1.1.0-RC4，安装清单版本仍为1.1.0。
+
+已完成五项
+
+1. 导入页面布局缓存
+   文件：BetterBeads/Runtime/ImageImportPanel.cs
+   布局矩形在Layout时生成，绘制复用。窗口大小或UI缩放变化时仍重新布局，避免每帧重建布局对象与选项数组。
+
+2. 装修底色窗口图纸缓存
+   文件：BetterBeads/Runtime/CreativePalettePanel.cs
+   读取原底色时复用已有的变化序号缓存，避免静止窗口每帧深复制整张图纸。修改、撤销与打开作品仍按变化序号刷新。
+
+3. 手动保存查重减少复制
+   文件：BetterBeads/Data/BlueprintContent.cs
+   仅复制参与成品比较的数据，跳过参考底图和重复中间字典。保留品类、模板、尺寸、全部方向、位置、精确RGBA、材料、效果及挥舞模式的原有比较规则。
+   逐字对照旧算法，检查字典顺序、颜色名称、当前记录优先、稳定重复选择和源数据不变。
+   256×256参考图样例：单次分配275768字节→13104字节。此样例不代表普通图纸；当前常见无参考图的图纸主要只减少少量临时字典分配。
+
+4. 装修区域高亮跳过屏幕外图块
+   文件：BetterBeads/Runtime/DecorationPlacement.cs
+   完整区域继续用于放置和鼠标判断，仅可见图块提交高亮绘制。每个屏幕外图块少提交五次绘制，改善大房间预览的额外开销。
+
+5. 联机退出清理与迟到箱子锁回调
+   文件：BetterBeads/Runtime/OnlineSession.cs
+   清理先终止全部旧制作任务。成功、失败与释放回调均核对预留所有者，只释放本机实际持有的锁。
+   未返回的请求保留弱预留，迟到成功仍可释放自己的锁；旧回调不能删除新任务预留或继续提交制作。弱记录不会强持有旧地图。
+   不新增网络字段或存档字段；当前联机协议标识保持1.1.0-RC4-reliability1。
+
+验证
+
+- 247项集中数据检查通过：新增查重算法等价、分配量、相关导入、换色、装修及缓存流程。
+  记录：checks/code-optimization-2026-10-03.txt
+- 11项现有原版接口可靠性检查通过：装修失败回滚、两层图块恢复及手柄等待隔离。
+  记录：checks/code-optimization-runtime-2026-10-03.txt
+- 13项新增联机退出检查通过：重复清理、迟到成功/失败、重复回调、新所有者保护、不持锁不释放、超时后收尾与取消后不回复。
+  记录：checks/code-optimization-online-2026-10-03.txt
+- 当前版与保留完整版均编译成功，0警告、0错误；安装ZIP的27个条目逐项校验通过。
+  记录：checks/code-optimization-current-build-2026-10-03.txt、checks/code-optimization-full-build-2026-10-03.txt
+
+合计271项相关检查。未重复无关战斗、数值及全量检查。
+首次联机测试因离线Chest替身缺少游戏注册信息而中止；已将普通箱子替身接到其实际NetMutex，再单独重跑13项联机检查。实际请求、持锁和释放方法仍来自本机原版程序集；未重跑已通过的11项。
+
+交付
+
+安装审阅包：dist/BetterBeads-1.1.0-RC4-optimization-review.zip
+源码审阅包：dist/BetterBeads-1.1.0-RC4-optimization-review-source.zip
+保留旧审阅包，不覆盖线上发布。Nexus:53029更新标识已核对。
+本轮没有启动游戏、修改Mods目录或存档。双人网络传输、实际箱子争用以及大地图高亮性能仍需游戏内实测；离线检查不替代实测。
+
+复现
+
+dotnet run --project checks/lite -c Release -- --code-optimization-only
+dotnet run --project tools/ForgeChecks -c Release -- "游戏目录" "BetterBeads/bin/Current/net6.0/BetterBeads.dll" --code-optimization-only
+dotnet build BetterBeads/BetterBeads.csproj -c Release -p:LiteBuild=false
+
+两个版本共用部分中间文件，顺序编译。内部LiteBuild开关仍用于维护历史分支，当前产品不以Lite对外命名。

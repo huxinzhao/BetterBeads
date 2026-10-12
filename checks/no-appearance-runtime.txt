@@ -1,0 +1,69 @@
+PASS AppearanceService is not compiled into the installation
+PASS AppearanceMenu is not compiled into the installation
+PASS AppearanceConfirmMenu is not compiled into the installation
+PASS AppearanceContent is not compiled into the installation
+PASS AppearanceDrops is not compiled into the installation
+PASS AppearanceDrawing is not compiled into the installation
+PASS AppearanceToolUpgrade is not compiled into the installation
+PASS AppearanceWorld is absent from the runtime assembly
+PASS ToolAppearance is absent from the runtime assembly
+PASS BeadAppearance is absent from the runtime assembly
+PASS AppearanceDropSettings is absent from the runtime assembly
+PASS AppearanceLayout is absent from the runtime assembly
+PASS existing weapon forge implementation remains available
+PASS distinct multiplayer protocol prevents mixing with the appearance candidate
+PASS unused AppearanceBench.png is not copied to the build
+PASS unused AppearanceStone.png is not copied to the build
+PASS unused appearance-drops.json is not copied to the build
+PASS default appearance copy was removed
+PASS default recovery copy feedback remains translated
+PASS zh appearance copy was removed
+PASS zh recovery copy feedback remains translated
+PASS 21 no-appearance variant checks; no game launched.
+PASS rolled-back game can restore the newer cached draft as an independent copy
+PASS recovery copy has fresh identity and requires explicit naming/save
+PASS recovered copy avoids stale revision conflict
+PASS recovery saves successfully without modifying the original record
+PASS save-as still reuses identical player artwork rather than duplicating it
+PASS save-as candidate never mutates current artwork before confirmation
+PASS legacy xinzh.BetterBeads.Picture16 share code migrates into a new compatible draft
+PASS old picture dimensions/colors survive repeated sharing
+PASS legacy xinzh.BetterBeads.Picture32 share code migrates into a new compatible draft
+PASS old picture dimensions/colors survive repeated sharing
+PASS unreadable main progress prevents gallery writes
+PASS loaded main and gallery progress allows gallery writes
+PASS unreadable shared gallery disables gifts even for the host
+PASS full backpack reason is displayed directly in the status bar without hovering
+PASS missing material amount is visible to controller and touch players
+PASS empty canvas instruction is visible before focusing any control
+PASS native gift guard does not bypass failed gallery load in single player/host mode
+PASS finished fractional wound leaves the active loop while preserving credit
+PASS 600 idle frames only sweep retained credit once per second
+INFO 600 inactive frames allocated 5496 bytes (periodic native-location sweeps included)
+PASS reactivating an idle target uses preserved fractional damage exactly once
+PASS leaving a location discards its retained fractional credit
+PASS background CPU decode preserves exact opaque and half-alpha RGB pixels
+PASS normal preparation reuses the single decoder buffer
+PASS conversion keeps original resolution and makes half-alpha beads solid only at commit
+PASS full-resolution conversion buffer uses a bounded proportional preview
+PASS CPU decode avoids two additional full-size managed pixel copies
+INFO 1024x768 decode allocated 3963432 managed bytes
+PASS JPEG decode supports opaque original RGB on the worker path
+PASS CPU decode rejects broken.png before replacing panel state
+PASS CPU decode rejects oversize.png before replacing panel state
+PASS cancelled page prevents a late CPU decode result from becoming a new preview
+PASS 30 RC6 targeted reliability/performance checks; no game launched.
+PASS dirty artwork writes a recovery file without touching the library
+PASS unchanged checkpoint does not rewrite or recopy the draft
+PASS restart restores a pending local recovery
+PASS recovery is isolated by both farmer and save identity
+PASS unresolved recovery cannot be erased by a new empty draft
+PASS dirty current work blocks recovery without losing either work
+PASS player-approved recovery restores exact pixels as an unsaved draft
+PASS manual save clears obsolete local recovery
+PASS explicitly deleting recovery does not create a saved blueprint
+PASS corrupt recovery remains untouched and exposes an error for the player
+PASS checkpoint does not leave staging files
+PASS 11 player experience runtime checks. Temporary files only: C:\Users\xinzh\Desktop\星露谷拼豆mod\.tools\player-recovery-db483a40795f4d98b0a472e1e0f8aeea
+PASS 4 shape runtime lifecycle checks; native kill entry is stubbed, no game is launched.
+PASS 83 forge integration checks, including 600 cached frames per weapon type. Session state and texture dimensions use offline fixtures. No game, save or GPU started.

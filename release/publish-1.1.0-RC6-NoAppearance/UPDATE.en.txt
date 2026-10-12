@@ -1,0 +1,14 @@
+Better Beads · 1.1.0 RC6 Fix Update
+
+- Recover drafts as independent copies; fix save conflicts after a rolled-back save and Save As.
+- Import legacy 16/32 painting share codes; block gifting when display records cannot be loaded safely.
+- Decode images in the background with less memory; improve UI, decorating, bleeding and save caches.
+- Fix co-op exit and delayed chest-lock callbacks; show missing-material and full-inventory reasons in the status bar.
+
+Wall art, ornaments, wallpaper, flooring and weapons remain. Costs, weapon stats and appraisal probabilities are unchanged. Existing weapon forge transmog remains; this package has no new Glamour Bench, Glamour Stone or Wizard quest.
+Requires Stardew Valley 1.6 and SMAPI 4.5.1 or a newer compatible version. English and Chinese included.
+Exit the game before updating. Back up custom config/assets and imports, exports, draft-recovery, then replace BetterBeads. Every co-op player must use the same candidate package.
+Glamour Benches/Stones from the unreleased RC5/RC6 test builds may become error items; their saved records are not deleted.
+Release candidate: live co-op, controller and touch still need in-game acceptance. Android support is not claimed.
+
+Bug reports are welcome! If you enjoy the mod, please leave an endorsement.

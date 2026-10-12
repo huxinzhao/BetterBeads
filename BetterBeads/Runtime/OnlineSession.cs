@@ -57,7 +57,8 @@ internal sealed class OnlineSession
     private readonly HashSet<long> peers=new();
     private readonly Dictionary<(long,string),OnlinePacket> receipts=new();
     private readonly List<CraftWork> work=new();
-    private readonly Dictionary<Chest,CraftWork> reservations=new();
+    // Cancelled requests retain ownership until their callback arrives, without retaining old maps.
+    private readonly System.Runtime.CompilerServices.ConditionalWeakTable<Chest,CraftWork> reservations=new();
     private readonly Dictionary<long,byte[]?> inventoryBroadcasts=new();
     private readonly List<(long Player,OnlinePacket Packet,double Started)> incomingGifts=new();
     private const string GiftOutboxKey="xinzh.BetterBeads/gallery-outbox-v1";
@@ -170,6 +171,7 @@ internal sealed class OnlineSession
         Sync();
     }
     private static string ItemKey(Item? item)=>item is null?"":DesignStorage.Serialize(new{item.QualifiedItemId,item.Stack,item.Quality,Data=item.modData.Pairs.OrderBy(p=>p.Key,StringComparer.Ordinal).ToArray()});
+    internal static string InventoryFingerprint(Item? item)=>ItemKey(item);
     private static string[] Bag(Farmer farmer)=>Enumerable.Range(0,farmer.MaxItems).Select(i=>ItemKey(i<farmer.Items.Count?farmer.Items[i]:null)).ToArray();
     private void Reply(long player,OnlinePacket request,string error="",ProductSnapshot? product=null,string lease="")
     {
@@ -311,13 +313,14 @@ internal sealed class OnlineSession
         if(job.Remaining.TryDequeue(out var chest))
         {
             // Never borrow a mutex already owned by an open native chest menu or another transaction.
-            if(chest.GetMutex().IsLocked()||reservations.ContainsKey(chest)){Finish(job,new(false,"manufacturing.changed"));return;}
-            reservations[chest]=job;
+            if(chest.GetMutex().IsLocked()||reservations.TryGetValue(chest,out _)){Finish(job,new(false,"manufacturing.changed"));return;}
+            reservations.Add(chest,job);
             chest.GetMutex().RequestLock(()=>
             {
-                if(job.Done){chest.GetMutex().ReleaseLock();reservations.Remove(chest);return;}
+                if(!OwnsReservation(job,chest))return;
+                if(job.Done){ReleaseReservation(job,chest);return;}
                 job.Held.Add(chest);NextLock(job);
-            },()=>{reservations.Remove(chest);Finish(job,new(false,"manufacturing.changed"));});
+            },()=>{if(!OwnsReservation(job,chest))return;reservations.Remove(chest);Finish(job,new(false,"manufacturing.changed"));});
             chest.GetMutex().Update(job.Lease.Location);
             return;
         }
@@ -335,11 +338,19 @@ internal sealed class OnlineSession
         }
         catch(Exception ex){monitor.Log("Online craft failed: "+ex,LogLevel.Error);Finish(job,new(false,"manufacturing.failed"));}
     }
+    private bool OwnsReservation(CraftWork job,Chest chest)=>reservations.TryGetValue(chest,out var owner)&&ReferenceEquals(owner,job);
+    private void ReleaseReservation(CraftWork job,Chest chest)
+    {
+        if(!OwnsReservation(job,chest))return;
+        if(chest.GetMutex().IsLockHeld())chest.GetMutex().ReleaseLock();
+        reservations.Remove(chest);
+    }
     private void Finish(CraftWork job,ManufacturingResult result)
     {
         if(job.Done)return;
         job.Done=true;
-        foreach(var chest in job.Held){chest.GetMutex().ReleaseLock();reservations.Remove(chest);}
+        foreach(var chest in job.Held)ReleaseReservation(job,chest);
+        job.Held.Clear();
         // Native broadcastFarmerDeltas sends only the local farmer. Explicitly publish the remote
         // creator's dirty root after a host commit, using the game's own delta codec and transport.
         if(result.Success&&job.Player!=Game1.player.UniqueMultiplayerID)inventoryBroadcasts.TryAdd(job.Player,null);
@@ -349,12 +360,13 @@ internal sealed class OnlineSession
     public void Gift(string npc,ProductSnapshot painting)
     {
         // Native receiving has already consumed the local item and applied native friendship exactly once.
+        if(!CanRecordGift)return;
         if(Context.IsMainPlayer){OnlineRules.Receive(session.Online,npc,Game1.player.UniqueMultiplayerID,Game1.player.Name,painting,Game1.Date.TotalDays);return;}
         if(!LoadGiftOutbox())return;
         giftOutbox.Add(new(){Request=Guid.NewGuid().ToString("N"),Npc=npc,Painting=painting.Copy(),Day=Game1.Date.TotalDays});
         SaveGiftOutbox();TryGiftDelivery();
     }
-    public bool CanRecordGift=>Context.IsMainPlayer||LoadGiftOutbox();
+    public bool CanRecordGift=>session.CanWriteGallery&&(Context.IsMainPlayer||connected&&LoadGiftOutbox());
     private bool LoadGiftOutbox()
     {
         if(giftOutboxLoaded)return giftOutboxReadable;
@@ -452,8 +464,15 @@ internal sealed class OnlineSession
     }
     public void Clear()
     {
-        foreach(var job in work)foreach(var chest in job.Held)if(chest.GetMutex().IsLockHeld())chest.GetMutex().ReleaseLock();
-        work.Clear();reservations.Clear();inventoryBroadcasts.Clear();incomingGifts.Clear();lastCreative=null;PlayMode.RemoteCreative=null;
+        foreach(var job in work)job.Done=true;
+        foreach(var pair in reservations.ToArray())
+        {
+            pair.Value.Done=true;
+            if(pair.Value.Held.Contains(pair.Key)||pair.Key.GetMutex().IsLockHeld())ReleaseReservation(pair.Value,pair.Key);
+        }
+        // Pending requests keep their weak reservation so late acquisition can release only its own lock.
+        foreach(var job in work)job.Held.Clear();
+        work.Clear();inventoryBroadcasts.Clear();incomingGifts.Clear();lastCreative=null;PlayMode.RemoteCreative=null;
         leases.Clear();peers.Clear();receipts.Clear();giftOutbox.Clear();giftOutboxLoaded=false;giftOutboxReadable=true;nextGiftAttempt=0;
         pending=null;completion=null;delivered=null;
         token="";connected=false;personalVersion=syncedVersion=0;hello=0;uncertainRequest=null;pendingStarted=lastReconcile=0;Gallery.GiftGalleryRecords.Clear();GalleryChanged?.Invoke();
@@ -489,6 +508,13 @@ internal sealed class OnlineSession
             }
             catch(Exception ex){monitor.Log("Inventory delivery will retry without repeating the craft: "+ex.Message,LogLevel.Warn);}
         }
+    }
+    internal void PublishInventory(long player)
+    {
+        if(!Context.IsMainPlayer||!Context.IsMultiplayer)return;
+        if(Game1.GetPlayer(player) is {} farmer)farmer.netItems.MarkReassigned();
+        inventoryBroadcasts[player]=null;
+        FlushInventories();
     }
 }
 #endif

@@ -1,4 +1,9 @@
-Better Beads 1.1.0 RC4 / 更好的拼豆 1.1.0 RC4
+Better Beads 1.1.0 RC6 NoAppearance / 更好的拼豆：无新增幻化版本
+
+This variant removes the Glamour Bench, Glamour Stone, Wizard unlock quest, and native object/tool reskins. Existing weapon forge transmog remains. Install only one Better Beads version, and use the same candidate on every co-op computer.
+本版移除新增幻化台、幻化石、法师解锁任务和普通物品／工具外观替换；保留原有武器锻造台幻化。与完整候选版二选一安装，联机所有玩家使用相同版本。
+Previously acquired Glamour Benches/Stones may become error items in this variant. Their saved appearance records are not deleted; switching back to the full candidate restores access. No save migration or item deletion is performed.
+旧存档中已经获得的幻化台和幻化石可能显示为错误物品；原外观记录不会被删除，切回完整候选版可重新读取。本版不自动迁移存档或删除物品。
 
 Updates / 更新：https://www.nexusmods.com/stardewvalley/mods/53029
 
@@ -18,8 +23,8 @@ New and existing Creative Mode artworks sell for 1g and can be shipped. Normal a
 新旧创造模式作品售价固定1金，可出售或出货。普通作品保留原估价，包括合法零价；商店仍按原品类收购。
 
 Online co-op candidate / 在线多人候选支持
-Every player must install the same RC4 package. The host checks crafting and decorating requests automatically. Libraries and palettes are personal; nearby chests and decorated rooms are shared. Split-screen is not supported.
-所有玩家安装相同 RC4 包。房主自动校验制作与装修请求。图纸、豆色各自独立；附近箱子和房屋装修状态共享。暂不支持同机分屏。
+Every player must install the same NoAppearance package. The host checks crafting and decorating requests automatically. Libraries and palettes are personal; nearby chests and decorated rooms are shared. Split-screen is not supported.
+所有玩家安装相同 NoAppearance 包。房主自动校验制作和装修请求。图纸、豆色各自独立；附近箱子与装修共享。暂不支持同机分屏。
 
 Controller and touch candidate / 手柄与触控候选
 Use the D-pad or left stick to choose controls. Select the board with A; then move bead by bead, hold A to paint, or hold X to erase. B leaves the board or closes the current window. Y opens colors, LB/RB undo and redo, the right stick pans, and LT/RT zoom. Text fields offer an on-screen keyboard. Select Input Mode in Generic Mod Config Menu or edit config.json.

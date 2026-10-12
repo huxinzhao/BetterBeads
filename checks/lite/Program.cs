@@ -7,6 +7,26 @@ using System.Reflection.PortableExecutable;
 
 int passed=0;
 void Check(bool ok,string name){if(!ok)throw new Exception(name);passed++;}
+if(args.Contains("--rc6-import-only"))
+{
+    try{ImageImportChecks.Run(Check);Console.WriteLine($"PASS {passed} focused image conversion checks.");}
+    catch(Exception ex){Console.Error.WriteLine("FAIL "+ex);Environment.ExitCode=1;}
+    return;
+}
+if(args.Contains("--code-optimization-only"))
+{
+    try
+    {
+        BlueprintContentOptimizationChecks.Run(Check);
+        ImageImportChecks.Run(Check);
+        CreativeChecks.Run(Check);
+        DecorationChecks.Run(Check);
+        await ExperienceChecks.Run(Check);
+        Console.WriteLine($"PASS {passed} focused code optimization checks.");
+    }
+    catch(Exception ex){Console.Error.WriteLine("FAIL "+ex);Environment.ExitCode=1;}
+    return;
+}
 if(args.Contains("--player-ui-only"))
 {
     try{PlayerUiChecks.Run(Check);Console.WriteLine($"PASS {passed} player UI checks.");}

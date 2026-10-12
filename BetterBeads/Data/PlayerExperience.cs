@@ -23,6 +23,14 @@ public sealed partial class EditorDocument
         saved=ContentKey(savedDesign);currentContent=null;unsavedIdentity=record.UnsavedIdentity;
         undo.Clear();redo.Clear();ChangeVersion++;return true;
     }
+    internal bool RestoreRecoveryCopy(DraftRecoveryEntry record)
+    {
+        if(!RestoreRecovery(record))return false;
+        draft=BlueprintManualSave.NewCopy(draft);
+        savedDesign=SimpleCrafting.Blank(draft.TemplateId);savedDesign.Id=draft.Id;
+        saved=ContentKey(savedDesign);currentContent=null;unsavedIdentity=true;ChangeVersion++;
+        return true;
+    }
     internal bool TransformRegion(UiRect region,int dx,int dy,bool copy)
     {
         var grid=draft.Views[View];

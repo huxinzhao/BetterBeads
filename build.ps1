@@ -1,4 +1,4 @@
-param([string]$GamePath = 'D:\steam\steamapps\common\Stardew Valley', [ValidatePattern('^[a-zA-Z0-9.-]*$')][string]$PackageTag = '')
+param([string]$GamePath = 'D:\steam\steamapps\common\Stardew Valley', [ValidatePattern('^[a-zA-Z0-9.-]*$')][string]$PackageTag = '', [switch]$SkipBuild)
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath $PSScriptRoot
 function AssertReleaseManifest($releaseManifest) {
@@ -17,9 +17,12 @@ $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 $env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH = '0'
 $env:DOTNET_GENERATE_ASPNET_CERTIFICATE = 'false'
 $dotnetExe = Join-Path $PSScriptRoot '.tools\dotnet\dotnet.exe'
-if (!(Test-Path -LiteralPath $dotnetExe)) { $dotnetExe = 'dotnet' }
-& $dotnetExe build 'BetterBeads\BetterBeads.csproj' -c Release --nologo "-p:GamePath=$GamePath" '-p:LiteBuild=true'
-if ($LASTEXITCODE -ne 0) { throw '构建失败，未生成发布包。' }
+if ($env:BETTERBEADS_DOTNET) { $dotnetExe = $env:BETTERBEADS_DOTNET }
+elseif (!(Test-Path -LiteralPath $dotnetExe)) { $dotnetExe = 'dotnet' }
+if (!$SkipBuild) {
+    & $dotnetExe build 'BetterBeads\BetterBeads.csproj' -c Release --nologo "-p:GamePath=$GamePath" '-p:LiteBuild=true'
+    if ($LASTEXITCODE -ne 0) { throw '构建失败，未生成发布包。' }
+}
 $output = Join-Path $PSScriptRoot 'BetterBeads\bin\Current\net6.0'
 $distRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'dist'))
 $stagingRoot = Join-Path $distRoot ('.staging-' + [Guid]::NewGuid().ToString('N'))

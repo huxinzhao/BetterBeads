@@ -17,8 +17,11 @@ internal static class ShapeCombat
         public string Protocol{get;set;}="";public long Sequence{get;set;}public string Target{get;set;}="";
         public string Location{get;set;}="";public string Weapon{get;set;}="";public double Baseline{get;set;}
     }
-    private sealed record Target(GameLocation Location,Dictionary<long,ShapeBleeding> Owners);
+    private sealed record Target(GameLocation Location,Dictionary<long,ShapeBleeding> Owners)
+    {public List<long> ActiveOwners {get;}=new();}
     private static readonly Dictionary<Monster,Target> targets=new();
+    private static readonly List<Monster> activeTargets=new(),retiredTargets=new();
+    private static readonly HashSet<GameLocation> occupiedLocations=new();
     private static readonly ShapeHitReceipts received=new();
     private static IModHelper helper=null!;private static ProductItems products=null!;private static IMonitor monitor=null!;
     private static long sequence;private static bool failed;private static int tagTicks;
@@ -54,7 +57,7 @@ internal static class ShapeCombat
 #else
     private const string Protocol="full-shape7";
 #endif
-    public static void Clear(){targets.Clear();received.Clear();sequence=0;failed=false;tagTicks=0;}
+    public static void Clear(){targets.Clear();activeTargets.Clear();retiredTargets.Clear();occupiedLocations.Clear();received.Clear();sequence=0;failed=false;tagTicks=0;}
     private static void Tag(Monster monster){if(!monster.modData.ContainsKey(Key))monster.modData[Key]=Guid.NewGuid().ToString("N");}
     public static void HitMonster(Monster monster,Farmer who,ProductSnapshot snapshot,double baseline)
     {
@@ -73,24 +76,41 @@ internal static class ShapeCombat
         if(budget<=0)return;
         if(!targets.TryGetValue(monster,out var target))targets[monster]=target=new(location,new());
         if(!target.Owners.TryGetValue(who.UniqueMultiplayerID,out var wounds))target.Owners[who.UniqueMultiplayerID]=wounds=new();
+        if(!wounds.Active)
+        {
+            if(target.ActiveOwners.Count==0)activeTargets.Add(monster);
+            target.ActiveOwners.Add(who.UniqueMultiplayerID);
+        }
         wounds.Add(budget);
     }
     private static void Update()
     {
         if(!Context.IsWorldReady||!Context.IsMainPlayer)return;
-        var locations=Game1.getOnlineFarmers().Select(f=>f.currentLocation).Where(l=>l is not null).Distinct().ToHashSet();
-        if(tagTicks++%60==0)foreach(var location in locations)foreach(var monster in location.characters.OfType<Monster>())Tag(monster);
+        bool sweep=tagTicks++%60==0;
+        if(activeTargets.Count==0&&!sweep)return;
+        occupiedLocations.Clear();foreach(var farmer in Game1.getOnlineFarmers())if(farmer.currentLocation is {} l)occupiedLocations.Add(l);
+        if(sweep)
+        {
+            foreach(var location in occupiedLocations)foreach(var npc in location.characters)if(npc is Monster monster)Tag(monster);
+            retiredTargets.Clear();
+            foreach(var pair in targets)if(pair.Key.Health<=0||!occupiedLocations.Contains(pair.Value.Location)||!pair.Value.Location.characters.Contains(pair.Key))retiredTargets.Add(pair.Key);
+            foreach(var monster in retiredTargets)targets.Remove(monster);
+            retiredTargets.Clear();
+        }
         if(!Game1.shouldTimePass())return;
         double elapsed=Math.Min(.25,Math.Max(0,Game1.currentGameTime.ElapsedGameTime.TotalSeconds));
-        foreach(var pair in targets.ToArray())
+        for(int i=activeTargets.Count-1;i>=0;i--)
         {
-            var monster=pair.Key;var target=pair.Value;
-            if(monster.Health<=0||!locations.Contains(target.Location)||!target.Location.characters.Contains(monster))
-            {targets.Remove(monster);continue;}
-            foreach(var owner in target.Owners.ToArray())
+            var monster=activeTargets[i];
+            if(!targets.TryGetValue(monster,out var target)||monster.Health<=0||!occupiedLocations.Contains(target.Location)||!target.Location.characters.Contains(monster))
+            {targets.Remove(monster);activeTargets.RemoveAt(i);continue;}
+            for(int j=target.ActiveOwners.Count-1;j>=0;j--)
             {
-                var who=Game1.GetPlayer(owner.Key);if(who is null){target.Owners.Remove(owner.Key);continue;}
-                int damage=owner.Value.Advance(elapsed);if(damage<=0)continue;
+                long owner=target.ActiveOwners[j];
+                var who=Game1.GetPlayer(owner);if(who is null){target.Owners.Remove(owner);target.ActiveOwners.RemoveAt(j);continue;}
+                var wound=target.Owners[owner];int damage=wound.Advance(elapsed);
+                if(!wound.Active)target.ActiveOwners.RemoveAt(j);
+                if(damage<=0)continue;
                 // The installment is already post-defense. No area query, crit, extra hit proc,
                 // knockback or invincibility is applied a second time.
                 if(ApplyTick(target.Location,monster,who,damage))
@@ -98,7 +118,8 @@ internal static class ShapeCombat
                     targets.Remove(monster);break;
                 }
             }
-            // Retain fractional credit until the monster leaves, even after a tiny wound ends.
+            if(!targets.ContainsKey(monster)||target.ActiveOwners.Count==0)activeTargets.RemoveAt(i);
+            // Idle fractional credit is retained but never advances in the per-frame loop.
         }
     }
     private static bool ApplyTick(GameLocation location,Monster monster,Farmer who,int damage)

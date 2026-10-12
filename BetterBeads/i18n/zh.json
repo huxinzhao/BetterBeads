@@ -850,11 +850,11 @@
   "weapon.shape.bleed": "锯齿：普通命中附加3秒持续伤害",
   "weapon.shape.wave": "波刃：普通命中附加3秒持续伤害",
   "simple.recovery-title": "发现上次未保存作品",
-  "simple.recovery-note": "不会自动加入图纸库；恢复后仍需手动保存。",
+  "simple.recovery-note": "恢复为独立未保存副本，不覆盖原图纸。手动保存时仍会查重。",
   "simple.recovery-restore": "恢复作品",
   "simple.recovery-delete": "删除恢复缓存",
   "simple.recovery-later": "稍后决定",
-  "simple.recovery-restored": "已恢复未保存作品，请手动保存图纸。",
+  "simple.recovery-restored": "已恢复为新副本，请手动保存图纸。",
   "simple.recovery-failed": "草稿未能恢复或删除，原缓存已保留。",
   "simple.pattern-edit": "移动与复制",
   "simple.pattern-all": "整幅图案",
@@ -884,5 +884,6 @@
   "simple.recovery-unreadable": "恢复缓存无法读取，原文件已保留；请勿直接覆盖。",
   "simple.shape-length": "主体长度约 {0:0.#}px",
   "simple.scene-standard": "返回场景",
-  "simple.recovery-delete-confirm": "删除未保存作品的恢复缓存？"
+  "simple.recovery-delete-confirm": "删除未保存作品的恢复缓存？",
+  "simple.recovery-copy": "恢复为新副本"
 }

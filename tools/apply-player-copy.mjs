@@ -3,7 +3,8 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {commitOutputs} from '../art/export-output.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const file=path.resolve(root,'docs/RC4_PLAYER_COPY.txt');
+const file=path.resolve(root,process.argv[2]||'docs/RC4_PLAYER_COPY.txt');
+if(!file.startsWith(root+path.sep))throw Error('Copy document must be inside the workspace');
 const input=fs.readFileSync(file,'utf8');
 const records=new Map();let key=null;
 for(const line of input.split(/\r?\n/)){
@@ -15,6 +16,7 @@ for(const line of input.split(/\r?\n/)){
 if(!records.size)throw Error('No editable text found');
 const tokens=s=>[...s.matchAll(/\{(\d+)(?:[^{}]*)\}/g)].map(m=>m[1]).sort();
 const output=new Map();
+const catalogs={};
 for(const [key,row] of records){
  if(!row.zh||!row.default||JSON.stringify(tokens(row.zh))!==JSON.stringify(tokens(row.default)))throw Error('Missing language or mismatched placeholders: '+key);
 }
@@ -26,6 +28,8 @@ for(const locale of ['zh','default']){
   original[key]=row[locale];
  }
  output.set(filename,Buffer.from(JSON.stringify(original,null,2)+'\n','utf8'));
+ catalogs[locale]=original;
 }
+output.set(path.join(root,'art/text-data.js'),Buffer.from('window.BEAD_COPY_CATALOG='+JSON.stringify(catalogs.default,null,2)+';\nwindow.BEAD_COPY_CHINESE='+JSON.stringify(catalogs.zh,null,2)+';\n','utf8'));
 commitOutputs(output);
 console.log('Applied '+records.size+' Chinese / English text entries. No game, Mods or save files were accessed.');

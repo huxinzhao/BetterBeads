@@ -65,6 +65,8 @@ internal sealed class GiftGalleryService
             ||service.Painting(item) is not {} painting)return true;
         // Let the native game reject gifts that cannot be received today.
         if(!__instance.tryToReceiveActiveObject(who,true))return true;
+        if(OnlineSession.Current?.CanRecordGift!=true)
+        {Game1.showRedMessage(OnlineSession.Text("data"));__result=true;return false;}
         Game1.activeClickableMenu=new GiftPaintingMenu(__instance,who,item,painting,service.Confirm);
         __result=true;return false;
     }
@@ -79,7 +81,7 @@ internal sealed class GiftGalleryService
         if(!Context.IsWorldReady||progress() is not {} data
             ||!ReferenceEquals(giver.ActiveObject,item)||!ReferenceEquals(products.Read(item),products.Read(giver.ActiveObject))
             ||Painting(item)?.InstanceId!=snapshot.InstanceId)return;
-        if(OnlineSession.Current?.CanRecordGift==false){Game1.showRedMessage(OnlineSession.Text("data"));return;}
+        if(OnlineSession.Current?.CanRecordGift!=true){Game1.showRedMessage(OnlineSession.Text("data"));return;}
         bypass=true;received=false;giftingTo=npc;giftingItem=item;
         try
         {

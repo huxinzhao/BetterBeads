@@ -147,6 +147,8 @@ internal static class ArtResources
             helper.GameContent.InvalidateCache(Prefix+"Art");
             foreach(string key in files.Keys)helper.GameContent.InvalidateCache(Prefix+key);
             helper.GameContent.InvalidateCache(Prefix+"Beads");
+#if BEADS_LITE
+#endif
             monitor.Log("Better Beads art invalidated; it will reload on the next draw.",LogLevel.Info);
         });
     }

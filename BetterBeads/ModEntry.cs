@@ -231,7 +231,7 @@ DefaultManufacturing.Recipes().Concat(DefaultWeapons.Recipes()).Concat(ClothingT
         workbench = new WorkbenchMenu(session.Progress, Helper.Translation, processing, draft,new ReferenceReader(Monitor),manufacturing,Helper.DirectoryPath);
 #if BEADS_LITE
         if(recovery?.Pending is {} pending&&draft is not null)
-            workbench.OfferRecovery(pending,restore=>recovery.Resolve(draft,restore));
+            workbench.OfferRecovery(pending,restore=>recovery.Resolve(draft,restore,asNewCopy:true));
         else if(recovery?.ReadError==true)workbench.ShowRecoveryError();
 #endif
         Game1.activeClickableMenu = workbench;

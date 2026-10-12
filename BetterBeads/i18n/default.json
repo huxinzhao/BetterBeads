@@ -850,11 +850,11 @@
   "weapon.shape.bleed": "Serrated: normal hits add damage over 3 seconds.",
   "weapon.shape.wave": "Wavy blade: normal hits add damage over 3 seconds.",
   "simple.recovery-title": "Unsaved artwork found",
-  "simple.recovery-note": "Recovery does not add a design to your library. Save it manually.",
+  "simple.recovery-note": "Recover as an independent unsaved draft. The original is kept; saving checks for duplicates.",
   "simple.recovery-restore": "Recover artwork",
   "simple.recovery-delete": "Delete recovery",
   "simple.recovery-later": "Decide later",
-  "simple.recovery-restored": "Artwork recovered. Save the design when ready.",
+  "simple.recovery-restored": "Recovered as a new draft. Save it manually.",
   "simple.recovery-failed": "Recovery could not be restored or deleted. The original file was kept.",
   "simple.pattern-edit": "Move / Copy",
   "simple.pattern-all": "Whole pattern",
@@ -884,5 +884,6 @@
   "simple.recovery-unreadable": "Recovery could not be read. The original file was kept; do not overwrite it.",
   "simple.shape-length": "Main length ~{0:0.#}px",
   "simple.scene-standard": "Back to scene",
-  "simple.recovery-delete-confirm": "Delete the unsaved recovery?"
+  "simple.recovery-delete-confirm": "Delete the unsaved recovery?",
+  "simple.recovery-copy": "Recover as new"
 }

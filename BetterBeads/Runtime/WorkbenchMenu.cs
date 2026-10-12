@@ -46,7 +46,13 @@ internal sealed class WorkbenchMenu : IClickableMenu
         if (service is not null && draft is not null) editor = new(draft,service.Catalog,progress,text,referenceReader,manufacturing);
         if(draft is not null && service is not null)library=new(progress,draft,service.Catalog,text,OpenDesign,()=>
         {ReleaseInputs();selected=1;Layout();editor?.BeginImport();},()=>
-        {if(editor?.SaveAs()==true){ReleaseInputs();selected=1;Layout();}},manufacturing,ReturnToEditor
+        {
+#if BEADS_LITE
+            ReleaseInputs();selected=0;Layout();editor?.SaveAs(()=>{ReleaseInputs();selected=1;Layout();});
+#else
+            if(editor?.SaveAs()==true){ReleaseInputs();selected=1;Layout();}
+#endif
+        },manufacturing,ReturnToEditor
 #if BEADS_LITE
         ,modDirectory,OpenImported
 #endif

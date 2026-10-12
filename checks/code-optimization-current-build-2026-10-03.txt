@@ -1,0 +1,10 @@
+  正在确定要还原的项目…
+  所有项目均是最新的，无法还原。
+  BetterBeads -> C:\Users\xinzh\Desktop\星露谷拼豆mod\BetterBeads\bin\Current\net6.0\BetterBeads.dll
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:02.46
+发布包：dist\BetterBeads-1.1.0-RC4-optimization-review.zip；27 个条目逐项校验通过。

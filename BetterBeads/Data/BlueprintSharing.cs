@@ -65,13 +65,15 @@ public static class BlueprintSharing
                 ||payload.VerticalSword!=verticalCode
                 ||decorationCode&&(payload.BackgroundRgba&255)!=255
                 ||payload.Colors.Any(c=>(c&255)!=255)||payload.Colors.Distinct().Count()!=payload.Colors.Length
-                ||payload.Template is not (SimpleCrafting.Picture16 or SimpleCrafting.Picture32 or SimpleCrafting.Ornament or SimpleCrafting.LargeOrnament
+                ||payload.Template is not (ProductTemplates.Picture or ProductTemplates.DetailedPicture or SimpleCrafting.Picture16 or SimpleCrafting.Picture32 or SimpleCrafting.Ornament or SimpleCrafting.LargeOrnament
                     or SimpleCrafting.Wallpaper16 or SimpleCrafting.Wallpaper32 or SimpleCrafting.Flooring16 or SimpleCrafting.Flooring32
                     or SimpleCrafting.Sword or SimpleCrafting.Sword24 or SimpleCrafting.Sword32
                     or SimpleCrafting.Dagger or SimpleCrafting.Dagger24 or SimpleCrafting.Dagger32
                     or SimpleCrafting.Hammer or SimpleCrafting.Hammer24 or SimpleCrafting.Hammer32)
                 ||payload.Cells.Any(i=>i<0||i>payload.Colors.Length))return false;
-            var result=SimpleCrafting.Blank(payload.Template);
+            var result=SimpleCrafting.Blank(payload.Template switch{
+                ProductTemplates.Picture=>SimpleCrafting.Picture16,
+                ProductTemplates.DetailedPicture=>SimpleCrafting.Picture32,_=>payload.Template});
             if(SimpleCrafting.IsDecoration(result.Use)!=decorationCode)return false;
             if(decorationCode)result.BackgroundRgba=payload.BackgroundRgba;
             if(verticalCode)

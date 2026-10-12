@@ -17,8 +17,12 @@ internal sealed class ImageImportPanel : IDisposable
     private readonly FrameControls controls=new();
     private readonly object chooserLock=new();
     private UiRect area,frame;
+    private ImageImportLayout geometry=null!;
     private Texture2D? texture;
-    private uint[]? pixels;
+    private IReadOnlyList<uint>? pixels;
+    private int sourceWidth,sourceHeight;
+    private sealed record Loaded(string Filename,CpuImportedImage Image);
+    private readonly LatestWork<Loaded> loading=new();
     private ImageImportResult? preview;
     private ImageImportPrepared? prepared;
     private string[] cachedFiles=Array.Empty<string>();
@@ -36,7 +40,7 @@ internal sealed class ImageImportPanel : IDisposable
     private bool conversionFailed;
     private sealed record Conversion(ImageImportPrepared Prepared,ImageImportResult Result,bool Large);
     private readonly LatestWork<Conversion> conversion=new();
-    private bool Generating=>dirty||conversion.Pending;
+    private bool Generating=>loading.Pending||dirty||conversion.Pending;
     public string FeedbackScope=>"import/"+(pixels is null?"files":settingsPage?"settings":"preview");
     private bool preparedDirty=true,opaqueImage;
     public bool Active {get;private set;}
@@ -45,7 +49,7 @@ internal sealed class ImageImportPanel : IDisposable
     private static string T(string key,string fallback)=>ContentText.Get("simple.import-"+key,fallback);
     public ImageImportPanel(string modDirectory,Action<Blueprint> accept)
     {folder=Path.Combine(modDirectory,"imports");this.accept=accept;}
-    public void Layout(UiRect area,UiRect frame){this.area=area;this.frame=frame;controls.Clear();}
+    public void Layout(UiRect area,UiRect frame){this.area=area;this.frame=frame;geometry=ImageImportLayout.Calculate(area);controls.Clear();}
     public void Start()
     {
         Active=true;message="";settingsPage=false;
@@ -54,7 +58,7 @@ internal sealed class ImageImportPanel : IDisposable
     }
     public void Close()
     {
-        Active=false;conversion.Cancel();chooserCancel?.Cancel();
+        Active=false;loading.Cancel();conversion.Cancel();chooserCancel?.Cancel();
         lock(chooserLock){chooserGeneration++;try{if(chooserProcess is {HasExited:false} process)process.Kill(true);}catch(Exception){}}
         chooserTask=null;chooserCancel?.Dispose();chooserCancel=null;
         texture?.Dispose();texture=null;pixels=null;prepared=null;preview=null;filename="";controls.Clear();
@@ -76,6 +80,26 @@ internal sealed class ImageImportPanel : IDisposable
             try{string? selected=done.GetAwaiter().GetResult();if(selected=="")message=T("picker-fallback","文件选择器不可用，请使用 imports 文件夹");else if(selected is not null)Load(selected);else message="";}
             catch(OperationCanceledException){}
             catch(Exception){message=T("picker-fallback","文件选择器不可用，请使用 imports 文件夹");}
+        }
+        if(loading.TryTake(out var loaded,out var loadError))
+        {
+            if(loaded is not null)
+            {
+                Texture2D? next=null;
+                try
+                {
+                    var image=loaded.Image;next=new Texture2D(Game1.graphics.GraphicsDevice,image.PreviewWidth,image.PreviewHeight);
+                    next.SetData(image.Preview);
+                    conversion.Cancel();texture?.Dispose();texture=next;next=null;
+                    pixels=image.Pixels;sourceWidth=image.Width;sourceHeight=image.Height;
+                    prepared=null;preview=null;preparedDirty=autoSize=true;filename=loaded.Filename;
+                    kind=ProductUse.Picture;large=sourceWidth>16||sourceHeight>16;
+                    removeBackground=false;outline=restore=true;showOriginal=false;dirty=true;message="";
+                }
+                catch(Exception){message=T("invalid","图片无法读取，或超过 20MB、4096 像素限制");}
+                finally{next?.Dispose();}
+            }
+            else if(loadError is not null)message=T("invalid","图片无法读取，或超过 20MB、4096 像素限制");
         }
         Refresh();
         if(conversion.TryTake(out var result,out var error))
@@ -126,27 +150,8 @@ internal sealed class ImageImportPanel : IDisposable
     }
     private void Load(string path)
     {
-        Texture2D? decoded=null;
-        try
-        {
-            if(!new[]{".png",".jpg",".jpeg"}.Contains(Path.GetExtension(path).ToLowerInvariant()))throw new ArgumentException("format");
-            var info=new FileInfo(path);if(!info.Exists||info.Length>ImageBlueprintImport.MaxFileBytes)throw new ArgumentException("size");
-            using var stream=File.OpenRead(path);
-            if(!ImageFileProbe.TryDimensions(stream,info.Extension,out _,out _))throw new ArgumentException("dimensions");
-            decoded=Texture2D.FromStream(Game1.graphics.GraphicsDevice,stream);
-            if(decoded.Width>ImageBlueprintImport.MaxSide||decoded.Height>ImageBlueprintImport.MaxSide
-                ||(long)decoded.Width*decoded.Height>ImageBlueprintImport.MaxPixels)throw new ArgumentException("dimensions");
-            var colors=new Color[decoded.Width*decoded.Height];decoded.GetData(colors);
-            var rgba=colors.Select(c=>PixelImport.FromPremultiplied(c.R,c.G,c.B,c.A)).ToArray();
-            conversion.Cancel();
-            texture?.Dispose();texture=decoded;decoded=null;
-            pixels=rgba;prepared=null;preparedDirty=true;autoSize=true;
-            filename=Path.GetFileName(path);
-            kind=ProductUse.Picture;large=texture.Width>16||texture.Height>16;
-            removeBackground=false;outline=true;restore=true;showOriginal=false;dirty=true;message="";
-        }
-        catch(Exception){message=T("invalid","图片无法读取，或超过 20MB、4096 像素限制");}
-        finally{decoded?.Dispose();}
+        loading.Request(token=>new Loaded(Path.GetFileName(path),ImageCpuDecoder.Load(path,token)),0);
+        message=T("generating","正在生成…");
     }
     private string Template()=>ProductCategories.For(kind)!.TemplateFor(SimpleCrafting.IsWeapon(kind)?weaponSize:large?32:16);
     private void Refresh()
@@ -154,7 +159,7 @@ internal sealed class ImageImportPanel : IDisposable
         if(!dirty||pixels is null||texture is null)return;
         dirty=false;conversionFailed=false;
         // Capture only plain data. No game state, texture or panel fields are accessed by the worker.
-        var source=pixels;int width=texture.Width,height=texture.Height;
+        var source=pixels;int width=sourceWidth,height=sourceHeight;
         var cached=preparedDirty?null:prepared;
         var settings=new ImageImportSettings(Template(),restore,removeBackground,tolerance,outline);
         bool chooseSize=autoSize,chosenLarge=large;
@@ -172,12 +177,11 @@ internal sealed class ImageImportPanel : IDisposable
     public void Draw(SpriteBatch b)
     {
         if(!Active)return;ArtResources.Scope=FeedbackScope;controls.Clear();
-        var geometry=ImageImportLayout.Calculate(area);
         ArtResources.TextLine(b,T("title","导入参考图"),new(area.X,area.Y-48,area.Width-160,40),ArtResources.Ink);
         Button(b,geometry.Back,T("back","返回我的图纸"),Close);
         if(!(pixels is not null&&geometry.Compact&&settingsPage))
         {
-            void Browse(){conversion.Cancel();RefreshFiles();pixels=null;prepared=null;preview=null;texture?.Dispose();texture=null;dirty=true;}
+            void Browse(){loading.Cancel();conversion.Cancel();RefreshFiles();pixels=null;prepared=null;preview=null;texture?.Dispose();texture=null;dirty=true;}
             if(OperatingSystem.IsWindows())
             {
                 Button(b,geometry.File,T("choose-file","选择本地图片"),PickWindowsFile,chooserTask is null);
@@ -191,7 +195,7 @@ internal sealed class ImageImportPanel : IDisposable
             page=Math.Clamp(page,0,Math.Max(0,(files.Length-1)/rows));
             for(int i=0;i<rows&&page*rows+i<files.Length;i++)
             {string file=files[page*rows+i];Button(b,new(area.X,rowY+i*48,area.Width,42),Path.GetFileName(file),()=>Load(file));}
-            ArtResources.TextLine(b,chooserTask is not null?T("waiting","等待选择图片…"):Generating&&pixels is not null?T("generating","正在生成…"):message.Length>0?message:T("folder-hint","请将 PNG 或 JPG 图片放入 imports 文件夹"),
+            ArtResources.TextLine(b,chooserTask is not null?T("waiting","等待选择图片…"):loading.Pending?T("generating","正在生成…"):message.Length>0?message:T("folder-hint","请将 PNG 或 JPG 图片放入 imports 文件夹"),
                 geometry.FolderHint,ArtResources.Ink);
             if(OperatingSystem.IsAndroid()&&files.Length==0)
                 ArtResources.TextLine(b,folder,new(area.X,area.Y+56,area.Width,64),ArtResources.MutedInk);
@@ -218,7 +222,7 @@ internal sealed class ImageImportPanel : IDisposable
             Button(b,new(area.Right-102,imageArea.Y+4,96,40),showOriginal?T("result","效果"):T("source","原图"),()=>showOriginal=!showOriginal);
         }
         int targetSize=SimpleCrafting.IsWeapon(kind)?weaponSize:large?32:16;
-        string status=chooserTask is not null?T("waiting","等待选择图片…"):Generating&&pixels is not null?T("generating","正在生成…"):message.Length>0?message:$"{filename} · {texture!.Width}×{texture.Height} → {targetSize}×{targetSize} · {preview?.Beads??0} {T("beads","颗豆")}";
+        string status=chooserTask is not null?T("waiting","等待选择图片…"):Generating&&pixels is not null?T("generating","正在生成…"):message.Length>0?message:$"{filename} · {sourceWidth}×{sourceHeight} → {targetSize}×{targetSize} · {preview?.Beads??0} {T("beads","颗豆")}";
         if(preview?.Restored==true)status+=" · "+T("restored","已无损还原");
         else if(preview?.Reduced==true)status+=" · "+T("reduced","已缩小");
         ArtResources.TextLine(b,status,geometry.Status,ArtResources.Ink,scale:0.82f);
@@ -297,7 +301,7 @@ internal sealed class ImageImportPanel : IDisposable
         if(SimpleCrafting.IsWeapon(kind))
         {
             int factor=restore?Math.Max(1,prepared?.ExactScale??1):1;
-            int extent=Math.Max((texture?.Width??16)/factor,(texture?.Height??16)/factor);
+            int extent=Math.Max(sourceWidth/factor,sourceHeight/factor);
             weaponSize=extent<=16?16:extent<=24?24:32;
         }
         dirty=true;
